@@ -1,0 +1,2407 @@
+<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Economía en el Salón</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: barra superior; profesor en dos columnas (control | tablero proyectable); estudiante en una tarjeta grande */
+:root{
+  --bg:#F2F4EE; --surface:#FFFFFF; --ink:#17251C; --muted:#56675B; --line:#D3DBD0;
+  --apple:#B3302A; --apple-soft:#F7E0DD; --leaf:#2C6E46; --leaf-soft:#DDEFE1; --gold:#9A6200;
+  --r1:#B3302A; --r2:#2C6E46; --r3:#3657A0; --r4:#9A6200;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111912; --surface:#18231B; --ink:#E7EEE8; --muted:#9BAFA1; --line:#2B3A30;
+    --apple:#F0756A; --apple-soft:#3B201D; --leaf:#72C792; --leaf-soft:#1C3525; --gold:#E6AE45;
+    --r1:#F0756A; --r2:#72C792; --r3:#93ADEC; --r4:#E6AE45; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111912; --surface:#18231B; --ink:#E7EEE8; --muted:#9BAFA1; --line:#2B3A30;
+  --apple:#F0756A; --apple-soft:#3B201D; --leaf:#72C792; --leaf-soft:#1C3525; --gold:#E6AE45;
+  --r1:#F0756A; --r2:#72C792; --r3:#93ADEC; --r4:#E6AE45; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+h1,h2,h3{font-family:var(--f-display);font-stretch:85%;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--apple);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding-block:14px;border-bottom:2px solid var(--ink);margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand svg{flex:none}
+.brand b{font-family:var(--f-display);font-stretch:80%;font-weight:800;font-size:1.35rem;letter-spacing:.01em}
+.nav{display:flex;gap:6px}
+.nav a{padding:6px 12px;border-radius:999px;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);font-size:.92rem}
+.nav a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+.wrap{max-width:1240px;margin:0 auto}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:10px;
+  border:1.5px solid var(--ink);background:var(--surface);cursor:pointer;font-weight:700;min-height:44px}
+.btn.primary{background:var(--apple);border-color:var(--apple);color:#fff}
+.btn.ghost{border-color:var(--line)}
+.btn.small{padding:6px 10px;min-height:34px;font-size:.88rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:9px 16px;cursor:pointer;font-weight:700;min-height:42px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+label{font-weight:700;font-size:.92rem}
+input[type="text"],input[type="number"]{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);
+  background:var(--bg);font-size:1.1rem;min-height:46px}
+input:focus{border-color:var(--ink)}
+
+/* Inicio */
+.hero{display:grid;gap:24px;padding-block:12px 8px}
+.hero h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:800}
+.hero p.lead{max-width:62ch;color:var(--muted);font-size:1.08rem}
+.choose{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.choice{display:grid;gap:10px;padding:22px;border-radius:16px;background:var(--surface);border:1.5px solid var(--line);
+  text-decoration:none;color:var(--ink)}
+.choice:hover{border-color:var(--ink)}
+.choice h2{font-size:1.6rem;font-weight:800}
+.choice p{color:var(--muted)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.rule{padding:14px 16px;border-left:4px solid var(--leaf);background:var(--surface);border-radius:0 10px 10px 0}
+.rule.apple{border-left-color:var(--apple)}
+
+/* Estudiante */
+.student{max-width:520px;margin:0 auto;display:grid;gap:18px}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:14px}
+.field{display:grid;gap:6px}
+.role{border-radius:18px;padding:24px;display:grid;gap:10px;border:2px solid var(--ink)}
+.role.V{background:var(--leaf-soft)}
+.role.C{background:var(--apple-soft)}
+.role .what{font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,12vw,4rem);line-height:1}
+.role .val{font-size:1.3rem}
+.role .val b{font-family:var(--f-display);font-size:3.2rem;font-weight:800;line-height:1;display:block}
+.cover{border-radius:18px;padding:28px;border:2px dashed var(--line);text-align:center;color:var(--muted)}
+
+/* Profesor */
+.prof{display:grid;grid-template-columns:minmax(290px,360px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.prof{grid-template-columns:minmax(0,1fr)}}
+.side{display:grid;gap:16px}
+.board{display:grid;gap:16px;min-width:0}
+.codebox{display:grid;gap:4px}
+.code{font-family:var(--f-display);font-weight:800;font-size:2.6rem;letter-spacing:.06em;line-height:1}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.spread{justify-content:space-between}
+.entry{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.entry .full{grid-column:1/-1}
+.msg{min-height:1.5em;font-size:.95rem}
+.msg.err{color:var(--apple);font-weight:700}
+.msg.ok{color:var(--leaf);font-weight:700}
+.trades{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:260px;overflow:auto}
+.trades li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:var(--bg)}
+.trades .p{font-family:var(--f-display);font-weight:800;font-size:1.25rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.tile{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:2px}
+.tile .big{font-family:var(--f-display);font-weight:800;font-size:2.4rem;line-height:1.05}
+.tile.eq{border-color:var(--ink)}
+.panel{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:10px;min-width:0}
+.panel h3{font-size:1.25rem;font-weight:800}
+.chart{width:100%;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{stroke:var(--ink);stroke-width:1.5}
+.chart text{fill:var(--muted);font-family:var(--f-body);font-size:13px}
+.chart text.lbl{fill:var(--ink);font-weight:700}
+.chart .r1{fill:var(--r1)} .chart .r2{fill:var(--r2)} .chart .r3{fill:var(--r3)} .chart .r4{fill:var(--r4)}
+.chart .eqline{stroke:var(--ink);stroke-width:2;stroke-dasharray:7 5}
+.chart .eqband{fill:var(--ink);opacity:.08}
+.chart .dem{stroke:var(--apple);stroke-width:3.5;fill:none}
+.chart .sup{stroke:var(--leaf);stroke-width:3.5;fill:none}
+.chart .mean{stroke:var(--gold);stroke-width:2.5;stroke-dasharray:2 5;stroke-linecap:round}
+.chart .sep{stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 4}
+.empty{padding:26px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:12px;display:grid;gap:10px;justify-items:center}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.chip{display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:.85rem}
+.chip.V{background:var(--leaf-soft);color:var(--leaf)}
+.chip.C{background:var(--apple-soft);color:var(--apple)}
+details{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:12px 16px}
+details summary{cursor:pointer;font-weight:700}
+details[open] summary{margin-bottom:10px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.mini{border-radius:10px;padding:8px 10px;border:1.5px solid var(--line);display:grid;gap:2px}
+.mini.V{background:var(--leaf-soft)} .mini.C{background:var(--apple-soft)}
+.mini b{font-family:var(--f-display);font-size:1.3rem}
+.banner{padding:10px 14px;border-radius:10px;background:var(--apple-soft);border:1.5px solid var(--apple);display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.confirm{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{flex-wrap:wrap}
+.field .seg{justify-self:start}
+.wx{padding:14px 18px;border-radius:14px;border:2px solid var(--ink);display:grid;gap:4px;background:var(--surface)}
+.wx.sequia{background:var(--apple-soft)}
+.wx.abund{background:var(--leaf-soft)}
+.chart .dembase{stroke:var(--apple);stroke-width:2;stroke-dasharray:6 5;fill:none;opacity:.55}
+.news{padding:10px 12px;border-radius:10px;background:var(--surface);border:1.5px solid var(--ink)}
+.wx .wxname{font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:1.05}
+.chart .supbase{stroke:var(--leaf);stroke-width:2;stroke-dasharray:6 5;fill:none;opacity:.55}
+.gate{max-width:420px;margin:24px auto 0;display:grid;gap:14px}
+.gate .lock{font-family:var(--f-display);font-weight:800;font-size:1.6rem}
+@media (prefers-reduced-motion: no-preference){.btn,.choice{transition:border-color .15s, transform .15s}.btn:active{transform:translateY(1px)}}
+/* Juegos nuevos: página inicial, multiplicador e inversión */
+.hub{display:grid;gap:22px;padding-block:12px 8px}
+.hub h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:800}
+.hub p.lead{max-width:62ch;color:var(--muted);font-size:1.08rem}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.game{display:grid;gap:10px;align-content:start;padding:22px;border-radius:16px;background:var(--surface);
+  border:1.5px solid var(--line);border-top:6px solid var(--c,var(--ink));text-decoration:none;color:var(--ink)}
+.game:hover{border-color:var(--ink);border-top-color:var(--c,var(--ink))}
+.game h2{font-size:1.6rem;font-weight:800}
+.game p{color:var(--muted)}
+.game .go{color:var(--ink);font-weight:700}
+.ex{padding:14px 16px;border-radius:12px;background:var(--surface);border:1.5px dashed var(--line);display:grid;gap:6px}
+.hh{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.pay{border-collapse:collapse;width:100%;max-width:560px}
+.pay th,.pay td{border:1.5px solid var(--line);padding:10px 12px;text-align:center;white-space:normal}
+.pay th{font-size:.85rem;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--bg)}
+.pay td b{font-family:var(--f-display);font-size:1.6rem;font-weight:800}
+.pay td.changed{background:var(--leaf-soft)}
+.decision{border-radius:18px;padding:30px 20px;text-align:center;border:2px solid var(--ink);
+  font-family:var(--f-display);font-weight:800;font-size:clamp(2.4rem,11vw,3.6rem);line-height:1}
+.decision.si{background:var(--leaf-soft);color:var(--leaf)}
+.decision.no{background:var(--apple-soft);color:var(--apple)}
+.bigchoice{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bigchoice .btn{min-height:84px;font-size:1.25rem;border-radius:14px}
+.bigchoice .btn.si{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.bigchoice .btn.no{background:var(--surface);border-color:var(--ink)}
+.story{padding:16px 18px;border-radius:14px;background:var(--surface);border:1.5px solid var(--line);display:grid;gap:8px}
+.newsbig{padding:18px 20px;border-radius:16px;border:2px solid var(--ink);background:var(--surface);display:grid;gap:6px}
+.newsbig .t{font-family:var(--f-display);font-weight:800;font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.05}
+.newsbig.ph1{background:var(--leaf-soft)}
+.newsbig.ph2{background:var(--apple-soft)}
+.newsbig.ph3{background:var(--surface);border-color:var(--r3)}
+.qs{margin:0;padding-left:1.2em;display:grid;gap:8px}
+.chart .ph1{fill:var(--leaf);opacity:.10}
+.chart .ph2{fill:var(--apple);opacity:.12}
+.chart .ph3{fill:var(--r3);opacity:.12}
+.chart .inc{stroke:var(--ink);stroke-width:3;fill:none}
+.chart .cons{stroke:var(--gold);stroke-width:2.5;fill:none;stroke-dasharray:2 5;stroke-linecap:round}
+.chart .dotinc{fill:var(--ink)}
+.chart .dotcons{fill:var(--gold)}
+.chart .b1{fill:var(--leaf)} .chart .b2{fill:var(--gold)} .chart .b3{fill:var(--apple)}
+.chart text.inbar{fill:#fff;font-weight:700}
+.theory{display:grid;gap:10px}
+/* Fuentes, gráficos y calculadoras de los juegos nuevos */
+.source{padding:14px 16px;border-radius:12px;background:var(--surface);border:1.5px solid var(--line);border-left:4px solid var(--ink);display:grid;gap:6px;font-size:.93rem;max-width:90ch}
+.source p:not(.eyebrow){color:var(--muted)}
+.source i{color:var(--ink)}
+.chart .ln{fill:none;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.chart .ln.s-b{stroke:var(--leaf)} .chart .dt.s-b{fill:var(--leaf)}
+.chart .ln.s-c{stroke:var(--r3)} .chart .dt.s-c{fill:var(--r3)}
+.chart .ln.s-a{stroke:var(--apple)} .chart .dt.s-a{fill:var(--apple)}
+.chart .ln.s-ink{stroke:var(--ink);stroke-width:2.5}
+.chart .ln.s-thin{stroke:var(--muted);stroke-width:1.5;opacity:.45}
+.chart .br.f-c{fill:var(--r3)} .chart .br.f-d{fill:var(--gold)}
+textarea{width:100%;font:inherit;font-size:1.05rem;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:inherit;resize:vertical}
+textarea:focus{border-color:var(--ink)}
+.verdictbox{padding:16px 18px;border-radius:14px;border:2px solid var(--ink);background:var(--bg);display:grid;gap:4px}
+.verdictbox .v{font-family:var(--f-display);font-weight:800;font-size:3rem;line-height:1}
+.hubsec{display:grid;gap:12px;padding-top:6px}
+.hubsec>h2{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:800}
+.hubsec>p{color:var(--muted);max-width:70ch}
+.game h3{font-size:1.5rem;font-weight:800}
+.game.ext{border-top-style:dashed}
+.game .tags{display:flex;gap:6px;flex-wrap:wrap}
+.game .tag{font-size:.78rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.game .src{font-size:.85rem}
+.foot{display:grid;gap:6px;margin-top:40px;padding-top:18px;border-top:1.5px solid var(--line);font-size:.9rem;color:var(--muted)}
+.foot .credit{color:var(--ink)}
+.chart text{paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+</style>
+
+<style>.fe-back{display:block;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:9px max(16px,env(safe-area-inset-left,0px));background:#2F467A;color:#FFFFFF;font:700 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;letter-spacing:.01em}.fe-back:hover{background:#243862}.fe-back:focus-visible{outline:3px solid #E0B865;outline-offset:-3px}</style>
+</head><body>
+<a class="fe-back" href="index.html">← Fundamentos de Economía · todos los materiales</a>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="#">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="3" y="17" width="6" height="10" rx="1.5" fill="var(--leaf)"/><rect x="12" y="11" width="6" height="16" rx="1.5" fill="var(--gold)"/><rect x="21" y="5" width="6" height="22" rx="1.5" fill="var(--apple)"/></svg>
+      <b>Economía en el salón</b>
+    </a>
+    <nav class="nav" id="lab-nav" aria-label="Navegación"></nav>
+  </header>
+
+  <!-- PÁGINA INICIAL -->
+  <section id="v-hub" hidden>
+    <div class="hub">
+      <p class="eyebrow">Fundamentos de Economía · Universidad de Antioquia</p>
+      <h1>Economía en el salón</h1>
+      <p class="lead">Juegos para vivir en clase lo que después discutimos con los modelos, adaptados a casos de Colombia. Cada uno tiene una página de reglas para proyectar, preguntas para la plenaria, un tablero para el profesor y, cuando hace falta, una vista para el celular. Al final de cada página de reglas están las fuentes originales del experimento.</p>
+      <div class="hubsec">
+        <h2>Mercados</h2>
+        <p>Cómo se forman los precios cuando nadie los conoce de antemano, y qué pasa cuando aparece un impuesto o cuando se especula.</p>
+        <div class="games">
+        <a class="game" href="#manzanas" style="--c:var(--apple)">
+          <p class="eyebrow">Oferta y demanda · impuestos</p>
+          <h3>Mercado de manzanas</h3>
+          <p>Compradores y vendedores negocian un bulto de manzanas. ¿Llega el salón al precio del modelo? Con dos escenarios de IVA: ¿importa quién lo paga?</p>
+          <div class="tags"><span class="tag">Todo el salón</span><span class="tag">Celular</span><span class="tag">40 min</span></div>
+          <p class="muted src">Chamberlin (1948), Smith (1962), CORE Econ exp. 2 y 7.</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        <a class="game" href="#acciones" style="--c:var(--apple)">
+          <p class="eyebrow">Mercados financieros · burbujas</p>
+          <h3>Acciones del barrio</h3>
+          <p>Se compran y venden acciones de una constructora que paga dividendos al azar. Todos saben cuánto vale cada acción. ¿Por qué los precios se disparan y después se desploman?</p>
+          <div class="tags"><span class="tag">Todo el salón</span><span class="tag">Papel</span><span class="tag">45 min</span></div>
+          <p class="muted src">Smith, Suchanek y Williams (1988).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        </div>
+      </div>
+      <div class="hubsec">
+        <h2>Macroeconomía y expectativas</h2>
+        <p>El gasto de unos es el ingreso de otros, y la inversión depende del ánimo: de lo que cada uno espera que hagan los demás.</p>
+        <div class="games">
+        <a class="game" href="#multiplicador" style="--c:var(--gold)">
+          <p class="eyebrow">El multiplicador</p>
+          <h3>La economía del barrio</h3>
+          <p>Cada grupo es un hogar que decide cuánto gastar. ¿Qué pasa cuando llega la pandemia y qué cambia cuando el Gobierno gasta?</p>
+          <div class="tags"><span class="tag">Grupos</span><span class="tag">Papel</span><span class="tag">35 min</span></div>
+          <p class="muted src">CORE Econ exp. 5; Keynes (1936).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        <a class="game" href="#inversion" style="--c:var(--r3)">
+          <p class="eyebrow">Inversión y coordinación</p>
+          <h3>¿Invertimos?</h3>
+          <p>Los negocios de una cuadra de Medellín deciden si invierten. Solo les va bien si invierten al menos dos de cada tres. Las noticias cambian, los pagos no.</p>
+          <div class="tags"><span class="tag">Grupos de 6 a 8</span><span class="tag">Celular</span><span class="tag">30 min</span></div>
+          <p class="muted src">CORE Econ exp. 3; Van Huyck, Battalio y Beil (1990).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        <a class="game" href="#belleza" style="--c:var(--r3)">
+          <p class="eyebrow">Expectativas · Keynes</p>
+          <h3>El reinado de Keynes</h3>
+          <p>Cada uno escoge un número de 0 a 100 y gana quien quede más cerca de los dos tercios del promedio. Como en el reinado de Cartagena, hay que adivinar lo que eligen los demás.</p>
+          <div class="tags"><span class="tag">Todo el salón</span><span class="tag">Papel</span><span class="tag">15 min</span></div>
+          <p class="muted src">Keynes (1936), cap. 12; Nagel (1995).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        </div>
+      </div>
+      <div class="hubsec">
+        <h2>Cooperación, confianza y Estado</h2>
+        <p>Qué pasa cuando lo que conviene a cada uno perjudica a todos, y qué hacen las normas, la comunidad y el Estado.</p>
+        <div class="games">
+        <a class="game" href="#vaca" style="--c:var(--leaf)">
+          <p class="eyebrow">Bienes públicos</p>
+          <h3>La vaca</h3>
+          <p>Grupos de vecinos ponen plata para arreglar la cancha. A cada uno le conviene que pongan los demás. ¿Qué cambia cuando se puede sancionar al que no pone?</p>
+          <div class="tags"><span class="tag">Grupos de 4</span><span class="tag">Celular</span><span class="tag">35 min</span></div>
+          <p class="muted src">Fehr y Gächter (2000); CORE Econ exp. 4.</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        <a class="game" href="#cienaga" style="--c:var(--leaf)">
+          <p class="eyebrow">Recursos de uso común</p>
+          <h3>La ciénaga</h3>
+          <p>Cinco pescadores comparten una ciénaga del Caribe. ¿Funciona mejor conversar entre ellos o una regulación que viene de afuera?</p>
+          <div class="tags"><span class="tag">Grupos de 5</span><span class="tag">Celular</span><span class="tag">40 min</span></div>
+          <p class="muted src">Cárdenas, Stranlund y Willis (2000); Ostrom, Gardner y Walker (1994).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        <a class="game" href="#fiado" style="--c:var(--leaf)">
+          <p class="eyebrow">Confianza y reciprocidad</p>
+          <h3>El fiado</h3>
+          <p>Una vecina le presta al tendero del barrio sin contrato. Lo prestado se triplica. ¿Cuánto presta y cuánto le devuelven?</p>
+          <div class="tags"><span class="tag">Parejas</span><span class="tag">Papel</span><span class="tag">20 min</span></div>
+          <p class="muted src">Berg, Dickhaut y McCabe (1995).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        </div>
+      </div>
+      <div class="hubsec">
+        <h2>Justicia y desigualdad</h2>
+        <p>Qué consideramos un reparto justo y cómo explicamos las ventajas con las que cada uno empieza.</p>
+        <div class="games">
+        <a class="game" href="#prima" style="--c:var(--gold)">
+          <p class="eyebrow">Dictador y ultimátum</p>
+          <h3>La prima</h3>
+          <p>Una persona reparte una prima de 10.000 pesos con otra. Primero sin que la otra pueda responder; después, con la posibilidad de rechazar. ¿Pesa la plata o la justicia?</p>
+          <div class="tags"><span class="tag">Parejas</span><span class="tag">Papel</span><span class="tag">20 min</span></div>
+          <p class="muted src">Güth, Schmittberger y Schwarze (1982); Forsythe y otros (1994); Henrich y otros (2001).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        <a class="game" href="#monopolio" style="--c:var(--gold)">
+          <p class="eyebrow">Mérito y privilegio</p>
+          <h3>Monopolio amañado</h3>
+          <p>Un juego de mesa con ventaja decidida por una moneda. ¿Cómo explican los ganadores su victoria?</p>
+          <div class="tags"><span class="tag">Grupos de 2 a 4</span><span class="tag">Juego de mesa</span><span class="tag">30 min</span></div>
+          <p class="muted src">Piff (2013).</p>
+          <p class="go">Ir al juego →</p>
+        </a>
+        </div>
+      </div>
+      <div class="hubsec">
+        <h2>Otros juegos en línea</h2>
+        <p>Juegos de otros autores para jugar en el celular o el computador. Están en inglés; cada uno trae una pregunta para llevarlo a Colombia.</p>
+        <div class="games">
+        <a class="game ext" href="https://ncase.me/trust/" target="_blank" rel="noopener" style="--c:var(--muted)">
+          <p class="eyebrow">Confianza · teoría de juegos</p>
+          <h3>The Evolution of Trust</h3>
+          <p>Un juego interactivo sobre por qué la confianza se construye o se destruye cuando las personas se encuentran una y otra vez.</p>
+          <p class="small"><b>Para Colombia:</b> ¿Qué pasa con la confianza en un barrio donde la gente cambia todo el tiempo, o donde nadie cumple los acuerdos?</p>
+          <p class="muted src">Nicky Case (2017). Basado en Axelrod, Robert (1984). <i>The Evolution of Cooperation</i>. Nueva York: Basic Books.</p>
+          <p class="go">Abrir en otra pestaña ↗</p>
+        </a>
+        <a class="game ext" href="https://ncase.me/polygons/" target="_blank" rel="noopener" style="--c:var(--muted)">
+          <p class="eyebrow">Segregación · decisiones individuales</p>
+          <h3>Parable of the Polygons</h3>
+          <p>Figuras que solo quieren no ser minoría en su vecindario terminan separadas por completo. Preferencias pequeñas, resultados grandes.</p>
+          <p class="small"><b>Para Colombia:</b> ¿Ayuda a entender la separación por estratos en Medellín o en Bogotá? ¿Qué no explica?</p>
+          <p class="muted src">Vi Hart y Nicky Case (2014). Basado en Schelling, Thomas C. (1971). «Dynamic Models of Segregation». <i>Journal of Mathematical Sociology</i> 1 (2): 143–186.</p>
+          <p class="go">Abrir en otra pestaña ↗</p>
+        </a>
+        <a class="game ext" href="https://www.fiscalship.org/" target="_blank" rel="noopener" style="--c:var(--muted)">
+          <p class="eyebrow">Finanzas públicas · presupuesto</p>
+          <h3>The Fiscal Ship</h3>
+          <p>Usted maneja el presupuesto del Gobierno de Estados Unidos: escoge impuestos y gastos para que la deuda no se dispare.</p>
+          <p class="small"><b>Para Colombia:</b> ¿Qué decisiones parecidas enfrenta Colombia con la regla fiscal y las reformas tributarias?</p>
+          <p class="muted src">Hutchins Center on Fiscal and Monetary Policy, Brookings Institution.</p>
+          <p class="go">Abrir en otra pestaña ↗</p>
+        </a>
+        <a class="game ext" href="https://playspent.org/" target="_blank" rel="noopener" style="--c:var(--muted)">
+          <p class="eyebrow">Pobreza · decisiones bajo escasez</p>
+          <h3>Spent</h3>
+          <p>Usted tiene que llegar a fin de mes con un ingreso muy bajo, y cada decisión tiene un costo.</p>
+          <p class="small"><b>Para Colombia:</b> ¿Cómo sería con un salario mínimo colombiano en una ciudad como Medellín?</p>
+          <p class="muted src">Urban Ministries of Durham y McKinney (2011).</p>
+          <p class="go">Abrir en otra pestaña ↗</p>
+        </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLAVE DEL PROFESOR (compartida por los tres juegos) -->
+  <section id="v-gate" hidden>
+    <form class="card gate" id="lab-gate" autocomplete="off">
+      <div>
+        <p class="eyebrow">Acceso restringido</p>
+        <p class="lock">Modo profesor</p>
+        <p class="muted small">Escriba la clave para entrar al tablero. Si usted es estudiante, vuelva a la <a href="#">página inicial</a> y elija su juego.</p>
+      </div>
+      <div class="field">
+        <label for="lab-pass">Clave</label>
+        <input type="password" id="lab-pass" autocomplete="off">
+      </div>
+      <button class="btn primary" type="submit">Entrar</button>
+      <p class="msg" id="lab-gmsg" role="status"></p>
+    </form>
+  </section>
+
+
+  <!-- INICIO -->
+  <section id="v-inicio" hidden>
+    <div class="hero">
+      <p class="eyebrow">Fundamentos de Economía · Universidad de Antioquia</p>
+      <h1>Un mercado de verdad, armado en el salón</h1>
+      <p class="lead">Cada persona recibe un papel: vende o compra un bulto de manzanas. Los precios se acuerdan conversando y el profesor los registra en la pantalla proyectada. Al final comparamos lo que pasó con lo que predice el modelo de oferta y demanda.</p>
+      <div class="choose">
+        <a class="choice" href="#estudiante">
+          <p class="eyebrow">En el celular</p>
+          <h2>Soy estudiante</h2>
+          <p>Escriba el código que aparece en el tablero y su número de participante para ver su papel.</p>
+        </a>
+        <a class="choice" href="#profesor">
+          <p class="eyebrow">En el computador del salón</p>
+          <h2>Soy el profesor</h2>
+          <p>Cree la sesión, registre las transacciones y proyecte los resultados.</p>
+        </a>
+      </div>
+      <div class="rules">
+        <div class="rule"><p class="eyebrow">Vendedores</p><p>Cada uno tiene un costo de producir. Ganan <b>precio − costo</b>.</p></div>
+        <div class="rule apple"><p class="eyebrow">Compradores</p><p>Cada uno tiene un máximo que pagaría. Ganan <b>valor − precio</b>.</p></div>
+        <div class="rule"><p class="eyebrow">Escenario 1</p><p>Tres costos para los vendedores y tres valores para los compradores.</p></div>
+        <div class="rule apple"><p class="eyebrow">Escenario 2</p><p>Llegó diciembre. Los mismos papeles, pero a cada uno le llega una noticia: a los vendedores el mal clima les sube el costo y a los compradores les llega plata extra. Cuánto cambia es distinto para cada uno.</p></div>
+        <div class="rule"><p class="eyebrow">Por ronda</p><p>Un solo bulto por persona. Quien no negocia gana 0.</p></div>
+        <div class="rule apple"><p class="eyebrow">Escenarios 3 y 4: IVA</p><p>Los papeles del escenario 1, con un IVA de 6 por bulto. En el 3 lo paga el vendedor y en el 4 el comprador. ¿Importa quién lo paga? Piense en la Ley de Rescate, que propone subir el IVA de algunos alimentos del 5 % al 19 %.</p></div>
+      </div>
+      <div class="source"><p class="eyebrow">Fuentes originales</p>
+        <p>Chamberlin, Edward H. (1948). «An Experimental Imperfect Market». <i>Journal of Political Economy</i> 56 (2): 95–108.</p>
+        <p>Smith, Vernon L. (1962). «An Experimental Study of Competitive Market Behavior». <i>Journal of Political Economy</i> 70 (2): 111–137.</p>
+        <p>CORE Econ, <i>Experiencing Economics</i>: experimento 2, «Mercado de manzanas», y experimento 7, «Un impuesto en el mercado de manzanas». Adaptación: valores, noticias de diciembre e IVA propios de este curso.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTUDIANTE -->
+  <section id="v-est" hidden>
+    <div class="student">
+      <form class="card" id="f-est" autocomplete="off">
+        <div>
+          <p class="eyebrow">Paso 1</p>
+          <h2 style="font-size:1.6rem">Busque su papel</h2>
+        </div>
+        <div class="field">
+          <label for="e-code">Código de la sesión (está en el tablero)</label>
+          <input type="text" id="e-code" placeholder="Ejemplo: KMT-25" autocapitalize="characters" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="e-num">Su número de participante</label>
+          <input type="number" id="e-num" inputmode="numeric" min="1" max="60" placeholder="Ejemplo: 7">
+        </div>
+        <div class="field">
+          <span style="font-weight:700;font-size:.92rem">Escenario (el profesor lo indica)</span>
+          <div class="seg" role="group" aria-label="Escenario">
+            <button type="button" id="e-sc1" aria-pressed="true">Escenario 1</button>
+            <button type="button" id="e-sc2" aria-pressed="false">Escenario 2</button>
+            <button type="button" id="e-sc3" aria-pressed="false">IVA al vendedor</button>
+            <button type="button" id="e-sc4" aria-pressed="false">IVA al comprador</button>
+          </div>
+        </div>
+        <button class="btn primary" type="submit" id="e-go">Ver mi papel</button>
+        <p class="msg" id="e-msg" role="status"></p>
+      </form>
+      <div id="e-out"></div>
+    </div>
+  </section>
+
+  <!-- PROFESOR -->
+  <section id="v-prof" hidden>
+    <div class="prof" id="p-main">
+      <aside class="side">
+        <div class="card">
+          <div class="codebox">
+            <p class="eyebrow">Código para los estudiantes</p>
+            <p class="code num" id="p-code">---</p>
+            <p style="color:var(--muted);font-size:.92rem">Abren el enlace con <b>#estudiante</b> al final, escriben este código y su número.</p>
+          </div>
+          <div class="row spread">
+            <div class="seg" role="group" aria-label="Escenario">
+              <button type="button" id="p-sc1" aria-pressed="true">Escenario 1</button>
+              <button type="button" id="p-sc2" aria-pressed="false">Escenario 2</button>
+              <button type="button" id="p-sc3" aria-pressed="false">IVA al vendedor</button>
+              <button type="button" id="p-sc4" aria-pressed="false">IVA al comprador</button>
+            </div>
+          </div>
+          <div class="row spread">
+            <p><span class="eyebrow">Ronda</span> <b class="num" id="p-round" style="font-family:var(--f-display);font-size:1.6rem">1</b></p>
+            <button class="btn" type="button" id="p-next">Nueva ronda</button>
+          </div>
+        </div>
+
+        <form class="card" id="f-trade" autocomplete="off">
+          <div>
+            <p class="eyebrow">Registrar transacción</p>
+            <p style="color:var(--muted);font-size:.92rem">Números de participante y precio acordado.</p>
+          </div>
+          <div class="entry">
+            <div class="field"><label for="t-s">Vendedor</label><input type="number" id="t-s" inputmode="numeric" min="1"></div>
+            <div class="field"><label for="t-b">Comprador</label><input type="number" id="t-b" inputmode="numeric" min="1"></div>
+            <div class="field"><label for="t-p">Precio</label><input type="number" id="t-p" inputmode="numeric" min="0" max="100"></div>
+            <button class="btn primary full" type="submit">Registrar</button>
+          </div>
+          <p class="msg" id="t-msg" role="status"></p>
+          <ul class="trades" id="t-list" aria-label="Transacciones de esta ronda"></ul>
+        </form>
+
+        <details id="d-cards">
+          <summary>Tarjetas de papeles (no proyectar)</summary>
+          <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px">Para trabajar en papel o verificar a alguien. Cambian con el escenario.</p>
+          <div class="cards-grid" id="p-cards"></div>
+        </details>
+
+        <details id="d-setup">
+          <summary>Configurar la sesión</summary>
+          <div style="display:grid;gap:12px">
+            <div class="field">
+              <label for="s-n">Número de participantes</label>
+              <input type="number" id="s-n" inputmode="numeric" min="6" max="60" value="25">
+            </div>
+            <div class="confirm" id="s-new-wrap">
+              <button class="btn" type="button" id="s-new">Crear sesión nueva</button>
+            </div>
+            <div class="confirm" id="s-clear-wrap">
+              <button class="btn ghost" type="button" id="s-clear">Borrar transacciones</button>
+            </div>
+            <div class="confirm" id="s-pilot-wrap">
+              <button class="btn ghost" type="button" id="s-pilot">Pilotear con 24 personas imaginarias</button>
+            </div>
+            <div class="confirm">
+              <button class="btn ghost" type="button" id="s-lock">Cerrar modo profesor</button>
+            </div>
+            <p style="color:var(--muted);font-size:.88rem">Los datos se guardan solo en este navegador.</p>
+          </div>
+        </details>
+      </aside>
+
+      <div class="board">
+        <div id="p-banner"></div>
+        <div id="p-wx"></div>
+        <div class="tiles">
+          <div class="tile"><p class="eyebrow">Transacciones</p><p class="big num" id="k-n">0</p><p style="color:var(--muted);font-size:.85rem">en esta ronda</p></div>
+          <div class="tile"><p class="eyebrow">Precio promedio</p><p class="big num" id="k-mean">–</p><p style="color:var(--muted);font-size:.85rem" id="k-range">sin datos</p></div>
+          <div class="tile"><p class="eyebrow">Ganancias del grupo</p><p class="big num" id="k-surplus">0</p><p style="color:var(--muted);font-size:.85rem" id="k-eff">compradores + vendedores</p></div>
+          <div class="tile eq"><p class="eyebrow">Equilibrio del modelo</p><p class="big num" id="k-eq">?</p><p style="font-size:.85rem" id="k-eq2"><button class="btn small" type="button" id="p-reveal">Revelar</button></p></div>
+        </div>
+
+        <div class="panel">
+          <div class="row spread">
+            <h3>Precios acordados, uno por uno</h3>
+            <div class="legend" id="lg-rounds"></div>
+          </div>
+          <div id="c-prices"></div>
+        </div>
+
+        <div class="panel">
+          <div class="row spread">
+            <h3>Resumen por ronda</h3>
+          </div>
+          <div class="tablewrap" id="tb-rounds"></div>
+        </div>
+
+        <div class="panel">
+          <div class="row spread">
+            <h3>Oferta y demanda de este salón</h3>
+            <div class="legend"><span style="--c:var(--apple)">Demanda (valores)</span><span style="--c:var(--leaf)">Oferta (costos)</span><span style="--c:var(--gold)">Promedio de la ronda</span></div>
+          </div>
+          <div id="c-curves"></div>
+        </div>
+
+        <div class="panel">
+          <h3>¿Quiénes negociaron en esta ronda?</h3>
+          <div class="tablewrap" id="tb-who"></div>
+        </div>
+
+        <div class="panel">
+          <div class="row spread">
+            <h3>Ranking de la sesión</h3>
+            <button class="btn small" type="button" id="p-rank-toggle">Mostrar ranking</button>
+          </div>
+          <div id="tb-rank"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MULTIPLICADOR: REGLAS ===================== -->
+  <section id="v-mult" hidden>
+    <div class="hero">
+      <p class="eyebrow">Juego del multiplicador</p>
+      <h1>La economía del barrio</h1>
+      <p class="lead">Cada grupo es un hogar de un barrio de Medellín. Cada mes decide cuánto gasta en mercado, transporte, servicios y salidas. Lo que un hogar gasta en la tienda o en el bus termina pagando los sueldos de otros hogares, así que el ingreso de cada uno depende de lo que gastan todos.</p>
+      <div class="rules">
+        <div class="rule"><p class="eyebrow">Su decisión</p><p>Cada mes el grupo decide cuánto gasta el hogar, en miles de pesos, y se lo dice al profesor.</p></div>
+        <div class="rule apple"><p class="eyebrow">Su ingreso</p><p>Todos los hogares reciben lo mismo: el <b>gasto promedio</b> de los hogares, más lo que <b>invierten las empresas</b> del barrio, más lo que <b>gasta el Gobierno</b>.</p></div>
+        <div class="rule"><p class="eyebrow">La meta</p><p>Gastar el <b>80 %</b> del ingreso de ese mes y ahorrar el resto. El problema: cuando deciden, todavía no saben cuánto van a recibir.</p></div>
+        <div class="rule apple"><p class="eyebrow">Cómo se gana</p><p>Gana el hogar que, sumando todos los meses, quede más cerca de su meta.</p></div>
+      </div>
+      <div class="ex">
+        <p class="eyebrow">Un ejemplo</p>
+        <p>Si este mes los hogares gastan en promedio 1.200 y las empresas invierten 400, cada hogar recibe 1.200 + 400 = <b>1.600</b>. La meta era gastar el 80 % de 1.600, es decir 1.280. Un hogar que gastó 1.200 quedó a 80 de su meta.</p>
+      </div>
+      <p class="muted">Durante el juego pueden llegar noticias que cambian la economía del barrio. El tablero las mostrará.</p>
+      <div class="choose">
+        <a class="choice" href="#multiplicador-profesor">
+          <p class="eyebrow">En el computador del salón</p>
+          <h2>Soy el profesor</h2>
+          <p>Registre el gasto de cada hogar, cambie la situación de la economía y proyecte el ingreso del barrio mes a mes.</p>
+        </a>
+      </div>
+      <p class="muted small">Basado en CORE Econ, <i>Experiencing Economics</i>, experimento 5. No hace falta celular: cada grupo dice su número en voz alta.</p>
+    </div>
+  </section>
+
+  <!-- ===================== MULTIPLICADOR: TABLERO ===================== -->
+  <section id="v-mult-prof" hidden>
+    <div class="prof">
+      <aside class="side">
+        <div class="card">
+          <div class="codebox">
+            <p class="eyebrow">Mes que se está jugando</p>
+            <p class="code num" id="x-month">1</p>
+          </div>
+          <div class="field">
+            <span style="font-weight:700;font-size:.92rem">Situación de la economía</span>
+            <div class="seg" role="group" aria-label="Situación de la economía">
+              <button type="button" id="x-ph1" aria-pressed="true">Año normal</button>
+              <button type="button" id="x-ph2" aria-pressed="false">Pandemia</button>
+              <button type="button" id="x-ph3" aria-pressed="false">El Gobierno gasta</button>
+            </div>
+            <p class="muted small">Se aplica al mes que se está jugando y a los siguientes.</p>
+          </div>
+        </div>
+
+        <form class="card" id="x-form" autocomplete="off">
+          <div>
+            <p class="eyebrow">Gasto de cada hogar</p>
+            <p class="muted small">En miles de pesos, tal como lo dice cada grupo.</p>
+          </div>
+          <div class="hh" id="x-inputs"></div>
+          <button class="btn primary" type="submit">Cerrar el mes</button>
+          <p class="msg" id="x-msg" role="status"></p>
+          <div class="row"><button class="btn small ghost" type="button" id="x-undo">Deshacer el último mes</button></div>
+        </form>
+
+        <details>
+          <summary>Preguntas para la plenaria</summary>
+          <ol class="qs">
+            <li>Al comienzo, ¿por qué el ingreso del barrio tardó varios meses en estabilizarse?</li>
+            <li>Cuando llegó la pandemia, las empresas invirtieron 200 menos por hogar. ¿Por qué el ingreso cayó mucho más que eso?</li>
+            <li>¿Qué hizo cada hogar cuando vio que su ingreso bajaba? ¿Qué le pasó a los demás por eso?</li>
+            <li>¿Qué cambió cuando el Gobierno empezó a gastar? ¿Habría pasado lo mismo si cada hogar, por su cuenta, hubiera decidido gastar más?</li>
+            <li>Si en lugar de contratar obras el Gobierno le hubiera entregado la plata a los hogares, como Ingreso Solidario, ¿el efecto sería igual de grande?</li>
+          </ol>
+        </details>
+
+        <details>
+          <summary>Configurar el juego</summary>
+          <div style="display:grid;gap:12px">
+            <div class="field">
+              <label for="x-h">Número de hogares (grupos)</label>
+              <input type="number" id="x-h" inputmode="numeric" min="2" max="12" value="5">
+            </div>
+            <div class="confirm" id="x-new-wrap"><button class="btn" type="button" id="x-new">Empezar un juego nuevo</button></div>
+            <div class="confirm" id="x-demo-wrap"><button class="btn ghost" type="button" id="x-demo">Ver con datos de ejemplo</button></div>
+            <div class="confirm"><button class="btn ghost" type="button" id="x-lock">Cerrar modo profesor</button></div>
+            <p class="muted small">Los datos se guardan solo en este navegador.</p>
+          </div>
+        </details>
+      </aside>
+
+      <div class="board">
+        <div id="x-banner"></div>
+        <div id="x-news"></div>
+        <div class="tiles">
+          <div class="tile"><p class="eyebrow">Ingreso del mes pasado</p><p class="big num" id="x-k-inc">–</p><p class="muted small">por hogar, en miles de pesos</p></div>
+          <div class="tile"><p class="eyebrow">Gasto promedio del mes pasado</p><p class="big num" id="x-k-cons">–</p><p class="muted small">de todos los hogares</p></div>
+          <div class="tile"><p class="eyebrow">Ayuda: el 80 % del mes pasado</p><p class="big num" id="x-k-hint">–</p><p class="small" id="x-k-hint2"></p></div>
+          <div class="tile eq"><p class="eyebrow">Equilibrio del modelo</p><p class="big num" id="x-k-eq">?</p><p class="small" id="x-k-eq2"></p></div>
+        </div>
+
+        <div class="panel">
+          <div class="row spread">
+            <h3>Ingreso y gasto del barrio, mes a mes</h3>
+            <div class="legend" id="x-legend"></div>
+          </div>
+          <div id="x-chart"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Mes a mes</h3>
+          <div class="tablewrap" id="x-table"></div>
+        </div>
+
+        <div class="panel">
+          <div class="row spread">
+            <h3>¿Qué hogar quedó más cerca de su meta?</h3>
+            <button class="btn small" type="button" id="x-rank-toggle">Mostrar resultados</button>
+          </div>
+          <div id="x-rank"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Juegos que se dibujan desde el script -->
+  <section id="v-inv" hidden></section>
+  <section id="v-inv-est" hidden></section>
+  <section id="v-inv-prof" hidden></section>
+  <section id="v-bz" hidden></section>
+  <section id="v-bz-prof" hidden></section>
+  <section id="v-rp" hidden></section>
+  <section id="v-rp-prof" hidden></section>
+  <section id="v-fi" hidden></section>
+  <section id="v-fi-prof" hidden></section>
+  <section id="v-va" hidden></section>
+  <section id="v-va-est" hidden></section>
+  <section id="v-va-prof" hidden></section>
+  <section id="v-ci" hidden></section>
+  <section id="v-ci-est" hidden></section>
+  <section id="v-ci-prof" hidden></section>
+  <section id="v-ac" hidden></section>
+  <section id="v-ac-prof" hidden></section>
+  <section id="v-mo" hidden></section>
+
+  <footer class="foot">
+    <p>Cada juego indica al final de sus reglas las fuentes originales de las que se adapta.</p>
+    <p class="credit">Realizado por Emilio Henao (@elnostos) con Claude (Opus 5.5).</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  var KEY = "mercado-manzanas-v1";
+  var KEY_EST = "mercado-manzanas-est";
+  var SVGNS = "http://www.w3.org/2000/svg";
+
+  /* ---------- utilidades ---------- */
+  function $(id){ return document.getElementById(id); }
+  function hashStr(s){ var h = 2166136261; for (var i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h,16777619); } return h>>>0; }
+  function rng(seed){ var a = seed>>>0; return function(){ a = (a + 0x6D2B79F5)>>>0; var t = a; t = Math.imul(t ^ (t>>>15), t|1); t ^= t + Math.imul(t ^ (t>>>7), t|61); return ((t ^ (t>>>14))>>>0)/4294967296; }; }
+  function fmt(x){ return (Math.round(x*10)/10).toString().replace(".", ","); }
+  function svg(tag, attrs, parent){ var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function txt(parent, x, y, s, cls, anchor){ var t = svg("text", {x:x, y:y, "text-anchor":anchor||"start"}, parent); if (cls) t.setAttribute("class", cls); t.textContent = s; return t; }
+
+  /* ---------- papeles y equilibrio ---------- */
+  /* Escenario 1: tres costos y tres valores. Escenario 2: los mismos papeles, y a cada persona le llega
+     al azar una noticia que sube su costo o su valor en 6, 10 o 14. El sorteo sale del código y del número,
+     así que el celular y el tablero calculan lo mismo sin comunicarse. */
+  var SHOCKS = [6,10,14];
+  var TAX = 6;
+  function rolesFor(letters, N, sc){
+    var sellers = Math.floor(N/2), buyers = N - sellers;
+    var roles = [], i;
+    var cs = [12,18,24], vs = [16,22,28];
+    for (i=0;i<sellers;i++) roles.push({type:"V", base: cs[i%3]});
+    for (i=0;i<buyers;i++) roles.push({type:"C", base: vs[i%3]});
+    var r = rng(hashStr(letters + "|" + N));
+    for (i=roles.length-1;i>0;i--){ var j = Math.floor(r()*(i+1)); var tmp = roles[i]; roles[i] = roles[j]; roles[j] = tmp; }
+    return roles.map(function(x, idx){
+      var shock = null, val = x.base;
+      if (sc === 2){
+        var k = Math.floor(rng(hashStr(letters + "|" + N + "|choque|" + (idx+1)))() * 3);
+        shock = k;
+        val = x.base + SHOCKS[k];
+      }
+      return {type:x.type, base:x.base, val:val, shock:shock};
+    });
+  }
+  function shockText(role){
+    if (role.shock === null || role.shock === undefined) return "";
+    var V = [
+      "<b>Helada.</b> Una helada quemó parte del cultivo y ahora producir le cuesta más.",
+      "<b>Plaga.</b> Una plaga dañó buena parte del cultivo y ahora producir le cuesta bastante más.",
+      "<b>Sequía.</b> No llovió en meses, le tocó comprar agua y ahora producir le cuesta mucho más."];
+    var C = [
+      "<b>Prima de diciembre.</b> Le pagaron la prima y tiene algo más de plata.",
+      "<b>Plata de afuera.</b> Una tía le mandó plata desde Estados Unidos.",
+      "<b>Trabajo de vacaciones.</b> Consiguió un trabajo de temporada muy bien pagado."];
+    if (role.type === "V") return V[role.shock] + " Su costo sube de " + role.base + " a " + role.val + ".";
+    return C[role.shock] + " Ahora pagaría hasta " + role.val + " (antes " + role.base + ").";
+  }
+  function equilibrium(roles){
+    var v = roles.filter(function(r){return r.type==="C";}).map(function(r){return r.val;}).sort(function(a,b){return b-a;});
+    var c = roles.filter(function(r){return r.type==="V";}).map(function(r){return r.val;}).sort(function(a,b){return a-b;});
+    var q = 0; while (q<v.length && q<c.length && v[q] >= c[q]) q++;
+    var lo = Math.max(q>0 ? c[q-1] : 0, q<v.length ? v[q] : 0);
+    var hi = Math.min(q>0 ? v[q-1] : 50, q<c.length ? c[q] : 50);
+    var max = 0; for (var k=0;k<q;k++) max += v[k]-c[k];
+    return {q:q, lo:lo, hi:hi, max:max, v:v, c:c};
+  }
+  function eqLabel(eq){ return eq.lo === eq.hi ? String(eq.lo) : eq.lo + " a " + eq.hi; }
+  function predicted(eq, type, val){
+    var P = (eq.lo + eq.hi) / 2;
+    if (type === "V"){
+      if (val < P) return "todos";
+      if (val > P) return "ninguno";
+      var strict = eq.c.filter(function(x){return x<P;}).length;
+      return Math.max(0, eq.q - strict) + " de ellos";
+    } else {
+      if (val > P) return "todos";
+      if (val < P) return "ninguno";
+      var strictB = eq.v.filter(function(x){return x>P;}).length;
+      return Math.max(0, eq.q - strictB) + " de ellos";
+    }
+  }
+  function parseCode(raw){
+    var s = String(raw||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+    var m = s.match(/^([A-Z]{3})(\d{1,2})$/);
+    if (!m) return null;
+    var N = parseInt(m[2],10);
+    if (N < 2 || N > 60) return null;
+    return {letters:m[1], N:N};
+  }
+
+  /* ---------- estado del profesor ---------- */
+  function genLetters(){
+    var a = new Uint32Array(3), s = "";
+    try { crypto.getRandomValues(a); } catch(e){ for (var i=0;i<3;i++) a[i] = Math.floor(Math.random()*1e6); }
+    for (var k=0;k<3;k++) s += ALPHA[a[k] % ALPHA.length];
+    return s;
+  }
+  function newSession(N){ return {letters:genLetters(), N:N, scenario:1, round:{"1":1,"2":1,"3":1,"4":1}, trades:[], revealed:{"1":false,"2":false,"3":false,"4":false}, clima2:{}, nextId:1}; }
+  function load(){ try { var t = localStorage.getItem(KEY); if (!t) return null; var o = JSON.parse(t); if (!o || !o.letters || !o.N) return null; if (!o.clima2) o.clima2 = {}; [3,4].forEach(function(k){ if (!o.round[k]) o.round[k] = 1; if (o.revealed[k] === undefined) o.revealed[k] = false; }); return o; } catch(e){ return null; } }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  var S = load() || newSession(25);
+
+  /* Escenarios 3 y 4: IVA de TAX por bulto. El precio registrado es el que acuerdan comprador y vendedor.
+     Con IVA al vendedor, este se queda con precio − TAX; con IVA al comprador, este paga precio + TAX. */
+  function rolesAdj(letters, N, sc){
+    return rolesFor(letters, N, sc).map(function(r){
+      if (sc === 3 && r.type === "V") return {type:r.type, base:r.base, val:r.val + TAX, shock:null};
+      if (sc === 4 && r.type === "C") return {type:r.type, base:r.base, val:r.val - TAX, shock:null};
+      return r;
+    });
+  }
+  function eqFor(sc){ return equilibrium(rolesAdj(S.letters, S.N, sc)); }
+  function rolesNow(){ return rolesAdj(S.letters, S.N, S.scenario); }
+  function scTrades(){ return S.trades.filter(function(t){ return t.sc === S.scenario; }); }
+  function roundTrades(){ var r = S.round[S.scenario]; return scTrades().filter(function(t){ return t.round === r; }); }
+
+
+
+  /* ---------- vista estudiante ---------- */
+  var estSc = 1;
+  function setEstSc(n){ estSc = n; [1,2,3,4].forEach(function(k){ $("e-sc" + k).setAttribute("aria-pressed", n===k); }); }
+  $("e-sc3").addEventListener("click", function(){ setEstSc(3); if ($("e-out").firstChild) showRole(); });
+  $("e-sc4").addEventListener("click", function(){ setEstSc(4); if ($("e-out").firstChild) showRole(); });
+  $("e-sc1").addEventListener("click", function(){ setEstSc(1); if ($("e-out").firstChild) showRole(); });
+  $("e-sc2").addEventListener("click", function(){ setEstSc(2); if ($("e-out").firstChild) showRole(); });
+  try { var prev = JSON.parse(localStorage.getItem(KEY_EST) || "null"); if (prev){ $("e-code").value = prev.code || ""; $("e-num").value = prev.num || ""; } } catch(e){}
+
+  function showRole(){
+    var msg = $("e-msg"); msg.className = "msg"; msg.textContent = "";
+    var code = parseCode($("e-code").value);
+    var num = parseInt($("e-num").value, 10);
+    if (!code){ msg.className = "msg err"; msg.textContent = "Revise el código: son tres letras y un número, como KMT-25."; return; }
+    if (!num || num < 1 || num > code.N){ msg.className = "msg err"; msg.textContent = "El número de participante va de 1 a " + code.N + "."; return; }
+    try { localStorage.setItem(KEY_EST, JSON.stringify({code:$("e-code").value, num:num})); } catch(e){}
+    var role = rolesFor(code.letters, code.N, estSc)[num-1];
+    var out = $("e-out"); out.innerHTML = "";
+    var card = document.createElement("div");
+    card.className = "role " + role.type;
+    var isV = role.type === "V";
+    var climaNote = (role.shock !== null && role.shock !== undefined) ? '<p class="news">' + shockText(role) + '</p>' : "";
+    card.innerHTML =
+      '<p class="eyebrow">Participante ' + num + ' · Escenario ' + estSc + '</p>' +
+      '<p class="what">' + (isV ? "Vendedor" : "Comprador") + '</p>' +
+      '<p class="val">' + (isV ? "Su costo de producir" : "Lo máximo que pagaría") + '<b class="num">' + role.val + '</b></p>' + climaNote +
+      (estSc === 3 && isV ? '<p class="news"><b>IVA.</b> Por cada bulto que venda, usted le paga ' + TAX + ' al Estado. Usted gana <b>precio − ' + TAX + ' − ' + role.val + '</b>. Nunca venda por menos de ' + (role.val + TAX) + '.</p>'
+      : estSc === 4 && !isV ? '<p class="news"><b>IVA.</b> Además del precio, usted le paga ' + TAX + ' al Estado por el bulto. Usted gana <b>' + role.val + ' − precio − ' + TAX + '</b>. Nunca acepte un precio mayor que ' + (role.val - TAX) + '.</p>'
+      : '<p>' + (isV ? "Usted gana <b>precio − " + role.val + "</b>. Nunca venda por menos de " + role.val + "." : "Usted gana <b>" + role.val + " − precio</b>. Nunca pague más de " + role.val + ".") + (estSc >= 3 ? " En este escenario el IVA lo paga " + (estSc === 3 ? "el vendedor" : "el comprador") + ", no usted." : "") + '</p>') +
+      '<p style="color:var(--muted);font-size:.92rem">No le muestre este número a nadie. Cuando acuerde un precio, díganselo al profesor con sus dos números de participante.</p>';
+    var hide = document.createElement("button");
+    hide.className = "btn"; hide.type = "button"; hide.textContent = "Ocultar mi papel";
+    hide.addEventListener("click", function(){
+      out.innerHTML = "";
+      var c = document.createElement("div"); c.className = "cover";
+      c.innerHTML = '<p>Su papel está oculto.</p>';
+      var b = document.createElement("button"); b.className = "btn"; b.type = "button"; b.textContent = "Mostrar de nuevo"; b.style.marginTop = "10px";
+      b.addEventListener("click", showRole);
+      c.appendChild(b); out.appendChild(c);
+    });
+    card.appendChild(hide);
+    out.appendChild(card);
+  }
+  $("f-est").addEventListener("submit", function(e){ e.preventDefault(); showRole(); });
+
+  $("s-lock").addEventListener("click", function(){ if (window.LAB) window.LAB.lock(); });
+
+  /* ---------- vista profesor: acciones ---------- */
+  function setScenario(n){ S.scenario = n; save(); renderProf(); }
+  $("p-sc1").addEventListener("click", function(){ setScenario(1); });
+  $("p-sc2").addEventListener("click", function(){ setScenario(2); });
+  $("p-sc3").addEventListener("click", function(){ setScenario(3); });
+  $("p-sc4").addEventListener("click", function(){ setScenario(4); });
+  $("p-next").addEventListener("click", function(){ S.round[S.scenario] = (S.round[S.scenario]||1) + 1; save(); flash("Comienza la ronda " + S.round[S.scenario] + ". Los papeles se mantienen.", "ok"); renderProf(); });
+  $("p-reveal").addEventListener("click", function(){ S.revealed[S.scenario] = !S.revealed[S.scenario]; save(); renderProf(); });
+
+  function flash(text, kind){ var m = $("t-msg"); m.className = "msg " + (kind||""); m.textContent = text; }
+
+  $("f-trade").addEventListener("submit", function(e){
+    e.preventDefault();
+    var s = parseInt($("t-s").value,10), b = parseInt($("t-b").value,10), p = parseInt($("t-p").value,10);
+    var roles = rolesNow(), N = S.N, rt = roundTrades();
+    if (!s || s<1 || s>N){ flash("El número del vendedor va de 1 a " + N + ".", "err"); $("t-s").focus(); return; }
+    if (!b || b<1 || b>N){ flash("El número del comprador va de 1 a " + N + ".", "err"); $("t-b").focus(); return; }
+    if (isNaN(p) || p<0 || p>100){ flash("Escriba un precio entre 0 y 100.", "err"); $("t-p").focus(); return; }
+    var rs = roles[s-1], rb = roles[b-1];
+    if (rs.type !== "V"){ flash("El participante " + s + " es comprador en este escenario.", "err"); return; }
+    if (rb.type !== "C"){ flash("El participante " + b + " es vendedor en este escenario.", "err"); return; }
+    if (rt.some(function(t){return t.seller===s;})){ flash("El vendedor " + s + " ya negoció en esta ronda.", "err"); return; }
+    if (rt.some(function(t){return t.buyer===b;})){ flash("El comprador " + b + " ya negoció en esta ronda.", "err"); return; }
+    if (p < rs.val){ flash("Con ese precio el vendedor " + s + " perdería dinero. Revisen el acuerdo en privado.", "err"); return; }
+    if (p > rb.val){ flash("Con ese precio el comprador " + b + " perdería dinero. Revisen el acuerdo en privado.", "err"); return; }
+    S.trades.push({id:S.nextId++, sc:S.scenario, round:S.round[S.scenario], seller:s, buyer:b, price:p, cost:rs.val, value:rb.val});
+    save();
+    flash("Registrado: vendedor " + s + " → comprador " + b + " a " + p + ".", "ok");
+    $("t-s").value = ""; $("t-b").value = ""; $("t-p").value = "";
+    $("t-s").focus();
+    renderProf();
+  });
+
+  $("t-list").addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-del]");
+    if (!btn) return;
+    var id = parseInt(btn.getAttribute("data-del"),10);
+    S.trades = S.trades.filter(function(t){ return t.id !== id; });
+    save(); flash("Transacción eliminada.", ""); renderProf();
+  });
+
+  function twoStep(wrapId, btnId, question, action){
+    var wrap = $(wrapId);
+    $(btnId).addEventListener("click", function(){
+      var orig = wrap.innerHTML;
+      wrap.innerHTML = "";
+      var q = document.createElement("span"); q.textContent = question; q.style.fontSize = ".92rem";
+      var yes = document.createElement("button"); yes.className = "btn small primary"; yes.type = "button"; yes.textContent = "Sí, continuar";
+      var no = document.createElement("button"); no.className = "btn small"; no.type = "button"; no.textContent = "Cancelar";
+      wrap.appendChild(q); wrap.appendChild(yes); wrap.appendChild(no);
+      function restore(){ wrap.innerHTML = orig; twoStep(wrapId, btnId, question, action); }
+      yes.addEventListener("click", function(){ action(); restore(); });
+      no.addEventListener("click", restore);
+    });
+  }
+  twoStep("s-new-wrap", "s-new", "Se borran todas las transacciones y cambia el código.", function(){
+    var N = parseInt($("s-n").value,10);
+    if (!N || N<6) N = 6; if (N>60) N = 60;
+    S = newSession(N); save(); flash("Sesión nueva creada para " + N + " participantes.", "ok"); renderProf();
+  });
+  twoStep("s-clear-wrap", "s-clear", "Se borran las transacciones; el código se mantiene.", function(){
+    S.trades = []; S.round = {"1":1,"2":1,"3":1,"4":1}; S.revealed = {"1":false,"2":false,"3":false,"4":false}; S.clima2 = {}; save(); flash("Transacciones borradas.", ""); renderProf();
+  });
+
+  /* Piloto: una clase de 24 personas imaginarias, una ronda por escenario.
+     Las parejas se encuentran al azar, solo cierran trato si a ambos les conviene,
+     y desde la segunda ronda los precios se acercan al promedio de la ronda anterior. */
+  function simulateClass(){
+    S = newSession(24); S.pilot = true;
+    var r = rng(hashStr("piloto" + S.letters));
+    [1,2].forEach(function(sc){
+      var roles = rolesFor(S.letters, S.N, sc);
+      var sellers = [], buyers = [];
+      roles.forEach(function(x, i){ (x.type === "V" ? sellers : buyers).push({n:i+1, val:x.val}); });
+      var prevMean = null;
+      for (var round=1; round<=1; round++){
+        var done = {}, prices = [];
+        for (var a=0; a<6*S.N; a++){
+          var sv = sellers[Math.floor(r()*sellers.length)], bv = buyers[Math.floor(r()*buyers.length)];
+          if (done["V"+sv.n] || done["C"+bv.n] || bv.val < sv.val) continue;
+          var p = sv.val + r()*(bv.val - sv.val);
+          if (prevMean !== null) p = 0.6*prevMean + 0.4*p;
+          p = Math.round(Math.min(bv.val, Math.max(sv.val, p)));
+          done["V"+sv.n] = done["C"+bv.n] = true;
+          prices.push(p);
+          S.trades.push({id:S.nextId++, sc:sc, round:round, seller:sv.n, buyer:bv.n, price:p, cost:sv.val, value:bv.val, pilot:true});
+        }
+        if (prices.length) prevMean = prices.reduce(function(x,y){return x+y;},0)/prices.length;
+      }
+      S.round[sc] = 1;
+    });
+    S.scenario = 1; save();
+    flash("Piloto listo: 24 participantes, una ronda en cada escenario.", "ok");
+    renderProf();
+  }
+  twoStep("s-pilot-wrap", "s-pilot", "Se reemplaza la sesión actual por una de prueba.", simulateClass);
+
+  function loadDemo(){
+    var roles = rolesFor(S.letters, S.N, 1, "normal");
+    var e0 = equilibrium(roles), mid0 = (e0.lo + e0.hi) / 2;
+    var sellers = [], buyers = [], i;
+    roles.forEach(function(r, idx){ if (r.type==="V") sellers.push({n:idx+1, val:r.val}); else buyers.push({n:idx+1, val:r.val}); });
+    var r = rng(hashStr("demo" + S.letters));
+    for (var round=1; round<=2; round++){
+      var sp = sellers.slice().sort(function(){ return r()-0.5; });
+      var bp = buyers.slice().sort(function(){ return r()-0.5; });
+      var used = {};
+      sp.forEach(function(sv){
+        for (var k=0;k<bp.length;k++){
+          var bv = bp[k];
+          if (used[bv.n] || bv.val < sv.val) continue;
+          var target = round === 1 ? sv.val + r()*(bv.val - sv.val) : mid0 + (r()-0.5)*4;
+          var p = Math.round(Math.min(bv.val, Math.max(sv.val, target)));
+          used[bv.n] = true;
+          S.trades.push({id:S.nextId++, sc:1, round:round, seller:sv.n, buyer:bv.n, price:p, cost:sv.val, value:bv.val, demo:true});
+          break;
+        }
+      });
+    }
+    S.scenario = 1; S.round["1"] = 2; save(); renderProf();
+  }
+
+  /* ---------- vista profesor: render ---------- */
+  function renderProf(){
+    var sc = S.scenario, roles = rolesNow(), eq = equilibrium(roles);
+    var rt = roundTrades(), st = scTrades(), revealed = !!S.revealed[sc];
+    $("p-code").textContent = S.letters + "-" + S.N;
+    [1,2,3,4].forEach(function(k){ $("p-sc" + k).setAttribute("aria-pressed", sc===k); });
+    $("p-round").textContent = S.round[sc];
+    $("s-n").value = S.N;
+
+    // aviso del escenario 2
+    var wx = $("p-wx"); wx.innerHTML = "";
+    if (sc === 2){
+      var wd = document.createElement("div"); wd.className = "wx";
+      wd.innerHTML = '<p class="eyebrow">Escenario 2</p><p class="wxname">Cada uno recibió una noticia</p><p>En el celular, toquen «Escenario 2». Llegó diciembre. A cada vendedor el clima le subió el costo y a cada comprador le llegó plata extra, en cantidades distintas. Cada uno sabe solo lo suyo.</p>';
+      wx.appendChild(wd);
+    }
+    if (sc >= 3){
+      var wt = document.createElement("div"); wt.className = "wx";
+      var rtx = roundTrades().length;
+      wt.innerHTML = '<p class="eyebrow">Escenario ' + sc + '</p><p class="wxname">IVA de ' + TAX + ' por bulto, lo paga ' + (sc === 3 ? 'el vendedor' : 'el comprador') + '</p><p>Mismos papeles del escenario 1. En el celular, toquen «' + (sc === 3 ? 'IVA al vendedor' : 'IVA al comprador') + '». El precio que se registra es el que acuerdan entre ellos; ' + (sc === 3 ? 'el vendedor le entrega ' + TAX + ' de ese precio al Estado.' : 'el comprador paga además ' + TAX + ' al Estado.') + '</p><p><b>Recaudo de esta ronda: ' + (rtx * TAX) + '</b> (' + rtx + ' bultos × ' + TAX + ').</p>';
+      wx.appendChild(wt);
+    }
+
+    // banner de ejemplo
+    var ban = $("p-banner"); ban.innerHTML = "";
+    if (S.trades.some(function(t){return t.demo;})){
+      var d = document.createElement("div"); d.className = "banner";
+      d.innerHTML = "<span><b>Datos de ejemplo.</b> Estas transacciones son inventadas para mostrar la herramienta.</span>";
+      var x = document.createElement("button"); x.className = "btn small"; x.type = "button"; x.textContent = "Quitar ejemplo";
+      x.addEventListener("click", function(){ S.trades = S.trades.filter(function(t){return !t.demo;}); S.round = {"1":1,"2":1,"3":1,"4":1}; save(); renderProf(); });
+      d.appendChild(x); ban.appendChild(d);
+    }
+    if (S.pilot){
+      var dp = document.createElement("div"); dp.className = "banner";
+      dp.innerHTML = "<span><b>Sesión de prueba.</b> 24 participantes imaginarios negociaron una ronda en cada escenario. Puede revelar, ver el ranking, abrir el modo estudiante con el código y registrar tratos para probar.</span>";
+      var xp = document.createElement("button"); xp.className = "btn small"; xp.type = "button"; xp.textContent = "Terminar piloto";
+      xp.addEventListener("click", function(){ S = newSession(25); save(); flash("Piloto terminado. Sesión nueva para 25 participantes.", "ok"); renderProf(); });
+      dp.appendChild(xp); ban.appendChild(dp);
+    }
+
+    // lista de transacciones de la ronda
+    var ul = $("t-list"); ul.innerHTML = "";
+    rt.slice().reverse().forEach(function(t){
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="num">V' + t.seller + ' → C' + t.buyer + '</span><span class="p num">' + t.price + '</span>';
+      var del = document.createElement("button"); del.className = "btn small ghost"; del.type = "button"; del.setAttribute("data-del", t.id); del.setAttribute("aria-label", "Eliminar transacción a " + t.price); del.textContent = "Quitar";
+      li.appendChild(del); ul.appendChild(li);
+    });
+
+    // indicadores
+    $("k-n").textContent = rt.length;
+    if (rt.length){
+      var prices = rt.map(function(t){return t.price;});
+      var mean = prices.reduce(function(a,b){return a+b;},0)/prices.length;
+      $("k-mean").textContent = fmt(mean);
+      $("k-range").textContent = "de " + Math.min.apply(null,prices) + " a " + Math.max.apply(null,prices);
+    } else { $("k-mean").textContent = "–"; $("k-range").textContent = "sin datos"; }
+    var surplus = rt.reduce(function(a,t){return a + (t.value - t.cost);},0);
+    $("k-surplus").textContent = revealed ? surplus : "–";
+    $("k-eff").textContent = revealed ? (eq.max>0 ? fmt(100*surplus/eq.max) + " % del máximo posible (" + eq.max + ")" : "compradores + vendedores") : "se muestran al revelar";
+    if (revealed){
+      $("k-eq").textContent = eqLabel(eq);
+      $("k-eq2").innerHTML = "";
+      var s1 = document.createElement("span"); s1.textContent = "precio, con " + eq.q + " transacciones ";
+      var hb = document.createElement("button"); hb.className = "btn small"; hb.type = "button"; hb.textContent = "Ocultar";
+      hb.addEventListener("click", function(){ S.revealed[sc] = false; save(); renderProf(); });
+      $("k-eq2").appendChild(s1); $("k-eq2").appendChild(hb);
+    } else {
+      $("k-eq").textContent = "?";
+      $("k-eq2").innerHTML = "";
+      var rb = document.createElement("button"); rb.className = "btn small"; rb.type = "button"; rb.textContent = "Revelar";
+      rb.addEventListener("click", function(){ S.revealed[sc] = true; save(); renderProf(); });
+      $("k-eq2").appendChild(rb);
+    }
+
+    drawPrices(st, eq, revealed);
+    drawRounds(st, eq, revealed);
+    drawCurves(eq, rt, revealed);
+    drawWho(roles, rt, eq, revealed);
+    drawRank();
+    drawCards(roles);
+  }
+
+  function drawPrices(st, eq, revealed){
+    var box = $("c-prices"); box.innerHTML = "";
+    var lg = $("lg-rounds"); lg.innerHTML = "";
+    if (!st.length){
+      var e = document.createElement("div"); e.className = "empty";
+      e.innerHTML = "<p><b>Todavía no hay transacciones en este escenario.</b></p><p>Registre la primera con el formulario. Cada punto será un precio acordado.</p>";
+      var b = document.createElement("button"); b.className = "btn small"; b.type = "button"; b.textContent = "Ver con datos de ejemplo";
+      b.addEventListener("click", loadDemo);
+      if (S.scenario === 1) e.appendChild(b);
+      box.appendChild(e); return;
+    }
+    var rounds = []; st.forEach(function(t){ if (rounds.indexOf(t.round) < 0) rounds.push(t.round); }); rounds.sort(function(a,b){return a-b;});
+    rounds.forEach(function(r, i){ var s = document.createElement("span"); s.style.setProperty("--c", "var(--r" + ((i%4)+1) + ")"); s.textContent = "Ronda " + r; lg.appendChild(s); });
+    var W = 680, H = 290, m = {l:42, r:14, t:14, b:40};
+    var ordered = []; rounds.forEach(function(r){ st.filter(function(t){return t.round===r;}).forEach(function(t){ ordered.push(t); }); });
+    var slots = ordered.length + (rounds.length - 1);
+    var c = svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":"Precios acordados en orden"}, box);
+    var y = function(v){ return m.t + (H - m.t - m.b) * (1 - v/50); };
+    var x = function(i){ return m.l + (W - m.l - m.r) * ((i + 0.5) / Math.max(slots,1)); };
+    for (var g=0; g<=50; g+=10){ svg("line", {x1:m.l, x2:W-m.r, y1:y(g), y2:y(g), class:"grid"}, c); txt(c, m.l-8, y(g)+4, g, "", "end"); }
+    var slotW = (W - m.l - m.r) / Math.max(slots,1);
+    var idx = 0;
+    rounds.forEach(function(r, ri){
+      var group = ordered.filter(function(t){return t.round===r;});
+      var start = idx;
+      var x0 = x(start) - slotW/2, x1 = x(start + group.length - 1) + slotW/2;
+      if (revealed){
+        var e = eqFor(S.scenario, r);
+        if (e.lo === e.hi){ svg("line", {x1:x0, x2:x1, y1:y(e.lo), y2:y(e.lo), class:"eqline"}, c); }
+        else { svg("rect", {x:x0, width:x1-x0, y:y(e.hi), height:y(e.lo)-y(e.hi), class:"eqband"}, c); }
+        txt(c, x0 + 4, y(e.hi) - 6, "Eq. " + eqLabel(e), "lbl", "start");
+      }
+      group.forEach(function(t){ var circ = svg("circle", {cx:x(idx), cy:y(t.price), r:6.5, class:"r" + ((ri%4)+1)}, c); var ti = svg("title", {}, circ); ti.textContent = "Ronda " + r + ": " + t.price; idx++; });
+      var mid = (x(start) + x(idx-1)) / 2;
+      txt(c, mid, H - 22, "Ronda " + r, "", "middle");
+      if (ri < rounds.length - 1){ svg("line", {x1:x(idx), x2:x(idx), y1:m.t, y2:H-m.b, class:"sep"}, c); idx++; }
+    });
+    svg("line", {x1:m.l, x2:W-m.r, y1:y(0), y2:y(0), class:"axis"}, c);
+  }
+
+  function drawRounds(st, eq, revealed){
+    var box = $("tb-rounds"); box.innerHTML = "";
+    if (!st.length){ var p = document.createElement("p"); p.style.color = "var(--muted)"; p.textContent = "Aparece cuando haya transacciones."; box.appendChild(p); return; }
+    var rounds = []; st.forEach(function(t){ if (rounds.indexOf(t.round) < 0) rounds.push(t.round); }); rounds.sort(function(a,b){return a-b;});
+    var sc1 = false;
+    var html = "<table><thead><tr><th>Ronda</th>" + (sc1 ? "<th>Clima</th>" : "") + "<th>Transacciones</th><th>Promedio</th><th>Mínimo</th><th>Máximo</th>" + (revealed ? "<th>Equilibrio</th><th>Ganancias</th><th>Eficiencia</th>" : "") + "</tr></thead><tbody>";
+    rounds.forEach(function(r){
+      var g = st.filter(function(t){return t.round===r;});
+      var pr = g.map(function(t){return t.price;});
+      var mean = pr.reduce(function(a,b){return a+b;},0)/pr.length;
+      var sur = g.reduce(function(a,t){return a + t.value - t.cost;},0);
+      var e = eqFor(S.scenario, r);
+      html += "<tr><td>" + r + "</td><td>" + g.length + "</td><td>" + fmt(mean) + "</td><td>" + Math.min.apply(null,pr) + "</td><td>" + Math.max.apply(null,pr) + "</td>" + (revealed ? "<td>" + eqLabel(e) + "</td><td>" + sur + "</td><td>" + (e.max>0 ? fmt(100*sur/e.max) + " %" : "–") + "</td>" : "") + "</tr>";
+    });
+    html += "</tbody></table>";
+    if (revealed) html += '<p style="color:var(--muted);font-size:.88rem;margin-top:8px">Ronda actual, según el modelo: ' + eq.q + " transacciones a un precio de " + eqLabel(eq) + ", con ganancias totales de " + eq.max + ".</p>";
+    box.innerHTML = html;
+  }
+
+  function drawCurves(eq, rt, revealed){
+    var box = $("c-curves"); box.innerHTML = "";
+    if (!revealed){
+      var e = document.createElement("div"); e.className = "empty";
+      e.innerHTML = "<p><b>Las curvas se muestran al revelar el equilibrio.</b></p><p>Primero dejen que el mercado funcione: nadie conoce el precio de equilibrio.</p>";
+      box.appendChild(e); return;
+    }
+    var W = 680, H = 300, m = {l:42, r:20, t:16, b:44};
+    var n = Math.max(eq.v.length, eq.c.length);
+    var c = svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":"Curvas de oferta y demanda del salón"}, box);
+    var y = function(v){ return m.t + (H - m.t - m.b) * (1 - v/50); };
+    var x = function(q){ return m.l + (W - m.l - m.r) * (q / (n + 1)); };
+    for (var g=0; g<=50; g+=10){ svg("line", {x1:m.l, x2:W-m.r, y1:y(g), y2:y(g), class:"grid"}, c); txt(c, m.l-8, y(g)+4, g, "", "end"); }
+    var step = Math.max(1, Math.ceil(n/10));
+    for (var q=0; q<=n; q+=step){ txt(c, x(q), H - m.b + 18, q, "", "middle"); }
+    txt(c, (m.l + W - m.r)/2, H - 6, "Cantidad de bultos", "", "middle");
+    var dD = "M" + x(0) + " " + y(eq.v[0]);
+    eq.v.forEach(function(v, k){ dD += " H" + x(k+1); dD += " V" + y(k+1 < eq.v.length ? eq.v[k+1] : 0); });
+    svg("path", {d:dD, class:"dem"}, c);
+    if (S.scenario !== 1){
+      var eb = equilibrium(rolesFor(S.letters, S.N, 1));
+      var dB = "M" + x(0) + " " + y(eb.c[0]);
+      eb.c.forEach(function(v, k){ dB += " H" + x(k+1); dB += " V" + y(k+1 < eb.c.length ? eb.c[k+1] : 50); });
+      svg("path", {d:dB, class:"supbase"}, c);
+      var dBD = "M" + x(0) + " " + y(eb.v[0]);
+      eb.v.forEach(function(v, k){ dBD += " H" + x(k+1); dBD += " V" + y(k+1 < eb.v.length ? eb.v[k+1] : 0); });
+      svg("path", {d:dBD, class:"dembase"}, c);
+      txt(c, m.l + 6, m.t + 12, S.scenario >= 3 ? "Punteadas: curvas sin IVA. La distancia entre las curvas es el impuesto." : "Punteadas: curvas del escenario 1", "", "start");
+    }
+    var dS = "M" + x(0) + " " + y(eq.c[0]);
+    eq.c.forEach(function(v, k){ dS += " H" + x(k+1); dS += " V" + y(k+1 < eq.c.length ? eq.c[k+1] : 50); });
+    svg("path", {d:dS, class:"sup"}, c);
+    if (eq.lo === eq.hi){ svg("line", {x1:m.l, x2:W-m.r, y1:y(eq.lo), y2:y(eq.lo), class:"eqline"}, c); txt(c, W-m.r-4, y(eq.lo)-7, "Precio de equilibrio: " + eq.lo, "lbl", "end"); }
+    else { svg("rect", {x:m.l, width:W-m.l-m.r, y:y(eq.hi), height:y(eq.lo)-y(eq.hi), class:"eqband"}, c); txt(c, W-m.r-4, y(eq.hi)-7, "Equilibrio: " + eq.lo + " a " + eq.hi, "lbl", "end"); }
+    svg("line", {x1:x(eq.q), x2:x(eq.q), y1:m.t, y2:y(0), class:"eqline"}, c);
+    txt(c, x(eq.q)+6, m.t+14, "Cantidad: " + eq.q, "lbl", "start");
+    if (rt.length){
+      var mean = rt.reduce(function(a,t){return a+t.price;},0)/rt.length;
+      svg("line", {x1:m.l, x2:W-m.r, y1:y(mean), y2:y(mean), class:"mean"}, c);
+      txt(c, m.l+6, y(mean)-7, "Promedio ronda " + S.round[S.scenario] + ": " + fmt(mean), "lbl", "start");
+    }
+    svg("line", {x1:m.l, x2:W-m.r, y1:y(0), y2:y(0), class:"axis"}, c);
+  }
+
+  function drawWho(roles, rt, eq, revealed){
+    if (!revealed){
+      $("tb-who").innerHTML = '<div class="empty"><p><b>Esta tabla se muestra al revelar el equilibrio.</b></p><p>Antes de eso diría cuántos vendedores y compradores hay de cada tipo, y eso ayudaría a adivinar el precio.</p></div>';
+      return;
+    }
+    var sv = [], bv = [];
+    roles.forEach(function(r){ var a = r.type === "V" ? sv : bv; if (a.indexOf(r.val) < 0) a.push(r.val); });
+    sv.sort(function(a,b){return a-b;}); bv.sort(function(a,b){return b-a;});
+    var groups = sv.map(function(v){ return {type:"V", val:v, name:"Vendedores con costo " + v}; })
+      .concat(bv.map(function(v){ return {type:"C", val:v, name:"Compradores con valor " + v}; }));
+    var html = "<table><thead><tr><th>Grupo</th><th>Personas</th><th>Negociaron</th>" + (revealed ? "<th>Según el modelo</th>" : "") + "</tr></thead><tbody>";
+    groups.forEach(function(g){
+      var total = roles.filter(function(r){return r.type===g.type && r.val===g.val;}).length;
+      var did = rt.filter(function(t){ return g.type==="V" ? t.cost===g.val : t.value===g.val; }).length;
+      html += '<tr><td><span class="chip ' + g.type + '">' + (g.type==="V" ? "V" : "C") + '</span> ' + g.name + "</td><td>" + total + "</td><td>" + did + "</td>" + (revealed ? "<td>" + (total ? predicted(eq, g.type, g.val) : "–") + "</td>" : "") + "</tr>";
+    });
+    html += "</tbody></table>";
+    if (!revealed) html += '<p style="color:var(--muted);font-size:.88rem;margin-top:8px">Al revelar el equilibrio aparece qué predice el modelo para cada grupo.</p>';
+    $("tb-who").innerHTML = html;
+  }
+
+  function drawRank(){
+    var box = $("tb-rank"); box.innerHTML = "";
+    $("p-rank-toggle").textContent = S.showRank ? "Ocultar ranking" : "Mostrar ranking";
+    if (!S.showRank){
+      box.innerHTML = '<div class="empty"><p><b>El ranking está oculto.</b></p><p>Muéstrelo al final de la clase. Con las ganancias y los precios a la vista se pueden adivinar los costos y los valores de cada uno.</p></div>';
+      return;
+    }
+    var real = S.trades.filter(function(t){ return !t.demo; });
+    if (!real.length){ box.innerHTML = '<p style="color:var(--muted)">Todavía no hay tratos registrados.</p>'; return; }
+    function tally(key, gain){
+      var m = {};
+      real.forEach(function(t){
+        var k = t[key];
+        if (!m[k]) m[k] = {n:k, total:0, trades:0};
+        m[k].total += gain(t); m[k].trades += 1;
+      });
+      var arr = Object.keys(m).map(function(k){ return m[k]; });
+      arr.sort(function(a,b){ return b.total - a.total || a.n - b.n; });
+      var pos = 0, prev = null;
+      arr.forEach(function(x, i){ if (x.total !== prev){ pos = i + 1; prev = x.total; } x.pos = pos; });
+      return arr;
+    }
+    var sellers = tally("seller", function(t){ return t.price - t.cost; });
+    var buyers = tally("buyer", function(t){ return t.value - t.price; });
+    function table(title, arr, letter){
+      var h = '<div style="min-width:0;overflow-x:auto"><p class="eyebrow" style="margin-bottom:6px">' + title + '</p><table><thead><tr><th>Puesto</th><th>Quién</th><th>Ganancia</th><th>Tratos</th></tr></thead><tbody>';
+      arr.slice(0, 5).forEach(function(x){
+        h += '<tr' + (x.pos === 1 ? ' style="font-weight:700"' : '') + '><td>' + x.pos + '</td><td><span class="chip ' + letter + '">' + letter + x.n + '</span></td><td>' + x.total + '</td><td>' + x.trades + '</td></tr>';
+      });
+      return h + '</tbody></table></div>';
+    }
+    box.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">' +
+      table("Mejores vendedores", sellers, "V") + table("Mejores compradores", buyers, "C") + '</div>' +
+      '<p style="color:var(--muted);font-size:.88rem;margin-top:8px">Ganancia y tratos suman toda la sesión, en los dos escenarios. Se muestran los cinco primeros de cada lado; los empates comparten puesto.</p>';
+  }
+  $("p-rank-toggle").addEventListener("click", function(){ S.showRank = !S.showRank; save(); drawRank(); });
+
+  function drawCards(roles){
+    var box = $("p-cards"); box.innerHTML = "";
+    roles.forEach(function(r, i){
+      var d = document.createElement("div"); d.className = "mini " + r.type;
+      d.innerHTML = '<span class="eyebrow">N.º ' + (i+1) + '</span><span>' + (r.type==="V" ? "Vendedor" : "Comprador") + '</span><b class="num">' + r.val + '</b>';
+      box.appendChild(d);
+    });
+  }
+
+  window.MM = {render: renderProf};
+})();
+</script>
+<script>
+/* ===================== utilidades compartidas por los juegos nuevos ===================== */
+window.LABU = (function(){
+  "use strict";
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function $(id){ return document.getElementById(id); }
+  function svg(tag, attrs, parent){ var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function txt(parent, x, y, s, cls, anchor){ var t = svg("text", {x:x, y:y, "text-anchor":anchor||"start"}, parent); if (cls) t.setAttribute("class", cls); t.textContent = s; return t; }
+  function miles(x){ var n = Math.round(x); var s = Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); return (n < 0 ? "−" : "") + s; }
+  function dec(x){ return (Math.round(x*10)/10).toString().replace(".", ","); }
+  function hashStr(s){ var h = 2166136261; for (var i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h,16777619); } return h>>>0; }
+  function rng(seed){ var a = seed>>>0; return function(){ a = (a + 0x6D2B79F5)>>>0; var t = a; t = Math.imul(t ^ (t>>>15), t|1); t ^= t + Math.imul(t ^ (t>>>7), t|61); return ((t ^ (t>>>14))>>>0)/4294967296; }; }
+  function load(key){ try { var t = localStorage.getItem(key); return t ? JSON.parse(t) : null; } catch(e){ return null; } }
+  function save(key, obj){ try { localStorage.setItem(key, JSON.stringify(obj)); } catch(e){} }
+  function flash(id, text, kind){ var m = $(id); m.className = "msg " + (kind||""); m.textContent = text; }
+  function twoStep(wrapId, btnId, question, action){
+    var wrap = $(wrapId);
+    $(btnId).addEventListener("click", function(){
+      var orig = wrap.innerHTML;
+      wrap.innerHTML = "";
+      var q = document.createElement("span"); q.textContent = question; q.style.fontSize = ".92rem";
+      var yes = document.createElement("button"); yes.className = "btn small primary"; yes.type = "button"; yes.textContent = "Sí, continuar";
+      var no = document.createElement("button"); no.className = "btn small"; no.type = "button"; no.textContent = "Cancelar";
+      wrap.appendChild(q); wrap.appendChild(yes); wrap.appendChild(no);
+      function restore(){ wrap.innerHTML = orig; twoStep(wrapId, btnId, question, action); }
+      yes.addEventListener("click", function(){ action(); restore(); });
+      no.addEventListener("click", restore);
+    });
+  }
+  function banner(boxId, html, btnText, onClick){
+    var box = $(boxId);
+    var d = document.createElement("div"); d.className = "banner";
+    var s = document.createElement("span"); s.innerHTML = html; d.appendChild(s);
+    var b = document.createElement("button"); b.className = "btn small"; b.type = "button"; b.textContent = btnText;
+    b.addEventListener("click", onClick); d.appendChild(b); box.appendChild(d);
+  }
+  function empty(box, title, text){
+    var e = document.createElement("div"); e.className = "empty";
+    var p1 = document.createElement("p"); var b = document.createElement("b"); b.textContent = title; p1.appendChild(b);
+    var p2 = document.createElement("p"); p2.textContent = text;
+    e.appendChild(p1); e.appendChild(p2); box.appendChild(e); return e;
+  }
+  return {$:$, svg:svg, txt:txt, miles:miles, dec:dec, hashStr:hashStr, rng:rng, load:load, save:save, flash:flash, twoStep:twoStep, banner:banner, empty:empty};
+})();
+
+/* ===================== JUEGO 2: LA ECONOMÍA DEL BARRIO (multiplicador) ===================== */
+/* Cada grupo es un hogar. Ingreso de cada hogar = gasto promedio + inversión + gasto del Gobierno.
+   Meta: gastar el 80 % del ingreso del mismo mes. Con propensión 0,8 el multiplicador es 5:
+   equilibrio = (inversión + gasto del Gobierno) / 0,2. */
+window.MX = (function(){
+  "use strict";
+  var U = window.LABU, $ = U.$;
+  var KEY = "lab-multiplicador-v1";
+  var MPC = 0.8;
+  var PH = {
+    1: {short:"Año normal", name:"Un año normal", I:400, G:0,
+        news:"Las empresas del barrio invierten 400 por hogar cada mes: arreglan locales, compran neveras y motos para los domicilios. El Gobierno no gasta nada adicional en el barrio."},
+    2: {short:"Pandemia", name:"Llega la pandemia", I:200, G:0,
+        news:"Por la cuarentena cierran muchos negocios y las empresas frenan sus planes: ahora invierten solo 200 por hogar cada mes."},
+    3: {short:"El Gobierno gasta", name:"El Gobierno gasta", I:200, G:200,
+        news:"Las empresas siguen invirtiendo solo 200 por hogar, pero el Gobierno contrata obras y servicios en el barrio por otros 200 por hogar cada mes."}
+  };
+  function eqY(p){ return (PH[p].I + PH[p].G) / (1 - MPC); }
+  function fresh(H){ return {H:H, phase:1, months:[], revealed:false, hint:true, showRank:false}; }
+  var S = U.load(KEY);
+  if (!S || !S.H || !S.months) S = fresh(5);
+  function save(){ U.save(KEY, S); }
+
+  function buildInputs(){
+    var box = $("x-inputs");
+    if (box.getAttribute("data-h") === String(S.H)) return;
+    box.innerHTML = ""; box.setAttribute("data-h", S.H);
+    for (var i=1; i<=S.H; i++){
+      var f = document.createElement("div"); f.className = "field";
+      var l = document.createElement("label"); l.setAttribute("for", "x-c-" + i); l.textContent = "Hogar " + i;
+      var inp = document.createElement("input"); inp.type = "number"; inp.id = "x-c-" + i; inp.min = "0"; inp.max = "10000"; inp.setAttribute("inputmode", "numeric");
+      f.appendChild(l); f.appendChild(inp); box.appendChild(f);
+    }
+  }
+  function closeMonth(c, phase){
+    var avg = c.reduce(function(a,b){return a+b;},0) / c.length;
+    var Y = avg + PH[phase].I + PH[phase].G;
+    return {phase:phase, c:c, avg:avg, Y:Y, meta:MPC*Y};
+  }
+
+  $("x-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var c = [];
+    for (var i=1; i<=S.H; i++){
+      var v = parseInt($("x-c-" + i).value, 10);
+      if (isNaN(v) || v < 0 || v > 10000){ U.flash("x-msg", "Falta el gasto del hogar " + i + ", o no está entre 0 y 10.000.", "err"); $("x-c-" + i).focus(); return; }
+      c.push(v);
+    }
+    var m = closeMonth(c, S.phase);
+    S.months.push(m); save();
+    for (var k=1; k<=S.H; k++) $("x-c-" + k).value = "";
+    U.flash("x-msg", "Mes " + S.months.length + " cerrado: cada hogar recibió " + U.miles(m.Y) + ".", "ok");
+    $("x-c-1").focus();
+    render();
+  });
+  $("x-undo").addEventListener("click", function(){
+    if (!S.months.length){ U.flash("x-msg", "Todavía no hay meses cerrados.", ""); return; }
+    S.months.pop(); save(); U.flash("x-msg", "Se deshizo el último mes.", ""); render();
+  });
+  [1,2,3].forEach(function(n){
+    $("x-ph" + n).addEventListener("click", function(){ S.phase = n; save(); U.flash("x-msg", "Desde el mes " + (S.months.length + 1) + ": " + PH[n].name.toLowerCase() + ".", "ok"); render(); });
+  });
+  $("x-rank-toggle").addEventListener("click", function(){ S.showRank = !S.showRank; save(); render(); });
+  $("x-lock").addEventListener("click", function(){ if (window.LAB) window.LAB.lock(); });
+  U.twoStep("x-new-wrap", "x-new", "Se borran todos los meses.", function(){
+    var H = parseInt($("x-h").value, 10); if (!H || H < 2) H = 2; if (H > 12) H = 12;
+    S = fresh(H); save(); U.flash("x-msg", "Juego nuevo con " + H + " hogares.", "ok"); render();
+  });
+  U.twoStep("x-demo-wrap", "x-demo", "Se reemplaza el juego actual por uno de ejemplo.", function(){
+    var H = 5, r = U.rng(U.hashStr("demo-multiplicador"));
+    S = fresh(H); S.demo = true;
+    var plan = [1,1,1,1,1,2,2,2,2,2,3,3,3,3,3];
+    plan.forEach(function(p, t){
+      var prev = S.months.length ? S.months[S.months.length-1].Y : null;
+      var c = [];
+      for (var i=0;i<H;i++){
+        var v = prev === null ? 800 + r()*1600 : MPC*prev*(0.9 + 0.2*r());
+        c.push(Math.round(v/10)*10);
+      }
+      S.months.push(closeMonth(c, p));
+    });
+    S.phase = 3; save(); U.flash("x-msg", "Juego de ejemplo cargado: 5 hogares y 15 meses.", "ok"); render();
+  });
+
+  function render(){
+    buildInputs();
+    var n = S.months.length, last = n ? S.months[n-1] : null;
+    $("x-month").textContent = n + 1;
+    $("x-h").value = S.H;
+    [1,2,3].forEach(function(k){ $("x-ph" + k).setAttribute("aria-pressed", S.phase === k); });
+
+    var ban = $("x-banner"); ban.innerHTML = "";
+    if (S.demo) U.banner("x-banner", "<b>Datos de ejemplo.</b> Cinco hogares imaginarios jugaron 15 meses: cinco normales, cinco de pandemia y cinco con gasto del Gobierno.", "Terminar ejemplo", function(){ S = fresh(5); save(); render(); });
+
+    var ph = PH[S.phase];
+    var nw = $("x-news"); nw.innerHTML = "";
+    var card = document.createElement("div"); card.className = "newsbig ph" + S.phase;
+    card.innerHTML = '<p class="eyebrow">Mes ' + (n + 1) + '</p><p class="t">' + ph.name + '</p><p>' + ph.news + '</p>' +
+      '<p class="small"><b>Ingreso de cada hogar</b> = gasto promedio de los hogares + ' + ph.I + ' de inversión' + (ph.G ? ' + ' + ph.G + ' del Gobierno' : '') + '.</p>';
+    nw.appendChild(card);
+
+    $("x-k-inc").textContent = last ? U.miles(last.Y) : "–";
+    $("x-k-cons").textContent = last ? U.miles(last.avg) : "–";
+    var h2 = $("x-k-hint2"); h2.innerHTML = "";
+    var hb = document.createElement("button"); hb.className = "btn small"; hb.type = "button";
+    if (S.hint){
+      $("x-k-hint").textContent = last ? U.miles(MPC*last.Y) : "–";
+      var s = document.createElement("span"); s.textContent = "si el ingreso no cambiara ";
+      hb.textContent = "Ocultar"; h2.appendChild(s);
+    } else { $("x-k-hint").textContent = "·"; hb.textContent = "Mostrar"; }
+    hb.addEventListener("click", function(){ S.hint = !S.hint; save(); render(); });
+    h2.appendChild(hb);
+
+    var e2 = $("x-k-eq2"); e2.innerHTML = "";
+    var eb = document.createElement("button"); eb.className = "btn small"; eb.type = "button";
+    if (S.revealed){
+      $("x-k-eq").textContent = U.miles(eqY(S.phase));
+      var es = document.createElement("span"); es.textContent = "de ingreso y " + U.miles(MPC*eqY(S.phase)) + " de gasto ";
+      e2.appendChild(es); eb.textContent = "Ocultar";
+    } else { $("x-k-eq").textContent = "?"; eb.textContent = "Revelar"; }
+    eb.addEventListener("click", function(){ S.revealed = !S.revealed; save(); render(); });
+    e2.appendChild(eb);
+
+    drawChart(); drawTable(); drawRank();
+  }
+
+  function runs(){
+    var out = [];
+    S.months.forEach(function(m, i){
+      if (out.length && out[out.length-1].p === m.phase) out[out.length-1].end = i;
+      else out.push({p:m.phase, start:i, end:i});
+    });
+    return out;
+  }
+
+  function drawChart(){
+    var box = $("x-chart"); box.innerHTML = "";
+    var lg = $("x-legend");
+    lg.innerHTML = '<span style="--c:var(--ink)">Ingreso de cada hogar</span><span style="--c:var(--gold)">Gasto promedio</span>' + (S.revealed ? '<span style="--c:var(--muted)">Equilibrio (punteado)</span>' : '');
+    var n = S.months.length;
+    if (!n){ U.empty(box, "Todavía no hay meses cerrados.", "Escriba el gasto de cada hogar y oprima «Cerrar el mes». Cada mes será un punto."); return; }
+    var W = 680, H = 300, m = {l:58, r:16, t:26, b:42};
+    var maxV = 0;
+    S.months.forEach(function(x){ maxV = Math.max(maxV, x.Y, x.avg); });
+    if (S.revealed) runs().forEach(function(r){ maxV = Math.max(maxV, eqY(r.p)); });
+    maxV = Math.max(2500, Math.ceil(maxV*1.08/500)*500);
+    var stepY = maxV > 5000 ? 1000 : 500;
+    var slots = Math.max(n, 6);
+    var x = function(i){ return m.l + (W - m.l - m.r) * ((i + 0.5) / slots); };
+    var y = function(v){ return m.t + (H - m.t - m.b) * (1 - v/maxV); };
+    var c = U.svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":"Ingreso y gasto promedio por mes"}, box);
+    var slotW = (W - m.l - m.r) / slots;
+    runs().forEach(function(r){
+      var x0 = x(r.start) - slotW/2, x1 = x(r.end) + slotW/2;
+      U.svg("rect", {x:x0, y:m.t, width:x1 - x0, height:H - m.t - m.b, class:"ph" + r.p}, c);
+      U.txt(c, x0 + 4, m.t - 8, PH[r.p].short, "lbl", "start");
+    });
+    for (var g=0; g<=maxV; g+=stepY){ U.svg("line", {x1:m.l, x2:W-m.r, y1:y(g), y2:y(g), class:"grid"}, c); U.txt(c, m.l-8, y(g)+4, U.miles(g), "", "end"); }
+    if (S.revealed){
+      runs().forEach(function(r){
+        var x0 = x(r.start) - slotW/2, x1 = x(r.end) + slotW/2, v = eqY(r.p);
+        U.svg("line", {x1:x0, x2:x1, y1:y(v), y2:y(v), class:"eqline"}, c);
+        U.txt(c, x1 - 4, y(v) - 6, "Eq. " + U.miles(v), "lbl", "end");
+      });
+    }
+    var dI = "", dC = "";
+    S.months.forEach(function(mo, i){ dI += (i ? " L" : "M") + x(i) + " " + y(mo.Y); dC += (i ? " L" : "M") + x(i) + " " + y(mo.avg); });
+    U.svg("path", {d:dC, class:"cons"}, c);
+    U.svg("path", {d:dI, class:"inc"}, c);
+    S.months.forEach(function(mo, i){
+      var a = U.svg("circle", {cx:x(i), cy:y(mo.Y), r:5, class:"dotinc"}, c); var t = U.svg("title", {}, a); t.textContent = "Mes " + (i+1) + ": ingreso " + U.miles(mo.Y);
+      var b = U.svg("circle", {cx:x(i), cy:y(mo.avg), r:4, class:"dotcons"}, c); var t2 = U.svg("title", {}, b); t2.textContent = "Mes " + (i+1) + ": gasto promedio " + U.miles(mo.avg);
+    });
+    var every = n > 12 ? 2 : 1;
+    for (var k=0; k<n; k+=every) U.txt(c, x(k), H - m.b + 18, k + 1, "", "middle");
+    U.txt(c, (m.l + W - m.r)/2, H - 4, "Mes", "", "middle");
+    U.svg("line", {x1:m.l, x2:W-m.r, y1:y(0), y2:y(0), class:"axis"}, c);
+  }
+
+  function drawTable(){
+    var box = $("x-table"); box.innerHTML = "";
+    if (!S.months.length){ var p = document.createElement("p"); p.className = "muted"; p.textContent = "Aparece cuando se cierre el primer mes."; box.appendChild(p); return; }
+    var html = "<table><thead><tr><th>Mes</th><th>Situación</th>";
+    for (var i=1; i<=S.H; i++) html += "<th>Hogar " + i + "</th>";
+    html += "<th>Gasto promedio</th><th>Ingreso</th><th>Meta (80 %)</th></tr></thead><tbody>";
+    S.months.forEach(function(mo, k){
+      html += "<tr><td>" + (k+1) + "</td><td>" + PH[mo.phase].short + "</td>";
+      mo.c.forEach(function(v){ html += "<td>" + U.miles(v) + "</td>"; });
+      html += "<td>" + U.miles(mo.avg) + "</td><td><b>" + U.miles(mo.Y) + "</b></td><td>" + U.miles(mo.meta) + "</td></tr>";
+    });
+    html += "</tbody></table>";
+    box.innerHTML = html;
+  }
+
+  function drawRank(){
+    var box = $("x-rank"); box.innerHTML = "";
+    $("x-rank-toggle").textContent = S.showRank ? "Ocultar resultados" : "Mostrar resultados";
+    if (!S.showRank){ U.empty(box, "Los resultados están ocultos.", "Muéstrelos al final del juego."); return; }
+    if (!S.months.length){ var p = document.createElement("p"); p.className = "muted"; p.textContent = "Todavía no hay meses cerrados."; box.appendChild(p); return; }
+    var tot = [];
+    for (var i=0; i<S.H; i++) tot.push({h:i+1, d:0});
+    S.months.forEach(function(mo){ mo.c.forEach(function(v, i){ if (tot[i]) tot[i].d += Math.abs(v - mo.meta); }); });
+    tot.sort(function(a,b){ return a.d - b.d || a.h - b.h; });
+    var html = "<table><thead><tr><th>Puesto</th><th>Hogar</th><th>Distancia total a la meta</th></tr></thead><tbody>";
+    tot.forEach(function(t, k){ html += "<tr" + (k === 0 ? ' style="font-weight:700"' : "") + "><td>" + (k+1) + "</td><td>Hogar " + t.h + "</td><td>" + U.miles(t.d) + "</td></tr>"; });
+    html += '</tbody></table><p class="muted small" style="margin-top:8px">La distancia suma, mes a mes, la diferencia entre lo que gastó cada hogar y el 80 % de su ingreso. Gana la más pequeña.</p>';
+    box.innerHTML = html;
+  }
+
+  return {render:render};
+})();
+
+/* ===================== JUEGOS NUEVOS: utilidades de páginas y gráficos ===================== */
+window.LABG = (function(){
+  "use strict";
+  var U = window.LABU, $ = U.$;
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  /* Página de reglas a partir de una descripción */
+  function rules(secId, g){
+    var h = '<div class="hero">' +
+      '<p class="eyebrow">' + g.eyebrow + '</p><h1>' + g.title + '</h1><p class="lead">' + g.lead + '</p>' +
+      (g.story ? '<div class="ex">' + g.story + '</div>' : '') +
+      '<div class="rules">' + g.rules.map(function(r, i){ return '<div class="rule' + (i % 2 ? ' apple' : '') + '"><p class="eyebrow">' + r[0] + '</p><p>' + r[1] + '</p></div>'; }).join("") + '</div>' +
+      (g.extra || '') +
+      '<div class="choose">' + g.links.map(function(l){ return '<a class="choice" href="' + l[0] + '"><p class="eyebrow">' + l[1] + '</p><h2>' + l[2] + '</h2><p>' + l[3] + '</p></a>'; }).join("") + '</div>' +
+      (g.questions ? '<details class="card"><summary><b>Preguntas para la plenaria</b></summary><ol class="qs">' + g.questions.map(function(q){ return '<li>' + q + '</li>'; }).join("") + '</ol></details>' : '') +
+      '<div class="source"><p class="eyebrow">Fuentes originales</p>' + g.sources.map(function(s){ return '<p>' + s + '</p>'; }).join("") + '</div>' +
+      '</div>';
+    $(secId).innerHTML = h;
+  }
+  function shell(secId, side, board){
+    $(secId).innerHTML = '<div class="prof"><aside class="side">' + side + '</aside><div class="board">' + board + '</div></div>';
+  }
+  function seg(id, labels, current){
+    return '<div class="seg" role="group" id="' + id + '">' + labels.map(function(l, i){ return '<button type="button" data-v="' + (i+1) + '" aria-pressed="' + (current === i+1) + '">' + l + '</button>'; }).join("") + '</div>';
+  }
+  function bindSeg(id, fn){
+    $(id).addEventListener("click", function(e){ var b = e.target.closest("button[data-v]"); if (b) fn(parseInt(b.getAttribute("data-v"), 10)); });
+  }
+  function setSeg(id, v){ Array.prototype.forEach.call($(id).querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", parseInt(b.getAttribute("data-v"),10) === v); }); }
+  function config(prefix, extra){
+    return '<details><summary>Configurar el juego</summary><div style="display:grid;gap:12px">' + (extra || '') +
+      '<div class="confirm" id="' + prefix + '-clear-wrap"><button class="btn" type="button" id="' + prefix + '-clear">Borrar los resultados</button></div>' +
+      '<div class="confirm" id="' + prefix + '-demo-wrap"><button class="btn ghost" type="button" id="' + prefix + '-demo">Ver con datos de ejemplo</button></div>' +
+      '<div class="confirm"><button class="btn ghost" type="button" id="' + prefix + '-lock">Cerrar modo profesor</button></div>' +
+      '<p class="muted small">Los datos se guardan solo en este navegador.</p></div></details>';
+  }
+  function plenaria(qs){ return '<details><summary>Preguntas para la plenaria</summary><ol class="qs">' + qs.map(function(q){ return '<li>' + q + '</li>'; }).join("") + '</ol></details>'; }
+  function tile(id, label, sub){ return '<div class="tile"><p class="eyebrow">' + label + '</p><p class="big num" id="' + id + '">–</p><p class="muted small" id="' + id + '-s">' + (sub || '') + '</p></div>'; }
+  function revealTile(id, label){ return '<div class="tile eq"><p class="eyebrow">' + label + '</p><p class="big" id="' + id + '" style="font-size:1.6rem">?</p><p class="small" id="' + id + '-b"></p></div>'; }
+  function revealBtn(id, revealed, fn){
+    var box = $(id + "-b"); box.innerHTML = "";
+    var b = document.createElement("button"); b.type = "button"; b.className = "btn small"; b.textContent = revealed ? "Ocultar" : "Revelar";
+    b.addEventListener("click", fn); box.appendChild(b);
+  }
+  function nums(text){ return (String(text).match(/-?\d+(?:[.,]\d+)?/g) || []).map(function(x){ return parseFloat(x.replace(",", ".")); }); }
+  function mean(a){ return a.length ? a.reduce(function(s, x){ return s + x; }, 0) / a.length : null; }
+  function banner(boxId, on, text, reset){ var b = $(boxId); b.innerHTML = ""; if (on) U.banner(boxId, text, "Terminar ejemplo", reset); }
+
+  /* Gráfico de líneas: xs = etiquetas; series = [{vals, cls, dots}] ; opts: ymin, ymax, step, hl:[{y, label}], vl:{x, label}, ylab, xlab */
+  function lines(box, xs, series, o){
+    box.innerHTML = "";
+    var W = 680, H = 290, m = {l:48, r:18, t:22, b:40};
+    var n = xs.length, ymin = o.ymin || 0, ymax = o.ymax;
+    var x = function(i){ return m.l + (W - m.l - m.r) * ((i + 0.5) / Math.max(n, 1)); };
+    var y = function(v){ return m.t + (H - m.t - m.b) * (1 - (v - ymin) / (ymax - ymin)); };
+    var c = U.svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":o.aria || "Gráfico"}, box);
+    for (var g = ymin; g <= ymax + 1e-9; g += o.step){ U.svg("line", {x1:m.l, x2:W-m.r, y1:y(g), y2:y(g), class:"grid"}, c); U.txt(c, m.l - 8, y(g) + 4, (o.fmt ? o.fmt(g) : g), "", "end"); }
+    xs.forEach(function(l, i){ U.txt(c, x(i), H - m.b + 18, l, "", "middle"); });
+    if (o.xlab) U.txt(c, (m.l + W - m.r) / 2, H - 4, o.xlab, "", "middle");
+    if (o.vl){ var vx = x(o.vl.x) - (W - m.l - m.r) / Math.max(n, 1) / 2; U.svg("line", {x1:vx, x2:vx, y1:m.t, y2:H-m.b, class:"sep"}, c); U.txt(c, vx + 4, m.t + 12, o.vl.label, "lbl", "start"); }
+    (o.hl || []).forEach(function(h){ U.svg("line", {x1:m.l, x2:W-m.r, y1:y(h.y), y2:y(h.y), class:"eqline"}, c); U.txt(c, W - m.r - 4, y(h.y) - 6, h.label, "lbl", "end"); });
+    series.forEach(function(s){
+      var d = "";
+      s.vals.forEach(function(v, i){ if (v === null || v === undefined) return; d += (d ? " L" : "M") + x(i) + " " + y(v); });
+      if (d) U.svg("path", {d:d, class:"ln " + s.cls}, c);
+      if (s.dots !== false) s.vals.forEach(function(v, i){ if (v === null || v === undefined) return; var ci = U.svg("circle", {cx:x(i), cy:y(v), r:s.r || 5, class:"dt " + s.cls}, c); var t = U.svg("title", {}, ci); t.textContent = xs[i] + ": " + U.dec(v); });
+    });
+    U.svg("line", {x1:m.l, x2:W-m.r, y1:y(ymin), y2:y(ymin), class:"axis"}, c);
+    return c;
+  }
+  /* Barras agrupadas: cats = etiquetas; series = [{vals, cls}] */
+  function bars(box, cats, series, o){
+    box.innerHTML = "";
+    var W = 680, H = 270, m = {l:44, r:14, t:18, b:40};
+    var ymax = o.ymax || Math.max(2, Math.ceil(1.35 * Math.max.apply(null, series.map(function(s){ return Math.max.apply(null, s.vals.concat([0])); }))));
+    var y = function(v){ return m.t + (H - m.t - m.b) * (1 - v / ymax); };
+    var c = U.svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":o.aria || "Gráfico de barras"}, box);
+    var step = o.step || Math.max(1, Math.ceil(ymax / 5));
+    for (var g = 0; g <= ymax; g += step){ U.svg("line", {x1:m.l, x2:W-m.r, y1:y(g), y2:y(g), class:"grid"}, c); U.txt(c, m.l - 8, y(g) + 4, g, "", "end"); }
+    var cw = (W - m.l - m.r) / cats.length, bw = cw * 0.8 / series.length;
+    cats.forEach(function(l, i){
+      series.forEach(function(s, k){
+        var v = s.vals[i] || 0, x0 = m.l + cw * i + cw * 0.1 + bw * k;
+        var r = U.svg("rect", {x:x0, y:y(v), width:Math.max(1, bw - 2), height:y(0) - y(v), class:"br " + s.cls}, c);
+        var t = U.svg("title", {}, r); t.textContent = l + ": " + v;
+      });
+      U.txt(c, m.l + cw * i + cw / 2, H - m.b + 18, l, "", "middle");
+    });
+    if (o.xlab) U.txt(c, (m.l + W - m.r) / 2, H - 4, o.xlab, "", "middle");
+    if (o.vl !== undefined){ var vx = m.l + (W - m.l - m.r) * o.vl.v / o.vl.max; U.svg("line", {x1:vx, x2:vx, y1:m.t, y2:H-m.b, class:"eqline"}, c); U.txt(c, vx + 4, m.t + 12, o.vl.label, "lbl", "start"); }
+    if (o.vl2 !== undefined){ var vx2 = m.l + (W - m.l - m.r) * o.vl2.v / o.vl2.max; U.svg("line", {x1:vx2, x2:vx2, y1:m.t, y2:H-m.b, class:"mean"}, c); U.txt(c, vx2 + 4, m.t + 28, o.vl2.label, "lbl", "start"); }
+    U.svg("line", {x1:m.l, x2:W-m.r, y1:y(0), y2:y(0), class:"axis"}, c);
+  }
+  function lockBind(prefix){ $(prefix + "-lock").addEventListener("click", function(){ if (window.LAB) window.LAB.lock(); }); }
+  return {esc:esc, rules:rules, shell:shell, seg:seg, bindSeg:bindSeg, setSeg:setSeg, config:config, plenaria:plenaria, tile:tile, revealTile:revealTile, revealBtn:revealBtn, nums:nums, mean:mean, banner:banner, lines:lines, bars:bars, lockBind:lockBind};
+})();
+
+/* ===================== ¿INVERTIMOS? (versión en grupo, con umbral) ===================== */
+window.MI = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$;
+  var KEY = "lab-inversion-v2", KEY_EST = "lab-inversion-est-v2";
+  var R = {
+    1: {title:"Un mes cualquiera", news:"No hay noticias especiales en el barrio.", L:0},
+    2: {title:"Malas noticias", news:"El Banco de la República subió la tasa de interés y en los noticieros dicen que la economía se está frenando. Los pagos son los mismos de la ronda 1.", L:0},
+    3: {title:"Buenas noticias", news:"Se acerca diciembre y en el barrio hay optimismo: en la cuadra de al lado varios negocios invirtieron y les fue muy bien. Los pagos son los mismos de la ronda 1.", L:0},
+    4: {title:"Una garantía del Gobierno", news:"El Gobierno ofrece una garantía: si usted invierte y la cuadra no alcanza a arreglarse, le devuelve 3 de sus 5 millones.", L:3}
+  };
+  function need(n){ return Math.ceil(2 * n / 3); }
+  function gain(round, inv, ok){ return inv ? (ok ? 10 : R[round].L) : 5; }
+  function payText(round, n){
+    var L = R[round].L, k = need(n);
+    return '<div class="tablewrap"><table class="pay"><thead><tr><th>Lo que usted gana</th><th>Invierten ' + k + ' o más de los ' + n + '</th><th>Invierten menos de ' + k + '</th></tr></thead><tbody>' +
+      '<tr><th>Usted invierte</th><td><b>10</b></td><td' + (L ? ' class="changed"' : '') + '><b>' + L + '</b></td></tr>' +
+      '<tr><th>Usted no invierte</th><td><b>5</b></td><td><b>5</b></td></tr></tbody></table></div>' +
+      '<p class="muted small">En millones de pesos. Cada negocio empieza con 5 millones. Si la cuadra se arregla, también gana quien no invirtió: sigue con sus 5.</p>';
+  }
+  G.rules("v-inv", {
+    eyebrow:"Juego de coordinación · inversión y expectativas", title:"¿Invertimos?",
+    lead:"Usted tiene un negocio en una cuadra de un barrio de Medellín. Cada negocio tiene 5 millones de pesos ahorrados y puede invertirlos en arreglar la cuadra: luces, fachadas y andenes. La cuadra solo cambia si invierten al menos dos de cada tres negocios.",
+    rules:[["La cuadra se arregla","Si invierten al menos dos tercios de los negocios, la cuadra se llena de clientes y cada negocio que invirtió termina con <b>10 millones</b>."],
+      ["La cuadra no se arregla","Si invierten menos, quien invirtió pierde su plata y queda con <b>0</b>."],
+      ["Quien no invierte","Conserva sus <b>5 millones</b> pase lo que pase."],
+      ["Cómo se juega","En grupos de 6 a 8 (cada grupo es una cuadra), o con el salón entero. Cada uno decide en el celular sin hablar y todos muestran su decisión al mismo tiempo cuando el profesor diga «¡ya!». Con grupos de 2 es el juego original en parejas."]],
+    links:[["#inversion-estudiante","En el celular","Soy estudiante","Elija la ronda y el tamaño de su cuadra, lea la noticia y decida."],["#inversion-profesor","En el computador del salón","Soy el profesor","Proyecte la noticia de cada ronda y registre cuántos invirtieron en cada cuadra."]],
+    questions:["En las rondas 1, 2 y 3 los pagos fueron los mismos. Si las decisiones cambiaron, ¿qué las hizo cambiar?","¿Por qué es más difícil coordinarse en una cuadra de ocho negocios que en una pareja?","¿Qué cambió con la garantía del Gobierno? ¿Qué más podría hacer el Estado para que la inversión no dependa tanto del ánimo?","¿Se parece esto a lo que pasa con la inversión en Colombia cuando suben las tasas de interés o crece la incertidumbre?"],
+    sources:["CORE Econ, <i>Experiencing Economics</i>, experimento 3, «Juego de coordinación: la inversión». De ahí vienen los pagos de 10, 5 y 0.",
+      "Van Huyck, John B., Raymond C. Battalio y Richard O. Beil (1990). «Tacit Coordination Games, Strategic Uncertainty, and Coordination Failure». <i>American Economic Review</i> 80 (1): 234–248. Inspira la versión en grupo.",
+      "Keynes, John Maynard (1936). <i>The General Theory of Employment, Interest and Money</i>, cap. 12, sobre los «espíritus animales».",
+      "Adaptación propia: la cuadra de Medellín, el umbral de dos tercios, las noticias de cada ronda y la garantía."]
+  });
+  /* estudiante */
+  var E = {round:1, n:6, choice:null, shown:false, k:null};
+  var hist = U.load(KEY_EST) || {};
+  function renderEst(){
+    var box = $("v-inv-est");
+    box.innerHTML = '<div class="student"><div class="card"><div><p class="eyebrow">Paso 1</p><h2 style="font-size:1.5rem">Ronda y tamaño de su cuadra</h2></div>' +
+      G.seg("ie-r", ["Ronda 1","Ronda 2","Ronda 3","Ronda 4"], E.round) +
+      '<div class="field"><label for="ie-n">¿Cuántos negocios hay en su cuadra (contándolo a usted)?</label><input type="number" id="ie-n" inputmode="numeric" min="2" max="40" value="' + E.n + '"></div></div><div id="ie-out" style="display:grid;gap:16px"></div></div>';
+    G.bindSeg("ie-r", function(v){ E = {round:v, n:E.n, choice:null, shown:false, k:null}; renderEst(); });
+    $("ie-n").addEventListener("change", function(){ var v = parseInt(this.value, 10); if (v >= 2 && v <= 40){ E.n = v; E.k = null; renderEst(); } });
+    var out = $("ie-out");
+    var st = document.createElement("div"); st.className = "story";
+    st.innerHTML = '<p class="eyebrow">Ronda ' + E.round + ' · ' + R[E.round].title + '</p><p class="news">' + R[E.round].news + '</p>' + payText(E.round, E.n);
+    out.appendChild(st);
+    var step = document.createElement("div"); step.className = "card";
+    if (E.choice === null){
+      step.innerHTML = '<div><p class="eyebrow">Paso 2</p><h2 style="font-size:1.4rem">¿Invierte?</h2><p class="muted small">Decida sin hablar con nadie. No se puede cambiar.</p></div>';
+      var bc = document.createElement("div"); bc.className = "bigchoice";
+      [["si","Invierto",true],["no","No invierto",false]].forEach(function(o){
+        var b = document.createElement("button"); b.type = "button"; b.className = "btn " + o[0]; b.textContent = o[1];
+        b.addEventListener("click", function(){ E.choice = o[2]; renderEst(); }); bc.appendChild(b);
+      });
+      step.appendChild(bc);
+    } else if (!E.shown){
+      step.innerHTML = '<div class="cover"><p><b>Su decisión quedó guardada.</b></p><p>Cuando el profesor diga «¡ya!», muestre la pantalla a su cuadra al mismo tiempo que los demás.</p></div>';
+      var sb = document.createElement("button"); sb.type = "button"; sb.className = "btn primary"; sb.textContent = "Mostrar mi decisión";
+      sb.addEventListener("click", function(){ E.shown = true; renderEst(); }); step.appendChild(sb);
+    } else {
+      var d = document.createElement("div"); d.className = "decision " + (E.choice ? "si" : "no"); d.textContent = E.choice ? "INVIERTO" : "NO INVIERTO"; step.appendChild(d);
+      var f = document.createElement("div"); f.className = "field";
+      f.innerHTML = '<label for="ie-k">¿Cuántos invirtieron en su cuadra, contándolo a usted?</label><input type="number" id="ie-k" inputmode="numeric" min="0" max="' + E.n + '"' + (E.k !== null ? ' value="' + E.k + '"' : '') + '>';
+      step.appendChild(f);
+      var res = document.createElement("p"); res.id = "ie-res"; step.appendChild(res);
+      function calc(){
+        var k = parseInt($("ie-k").value, 10);
+        if (isNaN(k) || k < 0 || k > E.n || (E.choice && k < 1) || (!E.choice && k > E.n - 1)){ res.textContent = "Escriba un número entre " + (E.choice ? 1 : 0) + " y " + (E.choice ? E.n : E.n - 1) + "."; return; }
+        E.k = k; var ok = k >= need(E.n), g = gain(E.round, E.choice, ok);
+        hist[E.round] = g; U.save(KEY_EST, hist);
+        var total = 0; Object.keys(hist).forEach(function(r){ total += hist[r]; });
+        res.innerHTML = (ok ? "La cuadra se arregló (" + k + " de " + E.n + " invirtieron). " : "La cuadra no se arregló: hacían falta " + need(E.n) + ". ") + "Usted termina con <b>" + g + " millones</b>. Total acumulado: " + total + " millones.";
+      }
+      $("ie-k").addEventListener("input", calc); if (E.k !== null) calc();
+    }
+    out.appendChild(step);
+  }
+  /* profesor */
+  function fresh(){ return {round:1, n:6, res:{}, revealed:false}; }
+  var S = U.load(KEY); if (!S || !S.res) S = fresh();
+  function save(){ U.save(KEY, S); }
+  G.shell("v-inv-prof",
+    '<div class="card"><p class="eyebrow">Ronda que se está jugando</p>' + G.seg("ip-r", ["Ronda 1","Ronda 2","Ronda 3","Ronda 4"], 1) +
+      '<div class="field"><label for="ip-n">Negocios por cuadra (tamaño de cada grupo)</label><input type="number" id="ip-n" inputmode="numeric" min="2" max="40" value="6"></div>' +
+      '<p class="muted small">Con grupos de 2 es el juego original en parejas. Pida que cambien de grupo en cada ronda.</p></div>' +
+    '<form class="card" id="ip-form" autocomplete="off"><div><p class="eyebrow">Resultado de la ronda</p><p class="muted small">Escriba cuántos invirtieron en cada cuadra, separados por espacios. Si una cuadra tiene otro tamaño, escríbalo así: 3/5.</p></div>' +
+      '<div class="field"><label for="ip-k">Inversionistas por cuadra</label><textarea id="ip-k" rows="3" placeholder="Ejemplo: 5 2 6 4 3/5"></textarea></div>' +
+      '<button class="btn primary" type="submit">Guardar la ronda</button><p class="msg" id="ip-msg" role="status"></p></form>' +
+    G.plenaria(["En las rondas 1, 2 y 3 los pagos fueron iguales. Si las decisiones cambiaron, ¿qué las hizo cambiar?","¿Por qué no invertir puede ser razonable aunque invertir todos sea mejor para todos?","¿Qué cambió con la garantía del Gobierno?","¿Se parece esto a la inversión en Colombia cuando suben las tasas o crece la incertidumbre?"]) +
+    G.config("ip"),
+    '<div id="ip-banner"></div><div id="ip-news"></div><div class="tiles">' + G.tile("ip-t1","Cuadras","en esta ronda") + G.tile("ip-t2","Cuadras arregladas","") + G.tile("ip-t3","Personas que invirtieron","") + G.revealTile("ip-eq","Lo que dice la teoría") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Ronda por ronda</h3><div class="legend"><span style="--c:var(--leaf)">Personas que invirtieron</span><span style="--c:var(--r3)">Cuadras arregladas</span></div></div><div id="ip-chart"></div></div>' +
+    '<div class="panel" id="ip-theory" hidden><h3>Lo que dice la teoría</h3><div class="theory"><p>Hay dos resultados en los que a nadie le conviene cambiar por su cuenta: que <b>inviertan todos</b> (10 para cada uno) y que <b>no invierta nadie</b> (5 para cada uno). El primero es mejor para todos, pero invertir es arriesgado: si no se alcanza el umbral, se pierde la plata.</p><p>Por eso cada uno decide según lo que espera de los demás, y con más gente es más fácil que unos pocos con dudas arrastren a toda la cuadra al mal resultado. Van Huyck, Battalio y Beil (1990) encontraron que en grupos grandes la coordinación tiende a fallar. Keynes llamó «espíritus animales» a ese ánimo del que depende la inversión.</p><p>En la ronda 4 la garantía no cambia lo que se gana cuando la cuadra se arregla, pero hace menos costoso equivocarse.</p></div></div>');
+  G.bindSeg("ip-r", function(v){ S.round = v; save(); render(); });
+  $("ip-n").addEventListener("change", function(){ var v = parseInt(this.value, 10); if (v >= 2 && v <= 40){ S.n = v; save(); render(); } });
+  $("ip-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var parts = $("ip-k").value.trim().split(/[\s,;]+/).filter(Boolean), out = [];
+    for (var i = 0; i < parts.length; i++){
+      var m = parts[i].match(/^(\d+)(?:\/(\d+))?$/);
+      if (!m){ U.flash("ip-msg", "No entendí «" + parts[i] + "». Use números o la forma 3/5.", "err"); return; }
+      var k = parseInt(m[1], 10), n = m[2] ? parseInt(m[2], 10) : S.n;
+      if (n < 2 || k > n){ U.flash("ip-msg", "En «" + parts[i] + "» hay más inversionistas que negocios.", "err"); return; }
+      out.push([k, n]);
+    }
+    if (!out.length){ U.flash("ip-msg", "Escriba al menos una cuadra.", "err"); return; }
+    S.res[S.round] = out; save(); U.flash("ip-msg", "Ronda " + S.round + " guardada: " + out.length + " cuadras.", "ok"); render();
+  });
+  G.lockBind("ip");
+  U.twoStep("ip-clear-wrap", "ip-clear", "Se borran todas las rondas.", function(){ S = fresh(); save(); render(); });
+  U.twoStep("ip-demo-wrap", "ip-demo", "Se reemplazan los resultados por unos de ejemplo.", function(){
+    S = fresh(); S.demo = true;
+    S.res = {1:[[5,6],[3,6],[6,6],[2,6]], 2:[[2,6],[1,6],[4,6],[3,6]], 3:[[6,6],[5,6],[4,6],[5,6]], 4:[[6,6],[6,6],[5,6],[4,6]]}; S.round = 4; save(); render();
+  });
+  function stats(r){
+    var x = S.res[r]; if (!x || !x.length) return null;
+    var people = 0, inv = 0, ok = 0, gsum = 0;
+    x.forEach(function(g){ var k = g[0], n = g[1], good = k >= need(n); people += n; inv += k; if (good) ok++; gsum += k * gain(r, true, good) + (n - k) * 5; });
+    return {groups:x.length, ok:ok, people:people, inv:inv, gain:gsum / people};
+  }
+  function render(){
+    G.setSeg("ip-r", S.round); $("ip-n").value = S.n;
+    var x = S.res[S.round]; $("ip-k").value = x ? x.map(function(g){ return g[1] === S.n ? g[0] : g[0] + "/" + g[1]; }).join(" ") : "";
+    G.banner("ip-banner", S.demo, "<b>Datos de ejemplo.</b> Resultados inventados para mostrar el tablero.", function(){ S = fresh(); save(); render(); });
+    $("ip-news").innerHTML = '<div class="newsbig"><p class="eyebrow">Ronda ' + S.round + '</p><p class="t">' + R[S.round].title + '</p><p>' + R[S.round].news + '</p>' + payText(S.round, S.n) + '</div>';
+    var s = stats(S.round);
+    $("ip-t1").textContent = s ? s.groups : "–";
+    $("ip-t2").textContent = s ? Math.round(100 * s.ok / s.groups) + " %" : "–"; $("ip-t2-s").textContent = s ? s.ok + " de " + s.groups : "";
+    $("ip-t3").textContent = s ? Math.round(100 * s.inv / s.people) + " %" : "–"; $("ip-t3-s").textContent = s ? s.inv + " de " + s.people + " · ganancia media " + U.dec(s.gain) + " millones" : "";
+    $("ip-eq").textContent = S.revealed ? "Dos equilibrios" : "?";
+    G.revealBtn("ip-eq", S.revealed, function(){ S.revealed = !S.revealed; save(); render(); });
+    $("ip-theory").hidden = !S.revealed;
+    var a = [], b = [];
+    for (var r = 1; r <= 4; r++){ var t = stats(r); a.push(t ? 100 * t.inv / t.people : null); b.push(t ? 100 * t.ok / t.groups : null); }
+    G.lines($("ip-chart"), ["Ronda 1","Ronda 2","Ronda 3","Ronda 4"], [{vals:a, cls:"s-b"}, {vals:b, cls:"s-c"}], {ymin:0, ymax:100, step:20, fmt:function(v){ return v + " %"; }, aria:"Inversión por ronda"});
+  }
+  return {render:render, renderEst:renderEst};
+})();
+
+/* ===================== EL REINADO DE KEYNES (concurso de belleza) ===================== */
+window.MB = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$, KEY = "lab-belleza-v1";
+  G.rules("v-bz", {
+    eyebrow:"Expectativas · Keynes y los mercados financieros", title:"El reinado de Keynes",
+    lead:"Cada persona escribe en secreto un número entero entre 0 y 100. Gana quien quede más cerca de los dos tercios del promedio de todos los números. Se juegan dos o tres rondas.",
+    story:'<p class="eyebrow">De dónde sale</p><p>En 1936 Keynes comparó invertir en la bolsa con un concurso de belleza de los periódicos de su época: ganaba quien escogiera las caras que escogería la mayoría. Imagínelo en noviembre, durante el Concurso Nacional de Belleza en Cartagena: para ganar no sirve elegir la candidata que a usted le parece mejor, sino la que usted cree que elegirán los demás, sabiendo que ellos también piensan en lo que eligen los demás.</p>',
+    rules:[["Su número","Un entero entre 0 y 100, escrito en un papel sin mostrarlo."],["La meta","Dos tercios del promedio de todos los números del salón."],["Quién gana","Quien quede más cerca de la meta. Si hay empate, comparten el premio."],["Rondas","Después de cada ronda se proyecta el resultado y se vuelve a jugar."]],
+    links:[["#belleza-profesor","En el computador del salón","Soy el profesor","Escriba los números de todos y proyecte el resultado."]],
+    questions:["¿Qué número escogió en la primera ronda y por qué?","¿Cuántos «pasos» pensó sobre lo que pensarían los demás?","¿Por qué bajan los números de una ronda a otra?","Keynes decía que la bolsa funciona así. ¿Pasa algo parecido con el precio del dólar o con la inflación que espera la gente?"],
+    sources:["Keynes, John Maynard (1936). <i>The General Theory of Employment, Interest and Money</i>. Londres: Macmillan, cap. 12.","Nagel, Rosemarie (1995). «Unraveling in Guessing Games: An Experimental Study». <i>American Economic Review</i> 85 (5): 1313–1326. Es el diseño experimental del juego.","Adaptación propia: la referencia al reinado de Cartagena y las preguntas sobre el dólar y la inflación."]
+  });
+  function fresh(){ return {round:1, r:{}, revealed:false}; }
+  var S = U.load(KEY); if (!S || !S.r) S = fresh();
+  function save(){ U.save(KEY, S); }
+  G.shell("v-bz-prof",
+    '<div class="card"><p class="eyebrow">Ronda</p>' + G.seg("bz-r", ["Ronda 1","Ronda 2","Ronda 3"], 1) + '</div>' +
+    '<form class="card" id="bz-form" autocomplete="off"><div><p class="eyebrow">Números del salón</p><p class="muted small">Escriba todos los números, separados por espacios o comas.</p></div>' +
+      '<div class="field"><label for="bz-in">Números entre 0 y 100</label><textarea id="bz-in" rows="5" placeholder="Ejemplo: 50 33 22 67 15 0 40"></textarea></div>' +
+      '<button class="btn primary" type="submit">Calcular</button><p class="msg" id="bz-msg" role="status"></p></form>' +
+    G.plenaria(["¿Qué número escogió en la primera ronda y por qué?","¿Por qué bajan los números de una ronda a otra?","¿Se parece esto al precio del dólar o a la inflación que espera la gente?"]) + G.config("bz"),
+    '<div id="bz-banner"></div><div class="tiles">' + G.tile("bz-t1","Participantes","") + G.tile("bz-t2","Promedio","") + G.tile("bz-t3","Meta: 2/3 del promedio","") + G.tile("bz-t4","Número ganador","") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Los números del salón</h3><div class="legend"><span style="--c:var(--r3)">Cuántos escogieron cada rango</span></div></div><div id="bz-chart"></div></div>' +
+    '<div class="panel"><h3>Ronda por ronda</h3><div class="tablewrap" id="bz-table"></div></div>' +
+    '<div class="panel"><div class="row spread"><h3>Lo que dice la teoría</h3><button class="btn small" type="button" id="bz-rev">Revelar</button></div><div class="theory" id="bz-theory" hidden><p>Si nadie pensara, el promedio rondaría 50 y la meta sería 33. Quien piensa un paso más escoge 33; quien piensa dos pasos, 22; tres pasos, 15. Si todos razonan hasta el final, el único resultado estable es que todos escojan <b>0</b>.</p><p>Nagel (1995) encontró que en la primera ronda muchos se agrupan cerca de 33 y de 22, y que los números bajan ronda tras ronda hacia cero. Ganar exige adivinar cuántos pasos piensan los demás. Para Keynes, eso mismo hacen los inversionistas en la bolsa.</p></div></div>');
+  G.bindSeg("bz-r", function(v){ S.round = v; save(); render(); });
+  $("bz-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = G.nums($("bz-in").value);
+    if (!v.length){ U.flash("bz-msg", "Escriba al menos un número.", "err"); return; }
+    if (v.some(function(x){ return x < 0 || x > 100 || Math.round(x) !== x; })){ U.flash("bz-msg", "Todos deben ser enteros entre 0 y 100.", "err"); return; }
+    S.r[S.round] = v; save(); U.flash("bz-msg", "Ronda " + S.round + ": " + v.length + " números.", "ok"); render();
+  });
+  $("bz-rev").addEventListener("click", function(){ S.revealed = !S.revealed; save(); render(); });
+  G.lockBind("bz");
+  U.twoStep("bz-clear-wrap", "bz-clear", "Se borran todas las rondas.", function(){ S = fresh(); save(); render(); });
+  U.twoStep("bz-demo-wrap", "bz-demo", "Se cargan números de ejemplo.", function(){
+    S = fresh(); S.demo = true;
+    S.r = {1:[50,33,22,67,40,35,30,25,50,10,45,33,22,60,15,28,33,20,1,38,44,30], 2:[22,20,15,25,18,10,14,22,12,30,9,20,15,17,8,22,11,19,5,13], 3:[9,8,5,10,3,6,12,7,2,0,8,5,4,10,6,1]};
+    S.round = 1; save(); render();
+  });
+  function st(v){ var a = G.mean(v), t = a * 2 / 3, best = Infinity; v.forEach(function(x){ best = Math.min(best, Math.abs(x - t)); }); var win = v.filter(function(x){ return Math.abs(x - t) === best; }); return {n:v.length, a:a, t:t, win:win[0], nw:win.length}; }
+  function render(){
+    G.setSeg("bz-r", S.round);
+    G.banner("bz-banner", S.demo, "<b>Datos de ejemplo.</b> Números inventados para mostrar el tablero.", function(){ S = fresh(); save(); render(); });
+    var v = S.r[S.round] || [];
+    $("bz-in").value = v.join(" ");
+    var s = v.length ? st(v) : null;
+    $("bz-t1").textContent = s ? s.n : "–"; $("bz-t2").textContent = s ? U.dec(s.a) : "–"; $("bz-t3").textContent = s ? U.dec(s.t) : "–";
+    $("bz-t4").textContent = s ? s.win : "–"; $("bz-t4-s").textContent = s ? (s.nw > 1 ? s.nw + " personas lo escogieron" : "una persona lo escogió") : "";
+    var bins = []; for (var i = 0; i < 10; i++) bins.push(0);
+    v.forEach(function(x){ bins[Math.min(9, Math.floor(x / 10))]++; });
+    if (v.length) G.bars($("bz-chart"), ["0–9","10–19","20–29","30–39","40–49","50–59","60–69","70–79","80–89","90–100"], [{vals:bins, cls:"f-c"}], {xlab:"Número escogido", vl:{v:s.t, max:100, label:"Meta " + U.dec(s.t)}, vl2:{v:s.a, max:100, label:"Promedio " + U.dec(s.a)}, aria:"Histograma de números"});
+    else { $("bz-chart").innerHTML = ""; U.empty($("bz-chart"), "Todavía no hay números en esta ronda.", "Escríbalos en el formulario y oprima «Calcular»."); }
+    var rows = [1,2,3].filter(function(r){ return S.r[r] && S.r[r].length; }).map(function(r){ var x = st(S.r[r]); return "<tr><td>" + r + "</td><td>" + x.n + "</td><td>" + U.dec(x.a) + "</td><td>" + U.dec(x.t) + "</td><td>" + x.win + "</td></tr>"; }).join("");
+    $("bz-table").innerHTML = rows ? "<table><thead><tr><th>Ronda</th><th>Participantes</th><th>Promedio</th><th>Meta</th><th>Ganador</th></tr></thead><tbody>" + rows + "</tbody></table>" : '<p class="muted">Aparece cuando haya rondas.</p>';
+    $("bz-theory").hidden = !S.revealed; $("bz-rev").textContent = S.revealed ? "Ocultar" : "Revelar";
+  }
+  return {render:render};
+})();
+
+/* ===================== LA PRIMA (dictador y ultimátum) ===================== */
+window.MR = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$, KEY = "lab-reparto-v1";
+  G.rules("v-rp", {
+    eyebrow:"Justicia y negociación · dictador y ultimátum", title:"La prima",
+    lead:"En parejas anónimas, una persona recibe 10.000 pesos de prima y decide cómo repartirlos con otra. Se juega dos veces: primero sin que la otra persona pueda responder, y después con la posibilidad de rechazar.",
+    rules:[["Cómo se arman las parejas","El profesor reparte papeles marcados A y B. Nadie sabe quién es su pareja."],
+      ["Juego 1: el dictador","A escribe cuánto de los 10.000 le da a B (de 0 a 10, en miles). B recibe lo que A decida, sin poder hacer nada."],
+      ["Juego 2: el ultimátum","A escribe una oferta. B la acepta, y cada uno se queda con su parte, o la rechaza, y los dos quedan con 0."],
+      ["El registro","Los papeles pasan por el profesor, que escribe cada oferta y si fue aceptada."]],
+    links:[["#prima-profesor","En el computador del salón","Soy el profesor","Escriba las ofertas y proyecte cómo se repartió la prima."]],
+    questions:["Si el egoísmo fuera lo único que pesa, ¿cuánto deberían haber dado en cada juego?","¿Por qué alguien rechaza una oferta baja si eso lo deja sin nada?","¿Por qué se ofrece más en el ultimátum que en el dictador?","Henrich y sus colegas jugaron el ultimátum en 15 sociedades pequeñas y encontraron ofertas muy distintas. ¿Qué dice eso sobre la idea de un ser humano universalmente egoísta?","¿Se parece la negociación del salario mínimo a un ultimátum?"],
+    sources:["Güth, Werner, Rolf Schmittberger y Bernd Schwarze (1982). «An Experimental Analysis of Ultimatum Bargaining». <i>Journal of Economic Behavior and Organization</i> 3 (4): 367–388.",
+      "Kahneman, Daniel, Jack L. Knetsch y Richard H. Thaler (1986). «Fairness and the Assumptions of Economics». <i>Journal of Business</i> 59 (4): S285–S300.",
+      "Forsythe, Robert, Joel L. Horowitz, N. E. Savin y Martin Sefton (1994). «Fairness in Simple Bargaining Experiments». <i>Games and Economic Behavior</i> 6 (3): 347–369. Compara el dictador con el ultimátum.",
+      "Henrich, Joseph y otros (2001). «In Search of Homo Economicus: Behavioral Experiments in 15 Small-Scale Societies». <i>American Economic Review</i> 91 (2): 73–78.",
+      "Adaptación propia: la prima de diciembre y la pregunta sobre el salario mínimo."]
+  });
+  function fresh(){ return {d:[], u:[], revealed:false}; }
+  var S = U.load(KEY); if (!S || !S.d) S = fresh();
+  function save(){ U.save(KEY, S); }
+  G.shell("v-rp-prof",
+    '<form class="card" id="rp-form" autocomplete="off"><div><p class="eyebrow">Ofertas</p><p class="muted small">En miles de pesos, de 0 a 10, separadas por espacios. En el ultimátum, marque con n las rechazadas: 3n.</p></div>' +
+      '<div class="field"><label for="rp-d">Juego 1, dictador: lo que dio cada A</label><textarea id="rp-d" rows="3" placeholder="Ejemplo: 0 5 2 3 0 5"></textarea></div>' +
+      '<div class="field"><label for="rp-u">Juego 2, ultimátum: ofertas (n = rechazada)</label><textarea id="rp-u" rows="3" placeholder="Ejemplo: 5 4 3n 5 2n 4"></textarea></div>' +
+      '<button class="btn primary" type="submit">Guardar</button><p class="msg" id="rp-msg" role="status"></p></form>' +
+    G.plenaria(["¿Cuánto debieron dar si solo pesara el egoísmo?","¿Por qué alguien rechaza una oferta baja?","¿Por qué se ofrece más en el ultimátum?","¿Se parece la negociación del salario mínimo a un ultimátum?"]) + G.config("rp"),
+    '<div id="rp-banner"></div><div class="tiles">' + G.tile("rp-t1","Oferta promedio, dictador","miles de pesos de 10") + G.tile("rp-t2","Oferta promedio, ultimátum","miles de pesos de 10") + G.tile("rp-t3","Ofertas rechazadas","en el ultimátum") + G.tile("rp-t4","Dieron 0 en el dictador","") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Cuánto se ofreció</h3><div class="legend"><span style="--c:var(--gold)">Dictador</span><span style="--c:var(--r3)">Ultimátum</span></div></div><div id="rp-chart"></div></div>' +
+    '<div class="panel"><h3>¿Qué ofertas se rechazaron?</h3><div class="tablewrap" id="rp-table"></div></div>' +
+    '<div class="panel"><div class="row spread"><h3>Lo que dice la teoría</h3><button class="btn small" type="button" id="rp-rev">Revelar</button></div><div class="theory" id="rp-theory" hidden><p>Si cada persona solo quisiera más plata, en el dictador A daría 0 y en el ultimátum ofrecería lo mínimo, porque B prefiere algo a nada y lo aceptaría.</p><p>Los experimentos muestran otra cosa. En el ultimátum muchas ofertas se acercan a la mitad y las ofertas bajas suelen rechazarse: la gente paga por castigar lo que considera injusto. En el dictador se da menos que en el ultimátum, pero muchos dan algo aunque nadie los obligue. Y lo que se considera justo cambia mucho de una sociedad a otra (Henrich y otros, 2001).</p></div></div>');
+  $("rp-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var d = G.nums($("rp-d").value);
+    var u = ($("rp-u").value.match(/\d+(?:[.,]\d+)?\s*n?/gi) || []).map(function(t){ return {o:parseFloat(t.replace(",", ".")), a:!/n/i.test(t)}; });
+    if (d.concat(u.map(function(x){ return x.o; })).some(function(x){ return x < 0 || x > 10; })){ U.flash("rp-msg", "Las ofertas van de 0 a 10.", "err"); return; }
+    S.d = d; S.u = u; save(); U.flash("rp-msg", "Guardado: " + d.length + " ofertas de dictador y " + u.length + " de ultimátum.", "ok"); render();
+  });
+  $("rp-rev").addEventListener("click", function(){ S.revealed = !S.revealed; save(); render(); });
+  G.lockBind("rp");
+  U.twoStep("rp-clear-wrap", "rp-clear", "Se borran las ofertas.", function(){ S = fresh(); save(); render(); });
+  U.twoStep("rp-demo-wrap", "rp-demo", "Se cargan ofertas de ejemplo.", function(){
+    S = fresh(); S.demo = true; S.d = [0,0,5,3,2,0,5,4,1,3,0,5]; S.u = [5,4,5,3,5,2,4,5,4,3,1,5].map(function(o){ return {o:o, a:o >= 3}; }); S.u[3].a = false; save(); render();
+  });
+  function render(){
+    G.banner("rp-banner", S.demo, "<b>Datos de ejemplo.</b> Ofertas inventadas para mostrar el tablero.", function(){ S = fresh(); save(); render(); });
+    $("rp-d").value = S.d.join(" "); $("rp-u").value = S.u.map(function(x){ return x.o + (x.a ? "" : "n"); }).join(" ");
+    var md = G.mean(S.d), mu = G.mean(S.u.map(function(x){ return x.o; }));
+    $("rp-t1").textContent = md === null ? "–" : U.dec(md); $("rp-t2").textContent = mu === null ? "–" : U.dec(mu);
+    var rej = S.u.filter(function(x){ return !x.a; }).length;
+    $("rp-t3").textContent = S.u.length ? Math.round(100 * rej / S.u.length) + " %" : "–"; $("rp-t3-s").textContent = S.u.length ? rej + " de " + S.u.length : "";
+    var z = S.d.filter(function(x){ return x === 0; }).length;
+    $("rp-t4").textContent = S.d.length ? Math.round(100 * z / S.d.length) + " %" : "–"; $("rp-t4-s").textContent = S.d.length ? z + " de " + S.d.length : "";
+    var cats = [], dv = [], uv = [];
+    for (var k = 0; k <= 10; k++){ cats.push(String(k)); dv.push(S.d.filter(function(x){ return Math.round(x) === k; }).length); uv.push(S.u.filter(function(x){ return Math.round(x.o) === k; }).length); }
+    if (S.d.length || S.u.length) G.bars($("rp-chart"), cats, [{vals:dv, cls:"f-d"}, {vals:uv, cls:"f-c"}], {xlab:"Oferta a B (miles de pesos de 10)", aria:"Ofertas"});
+    else { $("rp-chart").innerHTML = ""; U.empty($("rp-chart"), "Todavía no hay ofertas.", "Escríbalas en el formulario y oprima «Guardar»."); }
+    var rows = "";
+    for (var o = 0; o <= 10; o++){ var g = S.u.filter(function(x){ return Math.round(x.o) === o; }); if (g.length){ var r = g.filter(function(x){ return !x.a; }).length; rows += "<tr><td>" + o + "</td><td>" + g.length + "</td><td>" + r + "</td><td>" + Math.round(100 * r / g.length) + " %</td></tr>"; } }
+    $("rp-table").innerHTML = rows ? "<table><thead><tr><th>Oferta</th><th>Veces</th><th>Rechazadas</th><th>% rechazo</th></tr></thead><tbody>" + rows + "</tbody></table>" : '<p class="muted">Aparece cuando haya ofertas de ultimátum.</p>';
+    $("rp-theory").hidden = !S.revealed; $("rp-rev").textContent = S.revealed ? "Ocultar" : "Revelar";
+  }
+  return {render:render};
+})();
+
+/* ===================== EL FIADO (juego de la confianza) ===================== */
+window.MF = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$, KEY = "lab-fiado-v1";
+  G.rules("v-fi", {
+    eyebrow:"Confianza y reciprocidad", title:"El fiado",
+    lead:"En parejas anónimas. Una vecina tiene 10.000 pesos ahorrados y puede prestarle una parte al dueño de la tienda del barrio. Lo que le preste se triplica en el negocio, y el tendero decide cuánto le devuelve. No hay contrato ni forma de cobrar.",
+    rules:[["La vecina (A)","Recibe 10 (miles de pesos) y escribe cuánto le presta al tendero, de 0 a 10. Se queda con el resto."],
+      ["El negocio","Lo prestado se triplica: si presta 4, el tendero recibe 12."],
+      ["El tendero (B)","Decide cuánto le devuelve a la vecina, desde 0 hasta todo lo que recibió."],
+      ["Ronda 2: la historia del barrio","Antes de jugar otra vez, se proyectan los resultados de la ronda 1. Así se sabe cómo se portaron los tenderos del salón."]],
+    links:[["#fiado-profesor","En el computador del salón","Soy el profesor","Escriba lo que prestó y devolvió cada pareja y proyecte los resultados."]],
+    questions:["Si cada uno solo pensara en su plata, ¿cuánto devolvería el tendero? Y sabiendo eso, ¿cuánto prestaría la vecina?","¿Por qué prestaron algunos, si no había forma de cobrar?","¿Cambió algo en la ronda 2, después de ver la historia del barrio?","Cuando no hay bancos ni contratos que se cumplan, ¿quién llena ese vacío? Piense en el gota a gota.","¿Por qué la confianza puede ser una condición del desarrollo económico?"],
+    sources:["Berg, Joyce, John Dickhaut y Kevin McCabe (1995). «Trust, Reciprocity, and Social History». <i>Games and Economic Behavior</i> 10 (1): 122–142. De ahí vienen el diseño, la multiplicación por tres y la ronda con «historia social».","Adaptación propia: la vecina, la tienda del barrio y las preguntas sobre el crédito informal."]
+  });
+  function fresh(){ return {round:1, r:{}, revealed:false}; }
+  var S = U.load(KEY); if (!S || !S.r) S = fresh();
+  function save(){ U.save(KEY, S); }
+  G.shell("v-fi-prof",
+    '<div class="card"><p class="eyebrow">Ronda</p>' + G.seg("fi-r", ["Ronda 1: anónima","Ronda 2: con historia"], 1) + '</div>' +
+    '<form class="card" id="fi-form" autocomplete="off"><div><p class="eyebrow">Parejas</p><p class="muted small">Una pareja por línea: lo que prestó la vecina y lo que devolvió el tendero, en miles. Ejemplo: 4 6</p></div>' +
+      '<div class="field"><label for="fi-in">Prestado y devuelto</label><textarea id="fi-in" rows="6" placeholder="10 15&#10;4 6&#10;0 0"></textarea></div>' +
+      '<button class="btn primary" type="submit">Guardar la ronda</button><p class="msg" id="fi-msg" role="status"></p></form>' +
+    G.plenaria(["¿Cuánto devolvería un tendero que solo piensa en su plata?","¿Por qué prestaron algunos?","¿Cambió algo con la historia del barrio?","¿Quién llena el vacío cuando no hay bancos ni contratos?"]) + G.config("fi"),
+    '<div id="fi-banner"></div><div class="tiles">' + G.tile("fi-t1","Prestado en promedio","miles de 10") + G.tile("fi-t2","Devuelto en promedio","miles") + G.tile("fi-t3","De lo que recibió, el tendero devolvió","") + G.tile("fi-t4","Vecinas que recuperaron lo prestado","") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Cada punto es una pareja</h3><div class="legend"><span style="--c:var(--r3)">Ronda actual</span></div></div><div id="fi-chart"></div></div>' +
+    '<div class="panel"><h3>Ronda por ronda</h3><div class="tablewrap" id="fi-table"></div></div>' +
+    '<div class="panel"><div class="row spread"><h3>Lo que dice la teoría</h3><button class="btn small" type="button" id="fi-rev">Revelar</button></div><div class="theory" id="fi-theory" hidden><p>Un tendero que solo piensa en su plata no devuelve nada; una vecina que lo sabe no presta nada. Así se pierde el negocio: con confianza, los 10 de la vecina podían convertirse en 30.</p><p>Berg, Dickhaut y McCabe (1995) encontraron que la mayoría presta algo y muchos tenderos devuelven, aunque no todos lo suficiente para que prestar valga la pena. Cuando los participantes conocieron la «historia social» de rondas anteriores, la reciprocidad pesó todavía más.</p></div></div>');
+  G.bindSeg("fi-r", function(v){ S.round = v; save(); render(); });
+  $("fi-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var lines = $("fi-in").value.split(/\n+/).map(function(l){ return l.trim(); }).filter(Boolean), out = [];
+    for (var i = 0; i < lines.length; i++){
+      var v = G.nums(lines[i]);
+      if (v.length !== 2){ U.flash("fi-msg", "La línea «" + lines[i] + "» debe tener dos números.", "err"); return; }
+      if (v[0] < 0 || v[0] > 10){ U.flash("fi-msg", "Lo prestado va de 0 a 10 (línea «" + lines[i] + "»).", "err"); return; }
+      if (v[1] < 0 || v[1] > 3 * v[0]){ U.flash("fi-msg", "El tendero solo puede devolver hasta " + (3 * v[0]) + " (línea «" + lines[i] + "»).", "err"); return; }
+      out.push(v);
+    }
+    if (!out.length){ U.flash("fi-msg", "Escriba al menos una pareja.", "err"); return; }
+    S.r[S.round] = out; save(); U.flash("fi-msg", "Ronda " + S.round + ": " + out.length + " parejas.", "ok"); render();
+  });
+  $("fi-rev").addEventListener("click", function(){ S.revealed = !S.revealed; save(); render(); });
+  G.lockBind("fi");
+  U.twoStep("fi-clear-wrap", "fi-clear", "Se borran las dos rondas.", function(){ S = fresh(); save(); render(); });
+  U.twoStep("fi-demo-wrap", "fi-demo", "Se cargan parejas de ejemplo.", function(){
+    S = fresh(); S.demo = true;
+    S.r = {1:[[10,15],[5,5],[3,0],[10,0],[6,9],[0,0],[8,12],[4,2],[7,10],[2,3]], 2:[[10,18],[6,9],[2,0],[10,12],[8,12],[5,7],[3,4],[10,10],[4,6],[7,10]]}; save(); render();
+  });
+  function st(v){ var x = G.mean(v.map(function(p){ return p[0]; })), y = G.mean(v.map(function(p){ return p[1]; })); var sent = v.filter(function(p){ return p[0] > 0; }); var share = sent.length ? G.mean(sent.map(function(p){ return p[1] / (3 * p[0]); })) : null; var rec = sent.length ? sent.filter(function(p){ return p[1] >= p[0]; }).length / sent.length : null; return {n:v.length, x:x, y:y, share:share, rec:rec, ns:sent.length}; }
+  function render(){
+    G.setSeg("fi-r", S.round);
+    G.banner("fi-banner", S.demo, "<b>Datos de ejemplo.</b> Parejas inventadas para mostrar el tablero.", function(){ S = fresh(); save(); render(); });
+    var v = S.r[S.round] || [];
+    $("fi-in").value = v.map(function(p){ return p[0] + " " + p[1]; }).join("\n");
+    var s = v.length ? st(v) : null;
+    $("fi-t1").textContent = s ? U.dec(s.x) : "–"; $("fi-t2").textContent = s ? U.dec(s.y) : "–";
+    $("fi-t3").textContent = s && s.share !== null ? Math.round(100 * s.share) + " %" : "–";
+    $("fi-t4").textContent = s && s.rec !== null ? Math.round(100 * s.rec) + " %" : "–"; $("fi-t4-s").textContent = s ? "de las " + s.ns + " que prestaron algo" : "";
+    var box = $("fi-chart"); box.innerHTML = "";
+    if (!v.length){ U.empty(box, "Todavía no hay parejas en esta ronda.", "Escríbalas en el formulario."); }
+    else {
+      var W = 680, H = 300, m = {l:48, r:18, t:18, b:40};
+      var x = function(a){ return m.l + (W - m.l - m.r) * a / 10; }, y = function(b){ return m.t + (H - m.t - m.b) * (1 - b / 30); };
+      var c = U.svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":"Prestado y devuelto"}, box);
+      for (var g = 0; g <= 30; g += 5){ U.svg("line", {x1:m.l, x2:W-m.r, y1:y(g), y2:y(g), class:"grid"}, c); U.txt(c, m.l - 8, y(g) + 4, g, "", "end"); }
+      for (var h = 0; h <= 10; h += 2) U.txt(c, x(h), H - m.b + 18, h, "", "middle");
+      U.txt(c, (m.l + W - m.r) / 2, H - 4, "Prestado por la vecina (miles)", "", "middle");
+      U.txt(c, m.l + 4, m.t + 10, "Devuelto por el tendero", "", "start");
+      U.svg("line", {x1:x(0), y1:y(0), x2:x(10), y2:y(10), class:"eqline"}, c); U.txt(c, x(10) - 4, y(10) + 30, "Recupera lo prestado", "lbl", "end");
+      U.svg("line", {x1:x(0), y1:y(0), x2:x(10), y2:y(15), class:"mean"}, c); U.txt(c, x(10) - 4, y(15) - 6, "Reparten por mitades", "lbl", "end");
+      v.forEach(function(p){ var ci = U.svg("circle", {cx:x(p[0]), cy:y(p[1]), r:7, class:"dt s-c"}, c); var t = U.svg("title", {}, ci); t.textContent = "Prestó " + p[0] + ", devolvió " + p[1]; });
+      U.svg("line", {x1:m.l, x2:W-m.r, y1:y(0), y2:y(0), class:"axis"}, c);
+    }
+    var rows = [1,2].filter(function(r){ return S.r[r] && S.r[r].length; }).map(function(r){ var t = st(S.r[r]); return "<tr><td>" + (r === 1 ? "1, anónima" : "2, con historia") + "</td><td>" + t.n + "</td><td>" + U.dec(t.x) + "</td><td>" + U.dec(t.y) + "</td><td>" + (t.share === null ? "–" : Math.round(100 * t.share) + " %") + "</td></tr>"; }).join("");
+    $("fi-table").innerHTML = rows ? "<table><thead><tr><th>Ronda</th><th>Parejas</th><th>Prestado</th><th>Devuelto</th><th>Devuelto de lo recibido</th></tr></thead><tbody>" + rows + "</tbody></table>" : '<p class="muted">Aparece cuando haya rondas.</p>';
+    $("fi-theory").hidden = !S.revealed; $("fi-rev").textContent = S.revealed ? "Ocultar" : "Revelar";
+  }
+  return {render:render};
+})();
+
+/* ===================== LA VACA (bienes públicos con castigo) ===================== */
+window.MV = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$, KEY = "lab-vaca-v1";
+  var E = 20, M = 0.4, PCOST = 1, PHIT = 3;
+  G.rules("v-va", {
+    eyebrow:"Bienes públicos · cooperación y Estado", title:"La vaca",
+    lead:"En grupos de cuatro vecinos. Cada mes, cada uno recibe 20 (miles de pesos) y decide en secreto cuánto pone en la vaca para arreglar la cancha del barrio. Lo que se recoge rinde: se multiplica por 1,6 y se reparte por igual entre los cuatro, aporte o no.",
+    rules:[["Lo que usted gana","Lo que no puso en la vaca, más su parte de la cancha: <b>20 − su aporte + 0,4 × lo que puso todo el grupo</b>."],
+      ["El dilema","Cada peso que usted pone le devuelve 0,4. Al grupo le conviene que todos pongan todo; a cada uno le conviene que pongan los demás."],
+      ["Meses 1 a 5","Cada uno escribe su aporte en un papel. Un tesorero suma y anuncia el total del grupo, sin decir quién puso cuánto."],
+      ["Meses 6 a 10: sanción social","Se muestran los aportes de cada uno, sin nombres (vecino 1, 2, 3, 4). Cada uno puede sancionar: cada punto le cuesta 1 a quien sanciona y le quita 3 al sancionado."]],
+    links:[["#vaca-estudiante","En el celular","Calculadora","Calcule cuánto ganó en cada mes."],["#vaca-profesor","En el computador del salón","Soy el profesor","Registre el total de cada grupo y proyecte cómo cambian los aportes."]],
+    questions:["¿Qué pasó con los aportes de un mes a otro, antes de la sanción? ¿Por qué?","¿Qué cambió cuando se pudo sancionar? ¿Por qué alguien paga para castigar a otro?","¿Se parece esto a pagar impuestos, a una junta de acción comunal o a un convite?","¿Qué papel cumple el Estado cuando la cooperación voluntaria no alcanza?"],
+    sources:["Fehr, Ernst y Simon Gächter (2000). «Cooperation and Punishment in Public Goods Experiments». <i>American Economic Review</i> 90 (4): 980–994. De ahí vienen los grupos de cuatro, los 20 de dotación, el retorno de 0,4 y la fase con castigo.",
+      "CORE Econ, <i>Experiencing Economics</i>, experimento 4, «Juego de bienes públicos».",
+      "Adaptación propia: la vaca para la cancha, la sanción de 1 por 3 (más simple que la del artículo original) y las preguntas sobre impuestos y juntas de acción comunal."]
+  });
+  /* calculadora del estudiante */
+  $("v-va-est").innerHTML = '<div class="student"><form class="card" id="ve-form" autocomplete="off"><div><p class="eyebrow">Calculadora de la vaca</p><h2 style="font-size:1.5rem">¿Cuánto ganó este mes?</h2></div>' +
+    '<div class="field"><label for="ve-c">Lo que usted puso en la vaca (0 a 20)</label><input type="number" id="ve-c" inputmode="numeric" min="0" max="20"></div>' +
+    '<div class="field"><label for="ve-t">Lo que puso todo el grupo, contándolo a usted</label><input type="number" id="ve-t" inputmode="numeric" min="0" max="80"></div>' +
+    '<div class="field"><label for="ve-g">Puntos de sanción que usted dio (desde el mes 6)</label><input type="number" id="ve-g" inputmode="numeric" min="0" value="0"></div>' +
+    '<div class="field"><label for="ve-r">Puntos de sanción que usted recibió (desde el mes 6)</label><input type="number" id="ve-r" inputmode="numeric" min="0" value="0"></div>' +
+    '<div class="verdictbox" id="ve-out"><p class="muted">Escriba su aporte y el total del grupo.</p></div></form></div>';
+  function calc(){
+    var c = parseFloat($("ve-c").value), t = parseFloat($("ve-t").value), g = parseFloat($("ve-g").value) || 0, r = parseFloat($("ve-r").value) || 0, o = $("ve-out");
+    if (isNaN(c) || isNaN(t)){ o.innerHTML = '<p class="muted">Escriba su aporte y el total del grupo.</p>'; return; }
+    if (c < 0 || c > E || t < c || t > 4 * E){ o.innerHTML = '<p class="msg err">Revise los números: su aporte va de 0 a 20 y el total del grupo no puede ser menor que su aporte.</p>'; return; }
+    var w = E - c + M * t - PCOST * g - PHIT * r;
+    o.innerHTML = '<p class="eyebrow">Su ganancia del mes</p><p class="v num">' + U.dec(w) + '</p><p class="muted small">' + (E - c) + ' que se quedó + ' + U.dec(M * t) + ' de la cancha' + (g ? ' − ' + (PCOST * g) + ' por sancionar' : '') + (r ? ' − ' + (PHIT * r) + ' por las sanciones recibidas' : '') + '.</p>';
+  }
+  ["ve-c","ve-t","ve-g","ve-r"].forEach(function(id){ $(id).addEventListener("input", calc); });
+  $("ve-form").addEventListener("submit", function(e){ e.preventDefault(); });
+  /* profesor */
+  function fresh(){ return {H:5, P:6, R:10, rounds:[], revealed:false}; }
+  var S = U.load(KEY); if (!S || !S.rounds) S = fresh();
+  function save(){ U.save(KEY, S); }
+  G.shell("v-va-prof",
+    '<div class="card"><div class="codebox"><p class="eyebrow">Mes que se está jugando</p><p class="code num" id="va-m">1</p></div><p class="small" id="va-phase"></p></div>' +
+    '<form class="card" id="va-form" autocomplete="off"><div><p class="eyebrow">Total de la vaca en cada grupo</p><p class="muted small">Lo que puso todo el grupo este mes, de 0 a 80.</p></div><div class="hh" id="va-inputs"></div>' +
+      '<button class="btn primary" type="submit">Cerrar el mes</button><p class="msg" id="va-msg" role="status"></p><div class="row"><button class="btn small ghost" type="button" id="va-undo">Deshacer el último mes</button></div></form>' +
+    G.plenaria(["¿Qué pasó con los aportes antes de la sanción?","¿Por qué alguien paga para castigar a otro?","¿Se parece esto a pagar impuestos o a un convite?","¿Qué hace el Estado cuando la cooperación voluntaria no alcanza?"]) +
+    G.config("va", '<div class="field"><label for="va-h">Número de grupos de cuatro</label><input type="number" id="va-h" inputmode="numeric" min="1" max="15" value="5"></div><div class="field"><label for="va-p">La sanción empieza en el mes</label><input type="number" id="va-p" inputmode="numeric" min="2" max="20" value="6"></div><div class="confirm" id="va-new-wrap"><button class="btn" type="button" id="va-new">Empezar con esta configuración</button></div>'),
+    '<div id="va-banner"></div><div class="tiles">' + G.tile("va-t1","Aporte promedio el mes pasado","% de los 20") + G.tile("va-t2","Ganancia promedio el mes pasado","sin contar sanciones") + G.tile("va-t3","Grupos","de cuatro personas") + G.revealTile("va-eq","Lo que dice la teoría") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Aporte promedio a la vaca, mes a mes</h3><div class="legend"><span style="--c:var(--r3)">Promedio del salón</span><span style="--c:var(--line)">Cada grupo</span></div></div><div id="va-chart"></div></div>' +
+    '<div class="panel" id="va-theory" hidden><h3>Lo que dice la teoría</h3><div class="theory"><p>Cada peso en la vaca le devuelve 0,4 a quien lo pone, así que a cada uno, pensando solo en su plata, le conviene no poner nada. Pero si todos ponen sus 20, cada uno gana 32 en lugar de 20. Lo que es racional para cada uno lleva al grupo a un mal resultado.</p><p>Fehr y Gächter (2000) encontraron que sin castigo los aportes empiezan altos y caen mes a mes: los que cooperan se cansan de los aprovechados. Cuando se puede castigar, aunque cueste, la cooperación se sostiene. Normas sociales, sanciones e impuestos responden a este problema.</p></div></div>');
+  function build(){
+    var box = $("va-inputs"); if (box.getAttribute("data-h") === String(S.H)) return; box.innerHTML = ""; box.setAttribute("data-h", S.H);
+    for (var i = 1; i <= S.H; i++) box.insertAdjacentHTML("beforeend", '<div class="field"><label for="va-g' + i + '">Grupo ' + i + '</label><input type="number" id="va-g' + i + '" inputmode="numeric" min="0" max="80"></div>');
+  }
+  $("va-form").addEventListener("submit", function(e){
+    e.preventDefault(); var v = [];
+    for (var i = 1; i <= S.H; i++){ var x = parseFloat($("va-g" + i).value); if (isNaN(x) || x < 0 || x > 80){ U.flash("va-msg", "Falta el total del grupo " + i + ", o no está entre 0 y 80.", "err"); return; } v.push(x); }
+    S.rounds.push(v); save(); for (var k = 1; k <= S.H; k++) $("va-g" + k).value = "";
+    U.flash("va-msg", "Mes " + S.rounds.length + " cerrado.", "ok"); render();
+  });
+  $("va-undo").addEventListener("click", function(){ if (S.rounds.length){ S.rounds.pop(); save(); render(); } });
+  G.lockBind("va");
+  U.twoStep("va-new-wrap", "va-new", "Se borran los meses y se aplica la configuración.", function(){ var h = parseInt($("va-h").value, 10) || 5, p = parseInt($("va-p").value, 10) || 6; S = fresh(); S.H = Math.min(15, Math.max(1, h)); S.P = Math.max(2, p); save(); render(); });
+  U.twoStep("va-clear-wrap", "va-clear", "Se borran todos los meses.", function(){ var h = S.H, p = S.P; S = fresh(); S.H = h; S.P = p; save(); render(); });
+  U.twoStep("va-demo-wrap", "va-demo", "Se cargan diez meses de ejemplo.", function(){
+    S = fresh(); S.demo = true; var r = U.rng(U.hashStr("vaca"));
+    var base = [0.55,0.5,0.42,0.36,0.3,0.48,0.6,0.68,0.72,0.75];
+    base.forEach(function(b){ var v = []; for (var i = 0; i < S.H; i++) v.push(Math.round(80 * Math.min(1, Math.max(0, b + (r() - 0.5) * 0.25)))); S.rounds.push(v); });
+    save(); render();
+  });
+  function render(){
+    build(); $("va-h").value = S.H; $("va-p").value = S.P;
+    var n = S.rounds.length, m = n + 1;
+    $("va-m").textContent = m;
+    $("va-phase").innerHTML = m >= S.P ? '<b>Con sanción social.</b> Muestren los aportes de cada vecino, sin nombres, y dejen sancionar antes de cerrar el mes.' : '<b>Sin sanción.</b> Solo se anuncia el total de cada grupo. La sanción empieza en el mes ' + S.P + '.';
+    G.banner("va-banner", S.demo, "<b>Datos de ejemplo.</b> Diez meses inventados para mostrar el tablero.", function(){ var h = S.H; S = fresh(); S.H = h; save(); render(); });
+    var last = n ? S.rounds[n - 1] : null, avg = last ? G.mean(last) / 4 : null;
+    $("va-t1").textContent = avg === null ? "–" : Math.round(100 * avg / E) + " %"; $("va-t1-s").textContent = avg === null ? "de los 20" : U.dec(avg) + " de 20 por persona";
+    $("va-t2").textContent = avg === null ? "–" : U.dec(E - avg + M * 4 * avg);
+    $("va-t3").textContent = S.H;
+    $("va-eq").textContent = S.revealed ? "Nadie aporta" : "?";
+    G.revealBtn("va-eq", S.revealed, function(){ S.revealed = !S.revealed; save(); render(); });
+    $("va-theory").hidden = !S.revealed;
+    if (!n){ $("va-chart").innerHTML = ""; U.empty($("va-chart"), "Todavía no hay meses cerrados.", "Registre el total de cada grupo al final de cada mes."); return; }
+    var xs = S.rounds.map(function(_, i){ return String(i + 1); });
+    var series = [];
+    for (var g = 0; g < S.H; g++) series.push({vals:S.rounds.map(function(v){ return 100 * v[g] / 80; }), cls:"s-thin", dots:false});
+    series.push({vals:S.rounds.map(function(v){ return 100 * G.mean(v) / 80; }), cls:"s-c"});
+    G.lines($("va-chart"), xs, series, {ymin:0, ymax:100, step:20, fmt:function(v){ return v + " %"; }, xlab:"Mes", vl:S.P <= n ? {x:S.P - 1, label:"Empieza la sanción"} : null, hl:S.revealed ? [{y:0, label:"Teoría: 0 %"}] : [], aria:"Aportes por mes"});
+  }
+  return {render:render};
+})();
+
+/* ===================== LA CIÉNAGA (recursos de uso común) ===================== */
+window.MC = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$, KEY = "lab-cienaga-v1";
+  var A = 42, B = 2, C = 8, N = 5, XMAX = 8, LIM = 1, PINS = 0.25, FINE = 20;
+  function pay(x, X){ return A * x - B * x * x + C * (N * XMAX - X); }
+  G.rules("v-ci", {
+    eyebrow:"Recursos de uso común · Estado y comunidad", title:"La ciénaga",
+    lead:"En grupos de cinco pescadores que comparten una ciénaga en la costa Caribe. Cada mes, cada uno decide en secreto cuántos días sale a pescar, de 1 a 8. Más días le dan más pescado a quien sale, pero cada día de pesca agota la ciénaga para todos.",
+    rules:[["Lo que usted gana","Depende de sus días y de los días de todo el grupo. La calculadora del celular hace la cuenta y muestra la tabla de ganancias."],
+      ["El dilema","Cada día adicional le conviene a usted, pero a cada vecino le quita 8."],
+      ["Meses 1 a 5","Cada uno escribe sus días en un papel. Un vocero suma y anuncia el total del grupo, sin decir quién pescó cuánto."],
+      ["Meses 6 a 10","El profesor elige una de dos reglas: el grupo puede <b>conversar</b> antes de decidir, aunque cada uno sigue decidiendo en secreto, o llega una <b>regulación externa</b>: máximo 1 día al mes, con una inspección al azar a una de cada cuatro personas y una multa de 20 por cada día de más."]],
+    links:[["#cienaga-estudiante","En el celular","Calculadora","Calcule su ganancia y consulte la tabla."],["#cienaga-profesor","En el computador del salón","Soy el profesor","Registre el total de cada grupo y proyecte cómo cambia la pesca."]],
+    questions:["¿Por qué se pesca más de lo que le conviene al grupo, si todos lo saben?","¿Qué funcionó mejor: conversar o la regulación externa? ¿Por qué?","Cárdenas encontró en el campo colombiano que una regulación débil puede empeorar la cooperación. ¿Cómo puede una norma desplazar la confianza entre vecinos?","¿Qué recursos de uso común conoce en Colombia? Piense en ciénagas, páramos, bosques o el agua de una vereda."],
+    sources:["Cárdenas, Juan Camilo, John Stranlund y Cleve Willis (2000). «Local Environmental Control and Institutional Crowding-Out». <i>World Development</i> 28 (10): 1719–1733. Experimentos con campesinos de comunidades rurales colombianas que comparan la comunicación con la regulación externa.",
+      "Ostrom, Elinor, Roy Gardner y James Walker (1994). <i>Rules, Games, and Common-Pool Resources</i>. Ann Arbor: University of Michigan Press.",
+      "Adaptación propia: la ciénaga, la tabla de pagos (que conserva la estructura del diseño original: cada día adicional beneficia a quien pesca y le cuesta al grupo) y los valores de la inspección y la multa."]
+  });
+  /* calculadora */
+  var cols = [4, 10, 16, 22, 28, 32];
+  var tab = '<div class="tablewrap"><table class="pay"><thead><tr><th>Sus días</th>' + cols.map(function(o){ return '<th>Otros: ' + o + '</th>'; }).join("") + '</tr></thead><tbody>';
+  for (var x = 1; x <= XMAX; x++) tab += '<tr><th>' + x + '</th>' + cols.map(function(o){ return '<td>' + pay(x, x + o) + '</td>'; }).join("") + '</tr>';
+  tab += '</tbody></table></div><p class="muted small">Ganancia en miles de pesos según sus días y los días que suman los otros cuatro.</p>';
+  $("v-ci-est").innerHTML = '<div class="student"><form class="card" id="ce-form" autocomplete="off"><div><p class="eyebrow">Calculadora de la ciénaga</p><h2 style="font-size:1.5rem">¿Cuánto ganó este mes?</h2></div>' +
+    '<div class="field"><label for="ce-x">Sus días de pesca (1 a 8)</label><input type="number" id="ce-x" inputmode="numeric" min="1" max="8"></div>' +
+    '<div class="field"><label for="ce-t">Días de todo el grupo, contándolo a usted</label><input type="number" id="ce-t" inputmode="numeric" min="5" max="40"></div>' +
+    '<div class="verdictbox" id="ce-out"><p class="muted">Escriba sus días y el total del grupo.</p></div>' +
+    '<details><summary><b>Regulación externa: ¿me inspeccionan?</b></summary><p class="muted small">Solo si el profesor lo indica. El límite es 1 día; una de cada cuatro personas es inspeccionada y paga 20 por cada día de más.</p><button class="btn" type="button" id="ce-ins">Sortear la inspección</button><p id="ce-insr"></p></details></form>' +
+    '<div class="card"><h3>Tabla de ganancias</h3>' + tab + '</div></div>';
+  function calc(){
+    var x = parseInt($("ce-x").value, 10), t = parseInt($("ce-t").value, 10), o = $("ce-out");
+    if (isNaN(x) || isNaN(t)){ o.innerHTML = '<p class="muted">Escriba sus días y el total del grupo.</p>'; return; }
+    if (x < 1 || x > XMAX || t < x + 4 || t > x + 4 * XMAX){ o.innerHTML = '<p class="msg err">Revise: sus días van de 1 a 8 y el total del grupo va de ' + (x + 4) + ' a ' + (x + 32) + '.</p>'; return; }
+    o.innerHTML = '<p class="eyebrow">Su ganancia del mes</p><p class="v num">' + pay(x, t) + '</p><p class="muted small">Si todos hubieran pescado 1 día, cada uno ganaría ' + pay(1, 5) + '. Si todos pescan 8, cada uno gana ' + pay(8, 40) + '.</p>';
+  }
+  ["ce-x","ce-t"].forEach(function(id){ $(id).addEventListener("input", calc); });
+  $("ce-form").addEventListener("submit", function(e){ e.preventDefault(); });
+  $("ce-ins").addEventListener("click", function(){
+    var x = parseInt($("ce-x").value, 10), hit = Math.random() < PINS;
+    $("ce-insr").innerHTML = hit ? (x > LIM ? '<b>Lo inspeccionaron.</b> Pescó ' + x + ' días: paga ' + ((x - LIM) * FINE) + ' de multa.' : '<b>Lo inspeccionaron</b> y cumplió el límite. No paga multa.') : 'Esta vez no lo inspeccionaron.';
+    this.disabled = true;
+  });
+  /* profesor */
+  function fresh(){ return {H:4, mode:1, rounds:[], revealed:false}; }
+  var S = U.load(KEY); if (!S || !S.rounds) S = fresh();
+  function save(){ U.save(KEY, S); }
+  G.shell("v-ci-prof",
+    '<div class="card"><div class="codebox"><p class="eyebrow">Mes que se está jugando</p><p class="code num" id="ci-m">1</p></div>' +
+      '<div class="field"><span style="font-weight:700;font-size:.92rem">Regla desde el mes 6</span>' + G.seg("ci-mode", ["Conversación","Regulación externa"], 1) + '</div><p class="small" id="ci-phase"></p></div>' +
+    '<form class="card" id="ci-form" autocomplete="off"><div><p class="eyebrow">Días de pesca de cada grupo</p><p class="muted small">La suma de los cinco pescadores, de 5 a 40.</p></div><div class="hh" id="ci-inputs"></div>' +
+      '<button class="btn primary" type="submit">Cerrar el mes</button><p class="msg" id="ci-msg" role="status"></p><div class="row"><button class="btn small ghost" type="button" id="ci-undo">Deshacer el último mes</button></div></form>' +
+    G.plenaria(["¿Por qué se pesca más de lo que le conviene al grupo?","¿Qué funcionó mejor: conversar o la regulación externa?","¿Cómo puede una norma desplazar la confianza entre vecinos?","¿Qué recursos de uso común conoce en Colombia?"]) +
+    G.config("ci", '<div class="field"><label for="ci-h">Número de grupos de cinco</label><input type="number" id="ci-h" inputmode="numeric" min="1" max="12" value="4"></div><div class="confirm" id="ci-new-wrap"><button class="btn" type="button" id="ci-new">Empezar con esta configuración</button></div>'),
+    '<div id="ci-banner"></div><div class="tiles">' + G.tile("ci-t1","Días por pescador el mes pasado","promedio del salón") + G.tile("ci-t2","Ganancia aproximada por pescador","si todos pescaran lo mismo") + G.tile("ci-t3","Lo que se perdió","frente al mejor resultado posible") + G.revealTile("ci-eq","Lo que dice la teoría") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Días de pesca por pescador, mes a mes</h3><div class="legend"><span style="--c:var(--r3)">Promedio del salón</span><span style="--c:var(--line)">Cada grupo</span></div></div><div id="ci-chart"></div></div>' +
+    '<div class="panel" id="ci-theory" hidden><h3>Lo que dice la teoría</h3><div class="theory"><p>A cada pescador, pensando solo en su ganancia, le conviene salir los 8 días, haga lo que haga el resto. Si todos lo hacen, cada uno gana ' + pay(8, 40) + '. Si todos salieran 1 día, cada uno ganaría ' + pay(1, 5) + '. Es la tragedia de los comunes.</p><p>Ostrom mostró que muchas comunidades evitan la tragedia con reglas propias. Cárdenas, Stranlund y Willis (2000), con campesinos colombianos, encontraron que conversar reducía la sobreexplotación y que una regulación externa con poca vigilancia podía funcionar peor, porque desplazaba la cooperación entre vecinos. Con la multa de este juego, a quien solo piensa en sí mismo le sigue conviniendo pescar unos 7 días.</p></div></div>');
+  G.bindSeg("ci-mode", function(v){ S.mode = v; save(); render(); });
+  function build(){
+    var box = $("ci-inputs"); if (box.getAttribute("data-h") === String(S.H)) return; box.innerHTML = ""; box.setAttribute("data-h", S.H);
+    for (var i = 1; i <= S.H; i++) box.insertAdjacentHTML("beforeend", '<div class="field"><label for="ci-g' + i + '">Grupo ' + i + '</label><input type="number" id="ci-g' + i + '" inputmode="numeric" min="5" max="40"></div>');
+  }
+  $("ci-form").addEventListener("submit", function(e){
+    e.preventDefault(); var v = [];
+    for (var i = 1; i <= S.H; i++){ var x = parseFloat($("ci-g" + i).value); if (isNaN(x) || x < 5 || x > 40){ U.flash("ci-msg", "Falta el total del grupo " + i + ", o no está entre 5 y 40.", "err"); return; } v.push(x); }
+    S.rounds.push({v:v, mode:S.rounds.length + 1 >= 6 ? S.mode : 0}); save(); for (var k = 1; k <= S.H; k++) $("ci-g" + k).value = "";
+    U.flash("ci-msg", "Mes " + S.rounds.length + " cerrado.", "ok"); render();
+  });
+  $("ci-undo").addEventListener("click", function(){ if (S.rounds.length){ S.rounds.pop(); save(); render(); } });
+  G.lockBind("ci");
+  U.twoStep("ci-new-wrap", "ci-new", "Se borran los meses y se aplica la configuración.", function(){ var h = parseInt($("ci-h").value, 10) || 4; S = fresh(); S.H = Math.min(12, Math.max(1, h)); save(); render(); });
+  U.twoStep("ci-clear-wrap", "ci-clear", "Se borran todos los meses.", function(){ var h = S.H; S = fresh(); S.H = h; save(); render(); });
+  U.twoStep("ci-demo-wrap", "ci-demo", "Se cargan diez meses de ejemplo.", function(){
+    S = fresh(); S.demo = true; var r = U.rng(U.hashStr("cienaga"));
+    var base = [5.2,5.6,6,6.3,6.5,4.2,3.6,3.2,3.4,3.1];
+    base.forEach(function(b, i){ var v = []; for (var g = 0; g < S.H; g++) v.push(Math.round(5 * Math.min(8, Math.max(1, b + (r() - 0.5) * 1.6)))); S.rounds.push({v:v, mode:i >= 5 ? 1 : 0}); });
+    save(); render();
+  });
+  function render(){
+    build(); $("ci-h").value = S.H; G.setSeg("ci-mode", S.mode);
+    var n = S.rounds.length, m = n + 1;
+    $("ci-m").textContent = m;
+    $("ci-phase").innerHTML = m < 6 ? '<b>Sin hablar.</b> Cada uno decide en secreto; el vocero anuncia el total.' : (S.mode === 1 ? '<b>Con conversación.</b> Den dos minutos para que cada grupo converse; después cada uno decide en secreto.' : '<b>Regulación externa.</b> Límite de 1 día. Cada uno sortea la inspección en la calculadora del celular.');
+    G.banner("ci-banner", S.demo, "<b>Datos de ejemplo.</b> Diez meses inventados para mostrar el tablero.", function(){ var h = S.H; S = fresh(); S.H = h; save(); render(); });
+    var last = n ? S.rounds[n - 1] : null, xb = last ? G.mean(last.v) / N : null;
+    $("ci-t1").textContent = xb === null ? "–" : U.dec(xb);
+    var pb = xb === null ? null : pay(xb, N * xb);
+    $("ci-t2").textContent = pb === null ? "–" : U.dec(pb);
+    $("ci-t3").textContent = pb === null ? "–" : Math.round(100 * (1 - pb / pay(1, 5))) + " %";
+    $("ci-eq").textContent = S.revealed ? "8 días cada uno" : "?";
+    G.revealBtn("ci-eq", S.revealed, function(){ S.revealed = !S.revealed; save(); render(); });
+    $("ci-theory").hidden = !S.revealed;
+    if (!n){ $("ci-chart").innerHTML = ""; U.empty($("ci-chart"), "Todavía no hay meses cerrados.", "Registre el total de días de cada grupo al final de cada mes."); return; }
+    var xs = S.rounds.map(function(_, i){ return String(i + 1); }), series = [];
+    for (var g = 0; g < S.H; g++) series.push({vals:S.rounds.map(function(r){ return r.v[g] / N; }), cls:"s-thin", dots:false});
+    series.push({vals:S.rounds.map(function(r){ return G.mean(r.v) / N; }), cls:"s-c"});
+    var mode6 = S.rounds.length >= 6 ? S.rounds[5].mode : S.mode;
+    G.lines($("ci-chart"), xs, series, {ymin:0, ymax:8, step:1, xlab:"Mes", vl:n >= 6 ? {x:5, label:mode6 === 2 ? "Regulación externa" : "Conversación"} : null, hl:S.revealed ? [{y:8, label:"Interés individual: 8"}, {y:1, label:"Mejor para el grupo: 1"}] : [], aria:"Días de pesca por mes"});
+  }
+  return {render:render};
+})();
+
+/* ===================== ACCIONES DEL BARRIO (burbujas) ===================== */
+window.MA = (function(){
+  "use strict";
+  var U = window.LABU, G = window.LABG, $ = U.$, KEY = "lab-acciones-v1";
+  var T = 10, D = [0, 20], SH0 = 3, CASH0 = 300;
+  function fv(t){ return 10 * (T - t + 1); }
+  G.rules("v-ac", {
+    eyebrow:"Mercados financieros · burbujas", title:"Acciones del barrio",
+    lead:"Todos son inversionistas. Cada uno empieza con 3 acciones de la Constructora del Barrio y 300 (miles de pesos). Durante 10 períodos se compran y venden acciones. Al final de cada período, cada acción paga un dividendo de 0 o de 20, según una moneda. Después del período 10 las acciones no valen nada.",
+    rules:[["Comprar y vender","En cada período, quien quiera vender busca a quien quiera comprar y acuerdan un precio. El profesor registra cada venta."],
+      ["El dividendo","Al cerrar cada período se lanza una moneda: cada acción paga 0 o 20. En promedio, 10 por período."],
+      ["Lo que vale una acción","Lo que se espera que pague de aquí al final: 10 por cada período que falta. En el período 1 vale 100; en el período 10, solo 10."],
+      ["Cómo se gana","Gana quien termine con más efectivo: lo que tenía, más los dividendos, más o menos lo que compró y vendió. Lleve sus cuentas en un papel."]],
+    links:[["#acciones-profesor","En el computador del salón","Soy el profesor","Registre las ventas, lance la moneda y proyecte los precios."]],
+    questions:["¿Los precios siguieron el valor de las acciones? ¿Cuándo se separaron?","¿Por qué alguien compra una acción por encima de lo que vale?","¿Qué tiene que ver esto con el concurso de belleza de Keynes?","¿Qué se parece y qué no a una pirámide como la de DMG en 2008, o a una burbuja de vivienda?"],
+    sources:["Smith, Vernon L., Gerry L. Suchanek y Arlington W. Williams (1988). «Bubbles, Crashes, and Endogenous Expectations in Experimental Spot Asset Markets». <i>Econometrica</i> 56 (5): 1119–1151. De ahí vienen los dividendos al azar y el valor que baja período a período.",
+      "Adaptación propia: la Constructora del Barrio, las dotaciones, los valores del dividendo y el registro hecho por el profesor."]
+  });
+  function fresh(N){ var s = {N:N || 20, t:1, trades:[], divs:[], nextId:1, revealed:false}; return s; }
+  var S = U.load(KEY); if (!S || !S.trades) S = fresh(20);
+  function save(){ U.save(KEY, S); }
+  function holdings(){
+    var sh = [], cash = [], i;
+    for (i = 0; i < S.N; i++){ sh.push(SH0); cash.push(CASH0); }
+    for (var t = 1; t <= T; t++){
+      S.trades.filter(function(x){ return x.t === t; }).forEach(function(x){ sh[x.s-1]--; sh[x.b-1]++; cash[x.s-1] += x.p; cash[x.b-1] -= x.p; });
+      if (S.divs[t-1] !== undefined) for (i = 0; i < S.N; i++) cash[i] += sh[i] * S.divs[t-1];
+    }
+    return {sh:sh, cash:cash};
+  }
+  G.shell("v-ac-prof",
+    '<div class="card"><div class="codebox"><p class="eyebrow">Período</p><p class="code num" id="ac-t">1</p></div><p class="small">Valor esperado de una acción en este período: <b id="ac-fv">100</b></p></div>' +
+    '<form class="card" id="ac-form" autocomplete="off"><div><p class="eyebrow">Registrar una venta</p><p class="muted small">Números de participante y precio acordado.</p></div>' +
+      '<div class="entry"><div class="field"><label for="ac-s">Vende</label><input type="number" id="ac-s" inputmode="numeric" min="1"></div><div class="field"><label for="ac-b">Compra</label><input type="number" id="ac-b" inputmode="numeric" min="1"></div><div class="field"><label for="ac-p">Precio</label><input type="number" id="ac-p" inputmode="numeric" min="0"></div><button class="btn primary full" type="submit">Registrar</button></div>' +
+      '<p class="msg" id="ac-msg" role="status"></p><ul class="trades" id="ac-list"></ul></form>' +
+    '<div class="card" id="ac-divbox"><p class="eyebrow">Cerrar el período</p><p class="muted small">Lance una moneda delante de todos y marque el resultado.</p><div class="row"><button class="btn" type="button" id="ac-d0">Salió 0</button><button class="btn" type="button" id="ac-d20">Salió 20</button></div><div class="row"><button class="btn small ghost" type="button" id="ac-undo">Deshacer el último cierre</button></div></div>' +
+    '<details><summary>Saldos de cada participante (no proyectar)</summary><div class="tablewrap" id="ac-hold"></div></details>' +
+    G.plenaria(["¿Los precios siguieron el valor de las acciones?","¿Por qué alguien compra por encima de lo que vale?","¿Qué tiene que ver con el concurso de belleza de Keynes?","¿Qué se parece y qué no a una pirámide como DMG?"]) +
+    G.config("ac", '<div class="field"><label for="ac-n">Número de participantes</label><input type="number" id="ac-n" inputmode="numeric" min="4" max="60" value="20"></div><div class="confirm" id="ac-new-wrap"><button class="btn" type="button" id="ac-new">Empezar con esta configuración</button></div>'),
+    '<div id="ac-banner"></div><div class="tiles">' + G.tile("ac-t1","Precio promedio","en este período") + G.tile("ac-t2","Valor esperado","de una acción en este período") + G.tile("ac-t3","Acciones vendidas","en este período") + G.tile("ac-t4","Dividendos pagados","hasta ahora") + '</div>' +
+    '<div class="panel"><div class="row spread"><h3>Precios y valor de la acción, período a período</h3><div class="legend"><span style="--c:var(--r3)">Precio de cada venta</span><span style="--c:var(--apple)">Precio promedio</span><span style="--c:var(--ink)">Valor esperado</span></div></div><div id="ac-chart"></div></div>' +
+    '<div class="panel"><div class="row spread"><h3>Ranking final</h3><button class="btn small" type="button" id="ac-rank-t">Mostrar ranking</button></div><div id="ac-rank"></div></div>' +
+    '<div class="panel"><div class="row spread"><h3>Lo que dice la teoría</h3><button class="btn small" type="button" id="ac-rev">Revelar</button></div><div class="theory" id="ac-theory" hidden><p>Si todos compraran y vendieran según lo que la acción va a pagar, el precio seguiría la escalera del valor esperado: 100, 90, 80… hasta 10. Todos conocen ese valor, porque las reglas son públicas.</p><p>Smith, Suchanek y Williams (1988) encontraron otra cosa: los precios suelen empezar por debajo del valor, subir por encima, sostenerse un tiempo y desplomarse cerca del final. Muchos compran caro porque esperan venderle más caro a otro antes del derrumbe. Las burbujas se reducen cuando los mismos participantes repiten el juego.</p></div></div>');
+  function hl(){ return holdings(); }
+  $("ac-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    if (S.t > T){ U.flash("ac-msg", "El juego terminó: ya se cerraron los 10 períodos.", "err"); return; }
+    var s = parseInt($("ac-s").value, 10), b = parseInt($("ac-b").value, 10), p = parseFloat($("ac-p").value), h = hl();
+    if (!s || s < 1 || s > S.N || !b || b < 1 || b > S.N){ U.flash("ac-msg", "Los números de participante van de 1 a " + S.N + ".", "err"); return; }
+    if (s === b){ U.flash("ac-msg", "Quien vende y quien compra deben ser personas distintas.", "err"); return; }
+    if (isNaN(p) || p < 0){ U.flash("ac-msg", "Escriba un precio.", "err"); return; }
+    if (h.sh[s-1] < 1){ U.flash("ac-msg", "El participante " + s + " no tiene acciones para vender.", "err"); return; }
+    if (h.cash[b-1] < p){ U.flash("ac-msg", "El participante " + b + " solo tiene " + h.cash[b-1] + " en efectivo.", "err"); return; }
+    S.trades.push({id:S.nextId++, t:S.t, s:s, b:b, p:p}); save();
+    U.flash("ac-msg", "Registrado: " + s + " le vende a " + b + " a " + p + ".", "ok");
+    $("ac-s").value = ""; $("ac-b").value = ""; $("ac-p").value = ""; $("ac-s").focus(); render();
+  });
+  $("ac-list").addEventListener("click", function(e){ var b = e.target.closest("button[data-del]"); if (!b) return; var id = parseInt(b.getAttribute("data-del"), 10); S.trades = S.trades.filter(function(x){ return x.id !== id; }); save(); render(); });
+  function closeP(d){ if (S.t > T) return; S.divs[S.t - 1] = d; S.t++; save(); U.flash("ac-msg", "Período cerrado: cada acción pagó " + d + ".", "ok"); render(); }
+  $("ac-d0").addEventListener("click", function(){ closeP(0); });
+  $("ac-d20").addEventListener("click", function(){ closeP(20); });
+  $("ac-undo").addEventListener("click", function(){ if (S.t > 1){ S.t--; S.divs.length = S.t - 1; save(); render(); } });
+  $("ac-rev").addEventListener("click", function(){ S.revealed = !S.revealed; save(); render(); });
+  $("ac-rank-t").addEventListener("click", function(){ S.showRank = !S.showRank; save(); render(); });
+  G.lockBind("ac");
+  U.twoStep("ac-new-wrap", "ac-new", "Se borra el juego y se aplica la configuración.", function(){ var n = parseInt($("ac-n").value, 10) || 20; S = fresh(Math.min(60, Math.max(4, n))); save(); render(); });
+  U.twoStep("ac-clear-wrap", "ac-clear", "Se borra el juego.", function(){ S = fresh(S.N); save(); render(); });
+  U.twoStep("ac-demo-wrap", "ac-demo", "Se carga un juego de ejemplo.", function(){
+    S = fresh(20); S.demo = true; var r = U.rng(U.hashStr("burbuja"));
+    var path = [70,85,105,120,125,118,95,60,30,12];
+    for (var t = 1; t <= T; t++){
+      S.t = t; var k = 4 + Math.floor(r() * 4);
+      for (var j = 0; j < k; j++){
+        var h = holdings(), sellers = [], buyers = [];
+        for (var i = 0; i < S.N; i++){ if (h.sh[i] > 0) sellers.push(i + 1); }
+        var p = Math.max(0, Math.round(path[t-1] + (r() - 0.5) * 20));
+        for (i = 0; i < S.N; i++){ if (h.cash[i] >= p) buyers.push(i + 1); }
+        var s = sellers[Math.floor(r() * sellers.length)], b = buyers[Math.floor(r() * buyers.length)];
+        if (s && b && s !== b) S.trades.push({id:S.nextId++, t:t, s:s, b:b, p:p});
+      }
+      S.divs[t-1] = r() < 0.5 ? 0 : 20;
+    }
+    S.t = T + 1; save(); render();
+  });
+  function render(){
+    $("ac-n").value = S.N;
+    var t = Math.min(S.t, T), over = S.t > T, h = holdings();
+    $("ac-t").textContent = over ? "Fin" : S.t; $("ac-fv").textContent = over ? 0 : fv(S.t);
+    G.banner("ac-banner", S.demo, "<b>Datos de ejemplo.</b> Un juego inventado de 20 participantes para mostrar el tablero.", function(){ S = fresh(20); save(); render(); });
+    var cur = S.trades.filter(function(x){ return x.t === S.t; });
+    var ul = $("ac-list"); ul.innerHTML = "";
+    cur.slice().reverse().forEach(function(x){ var li = document.createElement("li"); li.innerHTML = '<span class="num">' + x.s + ' → ' + x.b + '</span><span class="p num">' + x.p + '</span><button class="btn small ghost" type="button" data-del="' + x.id + '">Quitar</button>'; ul.appendChild(li); });
+    var cp = cur.length ? G.mean(cur.map(function(x){ return x.p; })) : null;
+    $("ac-t1").textContent = cp === null ? "–" : U.dec(cp); $("ac-t1-s").textContent = over ? "el juego terminó" : "en el período " + S.t;
+    $("ac-t2").textContent = over ? "0" : fv(S.t);
+    $("ac-t3").textContent = cur.length;
+    $("ac-t4").textContent = S.divs.reduce(function(a, d){ return a + d; }, 0); $("ac-t4-s").textContent = S.divs.length ? "por acción, en " + S.divs.length + " períodos" : "por acción";
+    $("ac-divbox").hidden = over;
+    var rows = ""; for (var i = 0; i < S.N; i++) rows += "<tr><td>" + (i + 1) + "</td><td>" + h.sh[i] + "</td><td>" + h.cash[i] + "</td></tr>";
+    $("ac-hold").innerHTML = "<table><thead><tr><th>Participante</th><th>Acciones</th><th>Efectivo</th></tr></thead><tbody>" + rows + "</tbody></table>";
+    var box = $("ac-chart"); box.innerHTML = "";
+    var W = 680, H = 300, m = {l:48, r:18, t:18, b:40}, ymax = 160;
+    S.trades.forEach(function(x){ ymax = Math.max(ymax, Math.ceil(x.p / 20) * 20 + 20); });
+    var X = function(tt){ return m.l + (W - m.l - m.r) * (tt - 0.5) / T; }, Y = function(v){ return m.t + (H - m.t - m.b) * (1 - v / ymax); };
+    var c = U.svg("svg", {viewBox:"0 0 " + W + " " + H, class:"chart", role:"img", "aria-label":"Precios por período"}, box);
+    for (var g = 0; g <= ymax; g += 20){ U.svg("line", {x1:m.l, x2:W-m.r, y1:Y(g), y2:Y(g), class:"grid"}, c); U.txt(c, m.l - 8, Y(g) + 4, g, "", "end"); }
+    for (var tt = 1; tt <= T; tt++) U.txt(c, X(tt), H - m.b + 18, tt, "", "middle");
+    U.txt(c, (m.l + W - m.r) / 2, H - 4, "Período", "", "middle");
+    var dv = ""; for (tt = 1; tt <= T; tt++){ var x0 = m.l + (W - m.l - m.r) * (tt - 1) / T, x1 = m.l + (W - m.l - m.r) * tt / T; dv += (dv ? " L" : "M") + x0 + " " + Y(fv(tt)) + " L" + x1 + " " + Y(fv(tt)); }
+    U.svg("path", {d:dv, class:"ln s-ink"}, c);
+    S.trades.forEach(function(x){ var k = S.trades.filter(function(y){ return y.t === x.t; }); var idx = k.indexOf(x); var cx = X(x.t) + ((idx + 0.5) / k.length - 0.5) * (W - m.l - m.r) / T * 0.7; var ci = U.svg("circle", {cx:cx, cy:Y(x.p), r:4.5, class:"dt s-c"}, c); var ti = U.svg("title", {}, ci); ti.textContent = "Período " + x.t + ": " + x.p; });
+    var dm = ""; for (tt = 1; tt <= T; tt++){ var k2 = S.trades.filter(function(y){ return y.t === tt; }); if (k2.length) dm += (dm ? " L" : "M") + X(tt) + " " + Y(G.mean(k2.map(function(y){ return y.p; }))); }
+    if (dm) U.svg("path", {d:dm, class:"ln s-a"}, c);
+    U.svg("line", {x1:m.l, x2:W-m.r, y1:Y(0), y2:Y(0), class:"axis"}, c);
+    $("ac-rank-t").textContent = S.showRank ? "Ocultar ranking" : "Mostrar ranking";
+    var rk = $("ac-rank");
+    if (!S.showRank){ rk.innerHTML = '<p class="muted">Se muestra al final del juego.</p>'; }
+    else { var arr = h.cash.map(function(v, i){ return {n:i + 1, v:v + (over ? 0 : h.sh[i] * fv(S.t))}; }).sort(function(a, b){ return b.v - a.v; }); rk.innerHTML = "<table><thead><tr><th>Puesto</th><th>Participante</th><th>" + (over ? "Efectivo final" : "Efectivo + acciones a su valor esperado") + "</th></tr></thead><tbody>" + arr.slice(0, 10).map(function(a, i){ return "<tr><td>" + (i + 1) + "</td><td>" + a.n + "</td><td>" + a.v + "</td></tr>"; }).join("") + "</tbody></table>"; }
+    $("ac-theory").hidden = !S.revealed; $("ac-rev").textContent = S.revealed ? "Ocultar" : "Revelar";
+  }
+  return {render:render};
+})();
+
+/* ===================== MONOPOLIO AMAÑADO (guía) ===================== */
+(function(){
+  var G = window.LABG;
+  G.rules("v-mo", {
+    eyebrow:"Desigualdad · mérito y privilegio", title:"Monopolio amañado",
+    lead:"Un juego de mesa con trampa a la vista: en cada pareja, una moneda decide quién juega con ventaja. Sirve para discutir cómo explicamos el éxito propio cuando partimos de condiciones distintas. Se juega con un Monopolio de verdad o con cualquier juego de dados y dinero.",
+    rules:[["Materiales","Un juego de Monopolio por pareja (o por grupo de cuatro, en dos parejas), o cualquier juego de dados con dinero de papel."],
+      ["La moneda","En cada pareja se lanza una moneda. Quien gane será el jugador con privilegio. Todos ven que fue al azar."],
+      ["Las ventajas","El privilegiado empieza con el doble de dinero, cobra el doble cada vez que pasa por la salida y lanza dos dados; el otro lanza uno solo."],
+      ["Quince minutos","Se juega un rato corto. El profesor recorre las mesas y anota lo que ve y oye: cómo se sientan, qué dicen, cómo celebran."],
+      ["La pregunta final","Antes de comentar nada, cada uno escribe en un papel por qué cree que ganó o perdió."],
+      ["La plenaria","Se leen algunas respuestas. ¿Cuántos ganadores mencionan la moneda y cuántos hablan de sus decisiones?"]],
+    links:[["pobreza.html#la-calle","Para seguir","Atlas de la pobreza","Del juego a los datos: dónde queda un hogar colombiano."]],
+    questions:["¿Por qué tantos ganadores explican su victoria por sus decisiones, si la ventaja fue una moneda?","¿Qué equivale en la vida real a los dos dados y al doble de plata en la salida? Piense en la herencia, el colegio, el barrio o los contactos.","¿Cómo cambia la discusión sobre impuestos y subsidios si uno cree que el éxito depende sobre todo del esfuerzo, o de las condiciones de partida?","¿Qué datos del atlas de la pobreza muestran desigualdad de condiciones de partida en Colombia?"],
+    sources:["Piff, Paul (2013). «Does money make you mean?». Charla TED. Presenta el experimento del Monopolio amañado hecho en la Universidad de California en Berkeley.",
+      "PBS NewsHour (2023). «Scientists study the negative effects of income inequality». Video sobre el mismo experimento.",
+      "Adaptación propia: la guía para clase, la pregunta escrita antes de la plenaria y la conexión con el atlas de la pobreza. El experimento original observó parejas en laboratorio; aquí se usa como actividad de discusión, sin medición."]
+  });
+})();
+
+
+
+/* ===================== ENRUTADOR Y CLAVE DEL PROFESOR ===================== */
+window.LAB = (function(){
+  "use strict";
+  var $ = window.LABU.$;
+  var PASS_HASH = "5bce1dc55873cf63e4415f2d8288ca1157b490638fa69efff755f49e282d1175";
+  var unlocked = false;
+  try { unlocked = sessionStorage.getItem("mm-prof") === "1"; } catch(e){}
+  var ROUTES = {
+    "":                      {sec:"v-hub"},
+    "manzanas":              {sec:"v-inicio", game:"m"},
+    "estudiante":            {sec:"v-est", game:"m"},
+    "profesor":              {sec:"v-prof", game:"m", prof:true, mod:"MM"},
+    "multiplicador":         {sec:"v-mult", game:"x"},
+    "multiplicador-profesor":{sec:"v-mult-prof", game:"x", prof:true, mod:"MX"},
+    "inversion":             {sec:"v-inv", game:"i"},
+    "inversion-estudiante":  {sec:"v-inv-est", game:"i", est:"MI"},
+    "inversion-profesor":    {sec:"v-inv-prof", game:"i", prof:true, mod:"MI"},
+    "belleza":               {sec:"v-bz", game:"b"},
+    "belleza-profesor":      {sec:"v-bz-prof", game:"b", prof:true, mod:"MB"},
+    "prima":                 {sec:"v-rp", game:"r"},
+    "prima-profesor":        {sec:"v-rp-prof", game:"r", prof:true, mod:"MR"},
+    "fiado":                 {sec:"v-fi", game:"f"},
+    "fiado-profesor":        {sec:"v-fi-prof", game:"f", prof:true, mod:"MF"},
+    "vaca":                  {sec:"v-va", game:"v"},
+    "vaca-estudiante":       {sec:"v-va-est", game:"v"},
+    "vaca-profesor":         {sec:"v-va-prof", game:"v", prof:true, mod:"MV"},
+    "cienaga":               {sec:"v-ci", game:"c"},
+    "cienaga-estudiante":    {sec:"v-ci-est", game:"c"},
+    "cienaga-profesor":      {sec:"v-ci-prof", game:"c", prof:true, mod:"MC"},
+    "acciones":              {sec:"v-ac", game:"a"},
+    "acciones-profesor":     {sec:"v-ac-prof", game:"a", prof:true, mod:"MA"},
+    "monopolio":             {sec:"v-mo", game:"o"}
+  };
+  var NAV = {
+    m: [["#manzanas","Reglas"],["#estudiante","Estudiante"],["#profesor","Profesor"]],
+    x: [["#multiplicador","Reglas"],["#multiplicador-profesor","Profesor"]],
+    i: [["#inversion","Reglas"],["#inversion-estudiante","Estudiante"],["#inversion-profesor","Profesor"]],
+    b: [["#belleza","Reglas"],["#belleza-profesor","Profesor"]],
+    r: [["#prima","Reglas"],["#prima-profesor","Profesor"]],
+    f: [["#fiado","Reglas"],["#fiado-profesor","Profesor"]],
+    v: [["#vaca","Reglas"],["#vaca-estudiante","Calculadora"],["#vaca-profesor","Profesor"]],
+    c: [["#cienaga","Reglas"],["#cienaga-estudiante","Calculadora"],["#cienaga-profesor","Profesor"]],
+    a: [["#acciones","Reglas"],["#acciones-profesor","Profesor"]],
+    o: [["#monopolio","Guía"]]
+  };
+  var SECS = ["v-hub","v-gate","v-inicio","v-est","v-prof","v-mult","v-mult-prof","v-inv","v-inv-est","v-inv-prof","v-bz","v-bz-prof","v-rp","v-rp-prof","v-fi","v-fi-prof","v-va","v-va-est","v-va-prof","v-ci","v-ci-est","v-ci-prof","v-ac","v-ac-prof","v-mo"];
+  function route(){
+    var h = location.hash.replace(/^#/, "");
+    var r = ROUTES.hasOwnProperty(h) ? ROUTES[h] : ROUTES[""];
+    var show = (r.prof && !unlocked) ? "v-gate" : r.sec;
+    SECS.forEach(function(id){ var el = $(id); if (el) el.hidden = id !== show; });
+    var nav = $("lab-nav"); nav.innerHTML = "";
+    var items = [["#","Juegos"]].concat(r.game ? NAV[r.game] : []);
+    items.forEach(function(it){
+      var a = document.createElement("a"); a.href = it[0]; a.textContent = it[1];
+      a.setAttribute("aria-current", ("#" + h === it[0] || (h === "" && it[0] === "#")) ? "page" : "false");
+      nav.appendChild(a);
+    });
+    if (show === "v-gate") setTimeout(function(){ $("lab-pass").focus(); }, 0);
+    else if (r.prof && window[r.mod]) window[r.mod].render();
+    else if (r.est && window[r.est]) window[r.est].renderEst();
+    window.scrollTo(0,0);
+  }
+  function sha256(s){
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(x){ return ("0" + x.toString(16)).slice(-2); }).join("");
+    });
+  }
+  $("lab-gate").addEventListener("submit", function(e){
+    e.preventDefault();
+    var m = $("lab-gmsg"), v = $("lab-pass").value;
+    m.className = "msg"; m.textContent = "";
+    if (!window.crypto || !crypto.subtle){ m.className = "msg err"; m.textContent = "Este navegador no puede verificar la clave. Pruebe con Chrome o Firefox actualizados."; return; }
+    sha256(v).then(function(hh){
+      if (hh === PASS_HASH){
+        unlocked = true;
+        try { sessionStorage.setItem("mm-prof", "1"); } catch(err){}
+        $("lab-pass").value = "";
+        route();
+      } else { m.className = "msg err"; m.textContent = "Clave incorrecta."; $("lab-pass").select(); }
+    });
+  });
+  window.addEventListener("hashchange", route);
+  function lock(){ unlocked = false; try { sessionStorage.removeItem("mm-prof"); } catch(e){} route(); }
+  route();
+  return {lock:lock, route:route};
+})();
+</script>
+
+
+</body></html>
+</body></html>

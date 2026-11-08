@@ -1,0 +1,473 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Para docentes · Fundamentos de Economía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Display&display=swap">
+<style>
+/* Layout: guía de lectura larga con índice fijo a la izquierda en pantallas grandes; fichas de juego en cuadrícula */
+:root{
+  --paper:#EEF1F5; --surface:#FFFFFF; --ink:#16213A; --muted:#5B6679; --line:#D3DAE4;
+  --whale:#2F467A; --whale-soft:#DDE4F2; --gold:#9A6F1E; --gold-soft:#F3E7CC;
+  --apple:#B4442E; --leaf:#3F7A4A; --r3:#2F6FA8;
+  --f-display:"Libre Caslon Display","Libre Caslon Text",Georgia,"Times New Roman",serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10151F; --surface:#18202D; --ink:#E5EAF2; --muted:#9AA6B8; --line:#2B3546;
+    --whale:#9DB3E6; --whale-soft:#22304A; --gold:#E0B865; --gold-soft:#3A2F1A;
+    --apple:#E8826B; --leaf:#7CC08A; --r3:#7FB3E6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10151F; --surface:#18202D; --ink:#E5EAF2; --muted:#9AA6B8; --line:#2B3546;
+  --whale:#9DB3E6; --whale-soft:#22304A; --gold:#E0B865; --gold-soft:#3A2F1A;
+  --apple:#E8826B; --leaf:#7CC08A; --r3:#7FB3E6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper);color:var(--ink)}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:400;line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--whale)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.eyebrow{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.muted{color:var(--muted)}
+.fe-back{display:block;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:9px max(16px,env(safe-area-inset-left,0px));background:#2F467A;color:#fff;font-weight:700;font-size:14px;text-decoration:none}
+.fe-back:hover{background:#243862}
+
+.page{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;align-items:start}
+.toc{position:sticky;top:16px;display:grid;gap:4px;padding-top:40px;font-size:.92rem}
+.toc a{text-decoration:none;color:var(--muted);padding:4px 10px;border-left:2px solid var(--line)}
+.toc a:hover{color:var(--ink);border-left-color:var(--gold)}
+.toc .sub{padding-left:22px;font-size:.86rem}
+main{display:grid;gap:56px;min-width:0}
+.mast{display:grid;gap:14px;padding-block:40px 24px;border-bottom:1px solid var(--line)}
+.mast h1{font-size:clamp(2.4rem,6.5vw,4rem);color:var(--whale)}
+.mast .lead{max-width:68ch;font-size:1.08rem;color:var(--muted)}
+section{display:grid;gap:18px}
+section>h2{font-size:clamp(1.7rem,3.6vw,2.3rem)}
+section>p,.prose p{max-width:72ch}
+.prose{display:grid;gap:12px}
+h3{font-size:1.5rem}
+ul.plain,ol.plain{margin:0;padding-left:1.2em;display:grid;gap:6px;max-width:72ch}
+
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:grid;gap:10px;min-width:0}
+.box.note{background:var(--gold-soft);border-color:var(--gold)}
+.box.note b{color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.tab{display:grid;gap:6px;padding:16px 18px;border-radius:10px;background:var(--surface);border:1px solid var(--line);min-width:0}
+.tab h4{font-family:var(--f-body);font-weight:700;font-size:1.02rem}
+.tab p{color:var(--muted);font-size:.94rem}
+.tab .use{color:var(--ink)}
+.go{display:inline-flex;align-items:center;gap:6px;justify-self:start;padding:9px 16px;border-radius:9px;background:var(--whale);color:var(--surface);text-decoration:none;font-weight:700;font-size:.92rem}
+
+.game{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c,var(--whale));border-radius:12px;padding:22px;display:grid;gap:14px;min-width:0}
+.game header{display:grid;gap:6px}
+.game h3{font-size:1.7rem}
+.facts{display:flex;flex-wrap:wrap;gap:6px}
+.fact{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px 24px}
+.cols h4{font-family:var(--f-body);font-weight:700;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c,var(--whale));margin-bottom:6px}
+.cols ol,.cols ul{margin:0;padding-left:1.2em;display:grid;gap:5px;font-size:.95rem}
+.cols p{font-size:.95rem}
+.src{font-size:.86rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{font-size:.86rem;font-weight:700;padding:5px 11px;border-radius:999px;border:1px solid var(--whale);text-decoration:none}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.94rem;min-width:620px}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+
+.foot{display:grid;gap:8px;padding-top:22px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+.foot .credit{color:var(--ink)}
+
+@media (max-width:900px){
+  .page{grid-template-columns:minmax(0,1fr)}
+  .toc{position:static;padding-top:18px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 10px}
+  .toc .sub{display:none}
+}
+</style>
+</head><body>
+<a class="fe-back" href="index.html">← Fundamentos de Economía · todos los materiales</a>
+<div class="page">
+  <nav class="toc" aria-label="Contenido de la guía">
+    <a href="#como">Cómo está organizado</a>
+    <a href="#pensamiento">Atlas del pensamiento</a>
+    <a href="#pobreza">Atlas de la pobreza</a>
+    <a href="#salon">Economía en el salón</a>
+    <a class="sub" href="#g-manzanas">Mercado de manzanas</a>
+    <a class="sub" href="#g-acciones">Acciones del barrio</a>
+    <a class="sub" href="#g-multiplicador">La economía del barrio</a>
+    <a class="sub" href="#g-inversion">¿Invertimos?</a>
+    <a class="sub" href="#g-belleza">El reinado de Keynes</a>
+    <a class="sub" href="#g-vaca">La vaca</a>
+    <a class="sub" href="#g-cienaga">La ciénaga</a>
+    <a class="sub" href="#g-fiado">El fiado</a>
+    <a class="sub" href="#g-prima">La prima</a>
+    <a class="sub" href="#g-monopolio">Monopolio amañado</a>
+    <a class="sub" href="#g-linea">Juegos en línea</a>
+    <a href="#recorrido">Un recorrido por el curso</a>
+    <a href="#consejos">Antes de clase</a>
+    <a href="#creditos">Créditos</a>
+  </nav>
+
+  <main>
+    <header class="mast">
+      <p class="eyebrow">Fundamentos de Economía · Guía docente</p>
+      <h1>Para docentes</h1>
+      <p class="lead">Una guía para explorar el sitio y llevarlo al salón: qué hay en cada herramienta, para qué sirve cada sección y cómo se juega cada juego, con sus pasos, lo que conviene mirar en el tablero y las preguntas para la plenaria.</p>
+    </header>
+
+    <section id="como" aria-labelledby="h-como">
+      <h2 id="h-como">Cómo está organizado</h2>
+      <p>El sitio reúne tres herramientas pensadas para estudiantes de segundo semestre de Ciencia Política. Todas funcionan en el navegador, en computador y en celular, sin instalar nada ni crear cuentas.</p>
+      <div class="grid">
+        <div class="tab"><h4>Atlas del pensamiento económico</h4><p>Para estudiar la historia de las ideas, de Grecia a Keynes, y repasar antes de las evaluaciones.</p><p class="use"><b>Uso típico:</b> estudio autónomo y proyección en clase.</p></div>
+        <div class="tab"><h4>Atlas de la pobreza y la desigualdad</h4><p>Datos del mundo desde 1800 y de Colombia por departamentos, más una calculadora que ubica a un hogar colombiano.</p><p class="use"><b>Uso típico:</b> sesión de pobreza y desarrollo, trabajo en grupos.</p></div>
+        <div class="tab"><h4>Economía en el salón</h4><p>Diez experimentos clásicos de la economía adaptados a Colombia, con tablero para el profesor y vista para el celular.</p><p class="use"><b>Uso típico:</b> abrir una sesión jugando y discutir después con el modelo.</p></div>
+      </div>
+      <div class="box note">
+        <p><b>Dónde quedan los datos.</b> Nada se envía a un servidor. Los resultados de los juegos, el avance del repaso y las fichas marcadas se guardan en el navegador del equipo donde se usan. Por eso conviene llevar el tablero siempre desde el mismo computador y el mismo navegador, y borrar los resultados con el botón de cada juego al terminar.</p>
+        <p><b>Accesibilidad.</b> Los textos para estudiantes usan usted y vocabulario sencillo, y ningún juego pide hacer cuentas a mano: las calculadoras y el tablero las hacen. Esto facilita el trabajo con intérpretes de lengua de señas.</p>
+      </div>
+    </section>
+
+    <section id="pensamiento" aria-labelledby="h-pens">
+      <h2 id="h-pens">Atlas del pensamiento económico</h2>
+      <p>Organiza el contenido del libro del curso, <i>Historia del pensamiento económico</i>, en nueve pestañas. Los autores y escuelas posteriores a Keynes aparecen marcados como «Para explorar»: sirven para el estudio autónomo y no forman parte del documento del curso.</p>
+      <div class="grid">
+        <div class="tab"><h4>Línea de tiempo</h4><p>Autores, obras y acontecimientos históricos, de Hammurabi a Keynes. Tiene vista de mapa y de secuencia, y la escala se abre a partir del siglo XVIII.</p><p class="use">En clase: ubicar a un autor en su época antes de explicarlo.</p></div>
+        <div class="tab"><h4>Escuelas</h4><p>La genealogía de las corrientes, con flechas de influencia, y un cuadro comparativo de cinco preguntas que atraviesan el curso.</p><p class="use">En clase: mostrar de quién hereda cada escuela.</p></div>
+        <div class="tab"><h4>Autores</h4><p>Fichas con búsqueda por nombre, obra, tesis o concepto. Cada estudiante puede marcar las fichas que ya repasó.</p><p class="use">En casa: lista de chequeo para estudiar.</p></div>
+        <div class="tab"><h4>Temas</h4><p>Ocho grandes preguntas (riqueza, valor, clases, distribución, comercio, Estado y mercado, crecimiento, dinero y crisis) respondidas por los diez momentos del curso, en un espectro o en un cuadro completo.</p><p class="use">En clase: comparar escuelas sobre un mismo tema.</p></div>
+        <div class="tab"><h4>Leer el presente</h4><p>Casos actuales de Colombia y del mundo, como los repartidores de plataformas, el precio del café, el salario mínimo, los arriendos en Medellín o el gota a gota, leídos con las lentes de cada escuela.</p><p class="use">En clase: debate o pregunta abierta de taller.</p></div>
+        <div class="tab"><h4>Conceptos</h4><p>Glosario de las ideas que más vuelven en las evaluaciones, con los autores que las formularon o discutieron.</p><p class="use">En casa: repaso rápido antes de un examen.</p></div>
+        <div class="tab"><h4>Laboratorio</h4><p>Los ejemplos numéricos del libro para mover y observar: ecuación cuantitativa, ventaja comparativa, renta diferencial, progresiones de Malthus, plusvalía, tasa de ganancia, la escala de Menger y las tijeras de Marshall. Los cálculos ya están hechos; el objetivo es interpretar.</p><p class="use">En clase: proyectar y mover un control mientras se explica.</p></div>
+        <div class="tab"><h4>Repaso</h4><p>Seis modos de práctica: cuestionario, ¿quién lo dijo?, ordenar en el tiempo, ¿qué escuela?, tarjetas y temas y presente. Se puede filtrar por capítulo o por bloque de evaluación.</p><p class="use">En clase: concurso por grupos al cierre de una unidad.</p></div>
+        <div class="tab"><h4>Bibliografía</h4><p>Las obras de referencia del libro y, aparte, las de la ampliación a los siglos XX y XXI.</p><p class="use">Para el trabajo final.</p></div>
+      </div>
+      <a class="go" href="pensamiento.html">Abrir el atlas →</a>
+    </section>
+
+    <section id="pobreza" aria-labelledby="h-pob">
+      <h2 id="h-pob">Atlas de la pobreza y la desigualdad</h2>
+      <p>Inspirado en Dollar Street y en las herramientas de Gapminder, combina dos escalas: el mundo en el tiempo y Colombia en el espacio.</p>
+      <div class="grid">
+        <div class="tab"><h4>Dos siglos</h4><p>Los países en movimiento desde 1800, con datos de Gapminder. El eje horizontal es la producción por persona y el vertical se puede cambiar entre esperanza de vida, pobreza extrema y desigualdad. Incluye la pobreza extrema del mundo y de Colombia desde 1800.</p><p class="use">En clase: ver cuándo y cómo despegaron los países ricos y dónde está Colombia.</p></div>
+        <div class="tab"><h4>El mapa del mundo</h4><p>Un mapa con cinco indicadores para comparar países en un mismo año.</p><p class="use">En clase: discutir por qué la pobreza tiene geografía.</p></div>
+        <div class="tab"><h4>Colombia por departamentos</h4><p>Pobreza monetaria, pobreza extrema y Gini de cada departamento, con cifras del DANE de 2023 a 2025.</p><p class="use">En clase: comparar Chocó, La Guajira, Bogotá y Antioquia.</p></div>
+        <div class="tab"><h4>La calle</h4><p>Se describe un hogar (ingreso, número de personas, zona y condiciones como agua, alcantarillado e internet) y la página lo ubica frente a las líneas de pobreza del DANE, frente a los demás colombianos y frente a otros países. Enlaza a Dollar Street para ver hogares reales en fotos.</p><p class="use">En clase: probar con un salario mínimo para cuatro personas.</p></div>
+      </div>
+      <div class="box">
+        <p><b>Dos aproximaciones que conviene explicar.</b> El DANE no publica la distribución completa del ingreso, así que la ubicación frente a los demás colombianos sale de una curva ajustada a sus cifras de 2025. La comparación con otros países convierte pesos a dólares internacionales con una referencia gruesa. Las dos sirven para ver órdenes de magnitud y la propia página lo advierte.</p>
+      </div>
+      <a class="go" href="pobreza.html">Abrir el atlas →</a>
+    </section>
+
+    <section id="salon" aria-labelledby="h-salon">
+      <h2 id="h-salon">Economía en el salón</h2>
+      <div class="prose">
+        <p>Cada juego tiene tres vistas. La página de <b>reglas</b> se proyecta para explicar el juego y trae al final las preguntas para la plenaria y las fuentes originales del experimento. El <b>tablero del profesor</b> sirve para registrar lo que pasa y proyectar los resultados. Algunos juegos tienen además una vista de <b>celular</b>, para ver un papel secreto o hacer las cuentas.</p>
+        <p>El tablero del profesor pide una clave, que queda activa mientras la pestaña esté abierta. Si usted es docente del curso, solicítela al profesor responsable. En cada tablero, el menú «Configurar el juego» permite cargar <b>datos de ejemplo</b> para ensayar antes de clase, borrar los resultados y cerrar el modo profesor. La mayoría de tableros tiene un botón <b>Revelar</b> que muestra lo que predice la teoría: conviene dejarlo oculto hasta que el grupo haya discutido lo que pasó.</p>
+      </div>
+      <div class="box note"><p><b>Una secuencia que funciona.</b> Proyectar las reglas y resolver dudas (5 minutos), jugar sin explicar la teoría, mirar el tablero con el grupo, preguntar qué pasó y por qué, y solo entonces revelar el modelo y leer las fuentes.</p></div>
+
+      <article class="game" id="g-manzanas" style="--c:var(--apple)">
+        <header><p class="eyebrow">Mercados · oferta, demanda e impuestos</p><h3>Mercado de manzanas</h3>
+          <div class="facts"><span class="fact">Todo el salón</span><span class="fact">Celular</span><span class="fact">40 minutos</span></div></header>
+        <p>Cada estudiante es vendedor o comprador de un bulto de manzanas, con un costo o un valor máximo secreto que ve en su celular. Negocian en voz alta y el profesor registra cada venta. Sirve para ver si un mercado sin nadie que fije el precio llega al equilibrio que predice el modelo.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>En el tablero, cree la sesión con el número de participantes. Aparece un código.</li>
+            <li>Cada estudiante abre la vista de estudiante, escribe el código y su número, y ve su papel. Gana precio menos costo (vendedor) o valor menos precio (comprador).</li>
+            <li>Elija el escenario: 1 (tres costos y tres valores), 2 (llegó diciembre: a cada uno le cambia el costo o el valor), 3 (IVA de 6 que paga el vendedor) o 4 (IVA que paga el comprador).</li>
+            <li>Las parejas que cierran un trato le dicen al profesor quién vendió, quién compró y a qué precio. Un bulto por persona por ronda.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>Si los precios se acercan al equilibrio con el paso de las ventas.</li>
+            <li>Cuánto se movió el precio en diciembre y por qué.</li>
+            <li>En los escenarios de IVA, el recaudo y la brecha entre lo que paga el comprador y lo que recibe el vendedor. Al final no importa quién paga el impuesto ante la ley.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Alguien les dijo a qué precio vender? ¿Cómo se llegó a ese precio?</li>
+            <li>Con el IVA, ¿quién terminó pagando el impuesto? Piense en las propuestas de subir el IVA a algunos alimentos.</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuentes: Chamberlin (1948); Smith (1962); CORE Econ, <i>Experiencing Economics</i>, experimentos 2 y 7.</p>
+        <div class="links"><a href="juegos.html#manzanas">Reglas</a><a href="juegos.html#estudiante">Vista de estudiante</a><a href="juegos.html#profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-acciones" style="--c:var(--apple)">
+        <header><p class="eyebrow">Mercados financieros · burbujas</p><h3>Acciones del barrio</h3>
+          <div class="facts"><span class="fact">Todo el salón</span><span class="fact">Papel</span><span class="fact">45 minutos</span></div></header>
+        <p>Todos empiezan con 3 acciones de una constructora y 300 en efectivo. Durante 10 períodos compran y venden. Al final de cada período una moneda decide si cada acción paga 0 o 20 de dividendo, así que cada acción vale 10 por cada período que falta. Aun sabiéndolo, los precios suelen subir por encima de ese valor y desplomarse cerca del final.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Configure el número de participantes y asigne un número a cada estudiante. Cada uno lleva sus cuentas en un papel.</li>
+            <li>En cada período, quien quiere vender busca quien quiere comprar. El profesor registra quién vende, quién compra y el precio. El tablero rechaza ventas sin acciones o sin efectivo.</li>
+            <li>Al cerrar el período, lance una moneda frente a todos y marque 0 o 20.</li>
+            <li>Al final, muestre el ranking por efectivo.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>La nube de precios frente a la escalera del valor esperado (100, 90, 80… hasta 10).</li>
+            <li>El momento en que los precios se separan del valor y el momento del derrumbe.</li>
+            <li>Los saldos de cada participante están en un desplegable: no conviene proyectarlos.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Por qué alguien compra una acción por encima de lo que vale?</li>
+            <li>¿Qué se parece y qué no a una pirámide como la de DMG en 2008?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuente: Smith, Suchanek y Williams (1988), <i>Econometrica</i>.</p>
+        <div class="links"><a href="juegos.html#acciones">Reglas</a><a href="juegos.html#acciones-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-multiplicador" style="--c:var(--gold)">
+        <header><p class="eyebrow">Macroeconomía · el multiplicador</p><h3>La economía del barrio</h3>
+          <div class="facts"><span class="fact">Grupos</span><span class="fact">Sin celular</span><span class="fact">35 minutos</span></div></header>
+        <p>Cada grupo es un hogar de un barrio de Medellín y decide cada mes cuánto gasta. Todos los hogares reciben como ingreso el gasto promedio de los hogares, más lo que invierten las empresas, más lo que gasta el Gobierno. La meta es gastar el 80 % del ingreso, sin saber cuánto se va a recibir. Muestra que el gasto de unos es el ingreso de otros.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Arme los grupos y registre el número de hogares en el tablero.</li>
+            <li>Cada mes, cada grupo dice en voz alta su gasto y el profesor lo escribe. El tablero calcula el ingreso del barrio.</li>
+            <li>Cambie de fase cuando la economía se estabilice: año normal (inversión de 400), pandemia (inversión de 200) y el Gobierno gasta (inversión de 200 y gasto público de 200).</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>Cómo el ingreso del barrio cae mucho más que la inversión cuando llega la pandemia.</li>
+            <li>Cómo el gasto del Gobierno lo recupera.</li>
+            <li>El nivel al que tiende la economía en cada fase, que se puede revelar.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>Si la inversión cayó 200, ¿por qué el ingreso cayó mucho más?</li>
+            <li>¿Qué pasó en Colombia en 2020 con el gasto público?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuente: CORE Econ, <i>Experiencing Economics</i>, experimento 5; Keynes (1936).</p>
+        <div class="links"><a href="juegos.html#multiplicador">Reglas</a><a href="juegos.html#multiplicador-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-inversion" style="--c:var(--r3)">
+        <header><p class="eyebrow">Macroeconomía · coordinación y expectativas</p><h3>¿Invertimos?</h3>
+          <div class="facts"><span class="fact">Grupos de 6 a 8</span><span class="fact">Celular</span><span class="fact">30 minutos</span></div></header>
+        <p>Los negocios de una cuadra deciden si invierten sus 5 millones en arreglarla. La cuadra solo se arregla si invierten al menos dos de cada tres negocios: entonces quien invirtió termina con 10. Si no se alcanza, quien invirtió queda en 0, y quien no invierte conserva sus 5 pase lo que pase. Hay dos resultados estables y el ánimo decide cuál se da.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Arme cuadras de 6 a 8 personas. Con grupos de 2 es el juego original en parejas.</li>
+            <li>Cada estudiante elige en el celular la ronda y el tamaño de su cuadra, lee la noticia y decide sin hablar.</li>
+            <li>A la cuenta de «¡ya!», todos muestran la pantalla. El celular calcula lo que ganó cada uno.</li>
+            <li>El profesor escribe cuántos invirtieron en cada cuadra. Cuatro rondas: un mes cualquiera, malas noticias (sube la tasa de interés), buenas noticias (diciembre) y una garantía del Gobierno que devuelve 3 si la cuadra no se arregla.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>El porcentaje de personas que invirtió y de cuadras arregladas, ronda por ronda.</li>
+            <li>Que en las rondas 1 a 3 los pagos son idénticos: lo único que cambia es la noticia.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>Si los pagos no cambiaron, ¿qué hizo cambiar las decisiones?</li>
+            <li>¿Qué puede hacer el Estado para que la inversión no dependa tanto del ánimo?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuentes: CORE Econ, experimento 3; Van Huyck, Battalio y Beil (1990); Keynes (1936), cap. 12.</p>
+        <div class="links"><a href="juegos.html#inversion">Reglas</a><a href="juegos.html#inversion-estudiante">Vista de estudiante</a><a href="juegos.html#inversion-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-belleza" style="--c:var(--r3)">
+        <header><p class="eyebrow">Expectativas · Keynes y los mercados financieros</p><h3>El reinado de Keynes</h3>
+          <div class="facts"><span class="fact">Todo el salón</span><span class="fact">Papel</span><span class="fact">15 minutos</span></div></header>
+        <p>Cada persona escribe en secreto un número entero entre 0 y 100. Gana quien quede más cerca de los dos tercios del promedio del salón. Para ganar hay que adivinar lo que piensan los demás, como en el concurso de belleza con el que Keynes describió la bolsa.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Cada estudiante escribe su número en un papel.</li>
+            <li>El profesor recoge los papeles y escribe todos los números en el tablero.</li>
+            <li>Se proyecta el resultado y se juega una segunda y una tercera ronda.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>El histograma con el promedio y la meta.</li>
+            <li>Los grupos de números cerca de 33 y 22, que muestran cuántos «pasos» pensó cada uno.</li>
+            <li>Cómo bajan los números de una ronda a otra.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Cuántos pasos pensó sobre lo que pensarían los demás?</li>
+            <li>¿Pasa algo parecido con el precio del dólar o con la inflación que espera la gente?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuentes: Keynes (1936), cap. 12; Nagel (1995), <i>American Economic Review</i>.</p>
+        <div class="links"><a href="juegos.html#belleza">Reglas</a><a href="juegos.html#belleza-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-vaca" style="--c:var(--leaf)">
+        <header><p class="eyebrow">Bienes públicos · cooperación y Estado</p><h3>La vaca</h3>
+          <div class="facts"><span class="fact">Grupos de 4</span><span class="fact">Celular como calculadora</span><span class="fact">35 minutos</span></div></header>
+        <p>Cada mes, cada vecino recibe 20 y decide en secreto cuánto pone en la vaca para arreglar la cancha. Lo recogido se multiplica por 1,6 y se reparte por igual entre los cuatro, aporte o no. A cada uno le conviene que pongan los demás. Desde el mes 6 se puede sancionar al que no pone.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Configure el número de grupos y el mes en que empieza la sanción (por defecto, el 6).</li>
+            <li>En cada grupo, un tesorero suma los papeles y anuncia el total sin decir quién puso cuánto. El profesor registra el total de cada grupo.</li>
+            <li>Desde el mes de la sanción, se muestran los aportes sin nombres y cada uno puede sancionar: un punto le cuesta 1 a quien sanciona y le quita 3 al sancionado.</li>
+            <li>Cada estudiante calcula su ganancia en la calculadora del celular.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>Cómo caen los aportes mes a mes antes de la sanción.</li>
+            <li>Qué pasa después de la línea que marca el inicio de la sanción.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Por qué alguien paga para castigar a otro?</li>
+            <li>¿Se parece esto a pagar impuestos o a una junta de acción comunal?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuentes: Fehr y Gächter (2000), <i>American Economic Review</i>; CORE Econ, experimento 4. La sanción de 1 por 3 es una simplificación del diseño original.</p>
+        <div class="links"><a href="juegos.html#vaca">Reglas</a><a href="juegos.html#vaca-estudiante">Calculadora</a><a href="juegos.html#vaca-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-cienaga" style="--c:var(--leaf)">
+        <header><p class="eyebrow">Recursos de uso común · Estado y comunidad</p><h3>La ciénaga</h3>
+          <div class="facts"><span class="fact">Grupos de 5</span><span class="fact">Celular como calculadora</span><span class="fact">40 minutos</span></div></header>
+        <p>Cinco pescadores comparten una ciénaga del Caribe y cada mes deciden en secreto cuántos días salen a pescar, de 1 a 8. Cada día más le conviene a quien pesca, pero le quita a cada vecino. A partir del mes 6 se compara una de dos reglas: que el grupo converse antes de decidir, o una regulación externa con inspecciones al azar.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Configure el número de grupos y elija la regla para el mes 6 en adelante: conversación o regulación externa.</li>
+            <li>En cada grupo, un vocero suma los días y el profesor registra el total.</li>
+            <li>Con regulación externa, el límite es 1 día al mes. Cada estudiante sortea en el celular si lo inspeccionan (una de cada cuatro veces) y paga 20 por cada día de más.</li>
+            <li>La calculadora del celular muestra la ganancia y la tabla de pagos.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>Los días por pescador frente a las dos referencias: 8 (interés individual) y 1 (lo mejor para el grupo).</li>
+            <li>Cuánto se pierde frente al mejor resultado posible.</li>
+            <li>El cambio después del mes 6 según la regla elegida.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Qué funcionó mejor, conversar o la regulación externa?</li>
+            <li>¿Qué recursos de uso común conoce en Colombia: ciénagas, páramos, el agua de una vereda?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuentes: Cárdenas, Stranlund y Willis (2000), <i>World Development</i>, con experimentos en comunidades rurales colombianas; Ostrom, Gardner y Walker (1994). La tabla de pagos y los valores de la inspección son propios del curso.</p>
+        <div class="links"><a href="juegos.html#cienaga">Reglas</a><a href="juegos.html#cienaga-estudiante">Calculadora</a><a href="juegos.html#cienaga-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-fiado" style="--c:var(--leaf)">
+        <header><p class="eyebrow">Confianza y reciprocidad</p><h3>El fiado</h3>
+          <div class="facts"><span class="fact">Parejas anónimas</span><span class="fact">Papel</span><span class="fact">20 minutos</span></div></header>
+        <p>Una vecina tiene 10 y puede prestarle una parte al tendero del barrio. Lo prestado se triplica en el negocio, y el tendero decide cuánto devuelve, sin contrato ni forma de cobrar. Muestra cuánta cooperación se sostiene solo con confianza.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Reparta papeles marcados A (vecina) y B (tendero) para armar parejas anónimas.</li>
+            <li>A escribe cuánto presta; el papel pasa por el profesor a B, que escribe cuánto devuelve, desde 0 hasta el triple de lo prestado.</li>
+            <li>El profesor escribe una línea por pareja: lo prestado y lo devuelto.</li>
+            <li>Ronda 2: proyecte los resultados de la ronda 1 antes de jugar otra vez.</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>Cada pareja como un punto, frente a la línea en que la vecina recupera lo prestado.</li>
+            <li>La diferencia entre la ronda anónima y la ronda con historia.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Por qué prestaron algunos si no había forma de cobrar?</li>
+            <li>Cuando no hay bancos ni contratos que se cumplan, ¿quién llena ese vacío? Piense en el gota a gota.</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuente: Berg, Dickhaut y McCabe (1995), <i>Games and Economic Behavior</i>.</p>
+        <div class="links"><a href="juegos.html#fiado">Reglas</a><a href="juegos.html#fiado-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-prima" style="--c:var(--gold)">
+        <header><p class="eyebrow">Justicia y negociación · dictador y ultimátum</p><h3>La prima</h3>
+          <div class="facts"><span class="fact">Parejas anónimas</span><span class="fact">Papel</span><span class="fact">20 minutos</span></div></header>
+        <p>Una persona recibe 10.000 pesos de prima y decide cómo repartirlos con otra. En el primer juego la otra persona no puede responder; en el segundo puede rechazar la oferta y los dos quedan sin nada. Muestra que la justicia pesa en las decisiones económicas.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Reparta papeles A y B para armar parejas anónimas.</li>
+            <li>Juego 1, dictador: A escribe cuánto le da a B, de 0 a 10 (en miles).</li>
+            <li>Juego 2, ultimátum: A escribe una oferta y B la acepta o la rechaza.</li>
+            <li>El profesor registra las ofertas; en el ultimátum marca con una n las rechazadas (por ejemplo, 3n).</li>
+          </ol></div>
+          <div><h4>Qué mirar en el tablero</h4><ul>
+            <li>Las ofertas del dictador frente a las del ultimátum.</li>
+            <li>Cuántos dieron 0 en el dictador.</li>
+            <li>Qué ofertas se rechazaron.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Por qué alguien rechaza una oferta baja si eso lo deja sin nada?</li>
+            <li>¿Se parece la negociación del salario mínimo a un ultimátum?</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuentes: Güth, Schmittberger y Schwarze (1982); Kahneman, Knetsch y Thaler (1986); Forsythe y otros (1994); Henrich y otros (2001).</p>
+        <div class="links"><a href="juegos.html#prima">Reglas</a><a href="juegos.html#prima-profesor">Tablero</a></div>
+      </article>
+
+      <article class="game" id="g-monopolio" style="--c:var(--gold)">
+        <header><p class="eyebrow">Desigualdad · mérito y privilegio</p><h3>Monopolio amañado</h3>
+          <div class="facts"><span class="fact">Grupos de 2 a 4</span><span class="fact">Juego de mesa</span><span class="fact">30 minutos</span></div></header>
+        <p>Una guía de discusión, sin tablero. En cada pareja una moneda decide quién juega con ventaja: el doble de dinero al empezar, el doble al pasar por la salida y dos dados en lugar de uno. La pregunta es cómo explican su resultado quienes ganaron.</p>
+        <div class="cols">
+          <div><h4>Cómo se juega</h4><ol>
+            <li>Consiga un Monopolio por pareja o cualquier juego de dados con dinero de papel.</li>
+            <li>Lance la moneda a la vista de todos y asigne las ventajas.</li>
+            <li>Dejen jugar unos quince minutos mientras el profesor recorre las mesas y anota lo que ve y oye.</li>
+            <li>Antes de comentar, cada uno escribe por qué cree que ganó o perdió.</li>
+          </ol></div>
+          <div><h4>Qué observar</h4><ul>
+            <li>Cuántos ganadores mencionan la moneda y cuántos hablan de sus decisiones.</li>
+            <li>Cómo cambian la postura y el tono de quien va ganando.</li>
+          </ul></div>
+          <div><h4>Para la plenaria</h4><ul>
+            <li>¿Qué equivale en la vida real a los dos dados y al doble de plata en la salida?</li>
+            <li>Continuar con La calle, en el atlas de la pobreza.</li>
+          </ul></div>
+        </div>
+        <p class="src">Fuente: Piff (2013), charla TED «Does money make you mean?». El experimento original observó parejas en laboratorio; aquí se usa como actividad de discusión, sin medición.</p>
+        <div class="links"><a href="juegos.html#monopolio">Guía</a></div>
+      </article>
+
+      <article class="game" id="g-linea" style="--c:var(--muted)">
+        <header><p class="eyebrow">De otros autores · en inglés</p><h3>Juegos en línea</h3></header>
+        <p>Al final de la página de juegos hay cuatro juegos de otros autores, cada uno con una pregunta para llevarlo a Colombia. Sirven como tarea antes de clase o como actividad en la sala de cómputo.</p>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Juego</th><th>Tema</th><th>Autores</th><th>Sesión sugerida</th></tr></thead>
+          <tbody>
+            <tr><td>The Evolution of Trust</td><td>Confianza y teoría de juegos</td><td>Nicky Case (2017), a partir de Axelrod (1984)</td><td>Cooperación y Estado</td></tr>
+            <tr><td>Parable of the Polygons</td><td>Segregación por decisiones individuales</td><td>Vi Hart y Nicky Case (2014), a partir de Schelling (1971)</td><td>Pobreza y desigualdad</td></tr>
+            <tr><td>The Fiscal Ship</td><td>Presupuesto público</td><td>Hutchins Center, Brookings Institution</td><td>Rol del Estado</td></tr>
+            <tr><td>Spent</td><td>Decisiones bajo escasez</td><td>Urban Ministries of Durham y McKinney (2011)</td><td>Pobreza y desigualdad</td></tr>
+          </tbody></table></div>
+      </article>
+    </section>
+
+    <section id="recorrido" aria-labelledby="h-rec">
+      <h2 id="h-rec">Un recorrido por el curso</h2>
+      <p>Una posible distribución de las herramientas en las unidades del curso. En una sesión de dos horas cabe un juego largo o dos cortos con su plenaria.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Unidad</th><th>Para jugar</th><th>Para consultar</th></tr></thead>
+        <tbody>
+          <tr><td>Historia del pensamiento económico</td><td>La prima o El reinado de Keynes como apertura</td><td>Atlas del pensamiento: línea de tiempo, escuelas, temas, repaso</td></tr>
+          <tr><td>Microeconomía</td><td>Mercado de manzanas, escenarios 1 y 2</td><td>Atlas del pensamiento: laboratorio de las tijeras de Marshall</td></tr>
+          <tr><td>Macroeconomía</td><td>La economía del barrio, ¿Invertimos?, El reinado de Keynes, Acciones del barrio</td><td>Atlas del pensamiento: dinero, demanda y crisis</td></tr>
+          <tr><td>Rol del Estado</td><td>Mercado de manzanas con IVA, La vaca, La ciénaga, El fiado</td><td>The Fiscal Ship</td></tr>
+          <tr><td>Pobreza y desarrollo</td><td>Monopolio amañado, La prima</td><td>Atlas de la pobreza: dos siglos, Colombia, La calle; Spent</td></tr>
+          <tr><td>Colombia</td><td>Cualquiera de los juegos con sus preguntas colombianas</td><td>Atlas de la pobreza: Colombia por departamentos; Atlas del pensamiento: Leer el presente</td></tr>
+        </tbody></table></div>
+    </section>
+
+    <section id="consejos" aria-labelledby="h-cons">
+      <h2 id="h-cons">Antes de clase</h2>
+      <ol class="plain">
+        <li>Abra el tablero del juego en el computador del salón y entre al modo profesor antes de que lleguen los estudiantes.</li>
+        <li>Cargue los datos de ejemplo para ver cómo se ve el tablero lleno, y bórrelos antes de empezar.</li>
+        <li>Si el juego usa celular, proyecte el enlace de la vista de estudiante. Quien no tenga celular puede compartir con un compañero o recibir su papel impreso.</li>
+        <li>Prepare papeles en blanco para los juegos en papel, y monedas o un dado para Acciones del barrio y Monopolio amañado.</li>
+        <li>Deje el botón Revelar para el final de la discusión.</li>
+        <li>Al terminar, borre los resultados desde «Configurar el juego» si otro grupo va a usar el mismo computador.</li>
+      </ol>
+    </section>
+
+    <footer class="foot" id="creditos">
+      <p>Las fuentes de cada juego están completas al final de su página de reglas. Las fuentes de los datos están en cada atlas.</p>
+      <p>Universidad de Antioquia, Facultad de Derecho y Ciencias Políticas, Pregrado en Ciencia Política. Fundamentos de Economía, código 1035205.</p>
+      <p class="credit">Realizado por Emilio Henao (@elnostos) con Claude (Opus 5.5).</p>
+    </footer>
+  </main>
+</div>
+
+</body></html>

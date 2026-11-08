@@ -1,0 +1,218 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Fundamentos de Economía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&family=Libre+Caslon+Display&display=swap">
+<style>
+/* Layout: portada sobria de curso; tres secciones por tipo de material, cada herramienta como una ficha con sus puertas de entrada */
+:root{
+  --paper:#EEF1F5; --surface:#FFFFFF; --ink:#16213A; --muted:#5B6679; --line:#D3DAE4;
+  --whale:#2F467A; --whale-soft:#DDE4F2; --gold:#9A6F1E; --gold-soft:#F3E7CC;
+  --f-display:"Libre Caslon Display","Libre Caslon Text",Georgia,"Times New Roman",serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10151F; --surface:#18202D; --ink:#E5EAF2; --muted:#9AA6B8; --line:#2B3546;
+    --whale:#9DB3E6; --whale-soft:#22304A; --gold:#E0B865; --gold-soft:#3A2F1A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10151F; --surface:#18202D; --ink:#E5EAF2; --muted:#9AA6B8; --line:#2B3546;
+  --whale:#9DB3E6; --whale-soft:#22304A; --gold:#E0B865; --gold-soft:#3A2F1A; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--whale)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;gap:44px;grid-template-columns:minmax(0,1fr)}
+.eyebrow{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+.masthead{display:grid;gap:16px;padding-block:40px 28px;border-bottom:1px solid var(--line)}
+.masthead h1{font-size:clamp(2.6rem,7vw,4.6rem);color:var(--whale)}
+.masthead .lead{max-width:64ch;font-size:1.08rem;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:700}
+.code{font-family:var(--f-mono);font-size:.85rem}
+
+.section{display:grid;gap:18px}
+.section-head{display:grid;gap:6px;grid-template-columns:minmax(0,1fr)}
+.section-head h2{font-size:clamp(1.7rem,3.6vw,2.3rem)}
+.section-head p{color:var(--muted);max-width:68ch}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;gap:14px;align-content:start;min-width:0}
+.card h3{font-size:1.75rem}
+.card .desc{color:var(--muted)}
+.inside{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:.95rem}
+.inside li{display:grid;grid-template-columns:1.2em minmax(0,1fr);gap:6px}
+.inside li::before{content:"·";color:var(--gold);font-weight:700;font-size:1.3rem;line-height:1}
+.go{display:inline-flex;align-items:center;justify-content:center;gap:8px;justify-self:start;padding:11px 18px;border-radius:9px;background:var(--whale);color:var(--surface);text-decoration:none;font-weight:700}
+.go:hover{filter:brightness(1.08)}
+
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}
+.game{display:grid;gap:8px;align-content:start;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--paper);min-width:0}
+.game h4{margin:0;font-family:var(--f-display);font-weight:400;font-size:1.35rem;line-height:1.15}
+.game p{color:var(--muted);font-size:.93rem}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.links a{font-size:.88rem;font-weight:700;padding:6px 11px;border-radius:999px;border:1px solid var(--whale);text-decoration:none}
+.links a.main{background:var(--whale);color:var(--surface)}
+
+.soon{border-style:dashed;background:transparent}
+.badge{justify-self:start;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--gold-soft);color:var(--gold)}
+
+.foot{display:grid;gap:8px;padding-top:22px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+.foot .credit{color:var(--ink)}
+</style>
+</head><body>
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">Universidad de Antioquia · Facultad de Derecho y Ciencias Políticas · Pregrado en Ciencia Política</p>
+    <h1>Fundamentos de Economía</h1>
+    <p class="lead">Material de consulta y de trabajo del curso: herramientas para explorar la historia del pensamiento económico y la pobreza, y juegos para vivir la economía en el salón.</p>
+    <div class="meta">
+      <span>Código <b class="code">1035205</b></span>
+      <span>Semestre <b>2026-II</b></span>
+      <span>Profesor <b>S. Emilio Henao-Bedoya</b></span>
+      <span><a href="docentes.html">Guía para docentes →</a></span>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="h-consulta">
+    <div class="section-head">
+      <p class="eyebrow">Para consultar y explorar</p>
+      <h2 id="h-consulta">Atlas</h2>
+      <p>Dos herramientas para estudiar por su cuenta, repasar antes de un taller o buscar argumentos para el trabajo final.</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <p class="eyebrow">Historia del pensamiento económico</p>
+        <h3>Atlas del pensamiento económico</h3>
+        <p class="desc">Las escuelas y los autores del curso, de Grecia a Keynes y más allá, conectados en el tiempo y por sus ideas.</p>
+        <ul class="inside">
+          <li>Línea de tiempo con autores, obras y hechos históricos</li>
+          <li>Escuelas, autores y conceptos con sus relaciones</li>
+          <li>Casos de hoy leídos desde varias escuelas</li>
+          <li>Preguntas de autoevaluación</li>
+        </ul>
+        <a class="go" href="pensamiento.html">Abrir el atlas →</a>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Pobreza y desigualdad</p>
+        <h3>Atlas de la pobreza y la desigualdad</h3>
+        <p class="desc">Dos siglos de historia del mundo y el mapa de Colombia hoy, con datos de Gapminder y del DANE.</p>
+        <ul class="inside">
+          <li>Dos siglos: los países en movimiento desde 1800</li>
+          <li>El mapa del mundo con cinco indicadores</li>
+          <li>Colombia por departamentos</li>
+          <li>La calle: dónde queda un hogar colombiano</li>
+        </ul>
+        <a class="go" href="pobreza.html">Abrir el atlas →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="h-juegos">
+    <div class="section-head">
+      <p class="eyebrow">Para jugar en clase</p>
+      <h2 id="h-juegos">Economía en el salón</h2>
+      <p>Diez juegos y experimentos clásicos de la economía, adaptados a casos de Colombia, más cuatro juegos en línea de otros autores. El profesor lleva el tablero; cuando haga falta, los estudiantes entran desde el celular. Cada juego cita las fuentes originales de las que se adapta.</p>
+    </div>
+    <div class="card">
+      <div class="games">
+        <div class="game">
+          <p class="eyebrow">Mercados</p>
+          <h4>Mercado de manzanas</h4>
+          <p>Oferta y demanda, con dos escenarios de IVA.</p>
+          <div class="links"><a class="main" href="juegos.html#manzanas">Reglas</a><a href="juegos.html#estudiante">Estudiante</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Mercados</p>
+          <h4>Acciones del barrio</h4>
+          <p>Una burbuja en el salón: precios que se alejan del valor.</p>
+          <div class="links"><a class="main" href="juegos.html#acciones">Reglas</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Macroeconomía</p>
+          <h4>La economía del barrio</h4>
+          <p>El multiplicador: lo que gasta un hogar es el ingreso de otro.</p>
+          <div class="links"><a class="main" href="juegos.html#multiplicador">Reglas</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Macroeconomía</p>
+          <h4>¿Invertimos?</h4>
+          <p>Una cuadra de Medellín decide si invierte. Coordinación y expectativas.</p>
+          <div class="links"><a class="main" href="juegos.html#inversion">Reglas</a><a href="juegos.html#inversion-estudiante">Estudiante</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Macroeconomía</p>
+          <h4>El reinado de Keynes</h4>
+          <p>Adivinar lo que piensan los demás: el concurso de belleza.</p>
+          <div class="links"><a class="main" href="juegos.html#belleza">Reglas</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Cooperación y Estado</p>
+          <h4>La vaca</h4>
+          <p>Bienes públicos: la cancha del barrio y la sanción social.</p>
+          <div class="links"><a class="main" href="juegos.html#vaca">Reglas</a><a href="juegos.html#vaca-estudiante">Calculadora</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Cooperación y Estado</p>
+          <h4>La ciénaga</h4>
+          <p>Recursos de uso común: ¿conversar o regular desde afuera?</p>
+          <div class="links"><a class="main" href="juegos.html#cienaga">Reglas</a><a href="juegos.html#cienaga-estudiante">Calculadora</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Cooperación y Estado</p>
+          <h4>El fiado</h4>
+          <p>Confianza y reciprocidad sin contratos.</p>
+          <div class="links"><a class="main" href="juegos.html#fiado">Reglas</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Justicia y desigualdad</p>
+          <h4>La prima</h4>
+          <p>Dictador y ultimátum: ¿qué reparto es justo?</p>
+          <div class="links"><a class="main" href="juegos.html#prima">Reglas</a></div>
+        </div>
+        <div class="game">
+          <p class="eyebrow">Justicia y desigualdad</p>
+          <h4>Monopolio amañado</h4>
+          <p>Mérito y privilegio en un juego de mesa con trampa.</p>
+          <div class="links"><a class="main" href="juegos.html#monopolio">Guía</a></div>
+        </div>
+      </div>
+      <a class="go" href="juegos.html">Ver todos los juegos →</a>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="h-docentes">
+    <div class="section-head">
+      <p class="eyebrow">Para enseñar con este material</p>
+      <h2 id="h-docentes">Para docentes</h2>
+      <p>Una guía para explorar el sitio y llevarlo al salón.</p>
+    </div>
+    <article class="card">
+      <p class="eyebrow">Guía docente</p>
+      <h3>Cómo usar el sitio en clase</h3>
+      <ul class="inside">
+        <li>Qué hay en cada pestaña de los dos atlas y cómo usarla en clase</li>
+        <li>Cada juego paso a paso: formato, qué mirar en el tablero y preguntas para la plenaria</li>
+        <li>Un recorrido sugerido por las unidades del curso</li>
+        <li>Lo que conviene preparar antes de clase</li>
+      </ul>
+      <a class="go" href="docentes.html">Abrir la guía →</a>
+    </article>
+  </section>
+
+  <footer class="foot">
+    <p>Fuentes y créditos de cada herramienta al final de cada página.</p>
+    <p class="credit">Realizado por Emilio Henao (@elnostos) con Claude (Opus 5.5).</p>
+  </footer>
+</div>
+
+</body></html>
