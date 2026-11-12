@@ -1911,13 +1911,22 @@ window.MI = (function(){
 window.MV = (function(){
   "use strict";
   var U = window.LABU, G = window.LABG, L = window.LABS, $ = U.$;
-  var KEY = "lab-vaca-v2", K0 = 4, E = 20, RET = 1.6, PCOST = 1, PHIT = 3;
+  var KEY = "lab-vaca-v3", E = 20, RET = 1.6, PCOST = 1, PHIT = 3;
   function M(n){ return RET / n; }
+  /* En La vaca, el último número del código es el NÚMERO DE GRUPOS (no su tamaño). El sobrante se reparte de a uno:
+     18 personas en 4 grupos quedan en grupos de 5, 5, 4 y 4. */
+  function defG(N){ return Math.max(1, Math.round(N / 4)); }
+  function vgroups(letters, N, Gn){ Gn = Math.max(1, Math.min(N, Gn || defG(N))); return L.groups(letters, N, N / Gn, "vaca"); }
+  function split(N, Gn){
+    var q = Math.floor(N / Gn), r = N % Gn;
+    function part(k, size){ return k + (k === 1 ? " grupo de " : " grupos de ") + size; }
+    return r ? part(r, q + 1) + " y " + part(Gn - r, q) : part(Gn, q);
+  }
   G.rules("v-va", {
     eyebrow:"Bienes públicos · cooperación y Estado", title:"La vaca",
-    lead:"En grupos secretos de cuatro vecinos. Cada mes, cada uno recibe 20 (miles de pesos) y decide en secreto cuánto pone en la vaca para arreglar la cancha del barrio. Lo que se recoge rinde: se multiplica por 1,6 y se reparte por igual entre los del grupo, aporte o no. Al final hay dos premios: uno para el grupo que más gane y otro para la persona que más gane.",
+    lead:"En grupos secretos de cuatro o cinco vecinos, según cuántos sean en el salón. Cada mes, cada uno recibe 20 (miles de pesos) y decide en secreto cuánto pone en la vaca para arreglar la cancha del barrio. Lo que se recoge rinde: se multiplica por 1,6 y se reparte por igual entre los del grupo, aporte o no. Al final hay dos premios: uno para el grupo que más gane y otro para la persona que más gane.",
     rules:[["Su grupo es secreto","Cuando escribe en el celular el código y su número, usted ve a qué grupo quedó asignado. No sabe quiénes son los otros de su grupo y no le debe contar a nadie cuál es el suyo."],
-      ["Lo que usted gana","Lo que no puso en la vaca, más su parte de la cancha: <b>20 − su aporte + 0,4 × lo que puso todo el grupo</b> (con grupos de cuatro)."],
+      ["Lo que usted gana","Lo que no puso en la vaca, más su parte de la cancha: <b>20 − su aporte + 0,4 × lo que puso todo el grupo</b> (con grupos de cuatro; con grupos de cinco, 0,32)."],
       ["El dilema","Cada peso que usted pone le devuelve 0,4. Al grupo le conviene que todos pongan todo; a cada uno le conviene que pongan los demás."],
       ["Cada mes","Cada uno guarda su aporte en el celular, se acerca al profesor y le dice su número y su aporte. El tablero suma cada aporte a su grupo y, al cerrar el mes, proyecta lo que puso cada grupo y lo que ganó cada uno de sus integrantes."],
       ["Dos premios","Al final gana el grupo con la mayor ganancia promedio por persona y gana la persona con la mayor ganancia acumulada. Poner en la vaca ayuda a su grupo; quedarse con la plata mientras los demás ponen le ayuda a usted."],
@@ -1932,7 +1941,7 @@ window.MV = (function(){
   var MONTHS = ["1","2","3","4","5","6","7","8","9","10"];
   /* celular */
   L.student("v-va-est", {key:"lab-est-vaca", eyebrow:"La vaca", title:"Busque su grupo", rounds:MONTHS, roundLabel:"Mes (el profesor lo indica)", show:function(c, n, r, out){
-    var g = L.groups(c.letters, c.N, c.k || K0, "vaca"), me = g.of[n], sz = me.n, mm = M(sz);
+    var g = vgroups(c.letters, c.N, c.k), me = g.of[n], sz = me.n, mm = M(sz);
     L.roleCard(out, "", '<p class="eyebrow">Participante ' + n + ' · Mes ' + r + '</p><p class="what">Grupo ' + me.g + '</p><p>Usted es el <b>vecino ' + me.seat + '</b> de un grupo de ' + sz + '. No sabe quiénes son los demás y nadie sabe que usted está aquí: <b>no le cuente a nadie su grupo</b>.</p><p class="muted small">Cada peso en la vaca le devuelve ' + U.dec(mm) + ' a cada uno del grupo. Al cerrar cada mes, el tablero muestra lo que puso el Grupo ' + me.g + '.</p>');
     L.decide(out, {store:c.letters + c.N + "|vaca|" + n + "|" + r, title:"¿Cuánto pone en la vaca?", label:"Su aporte de este mes (0 a 20)", min:0, max:E, int:true,
       help:"Decida en secreto.", when:"Acérquese al profesor y muéstresela. Él solo necesita su número y su aporte.", who:"N.º " + n + " · Mes " + r, fmt:function(v){ return "Aporte: " + v; }});
@@ -1964,12 +1973,12 @@ window.MV = (function(){
   }});
 
   /* profesor */
-  function fresh(N, k){ var s = L.fresh(N || 24, k || K0); s.P = 6; s.entry = 2; s.rounds = []; s.pend = null; s.draft = {}; s.pendS = {}; s.revealed = false; s.showRank = false; return s; }
+  function fresh(N, k){ N = N || 24; var s = L.fresh(N, k && k <= N ? k : defG(N)); s.P = 6; s.entry = 2; s.rounds = []; s.pend = null; s.draft = {}; s.pendS = {}; s.revealed = false; s.showRank = false; return s; }
   var S = U.load(KEY); if (!S || !S.letters || !S.rounds) S = fresh();
   if (!S.draft) S.draft = {}; if (!S.pendS) S.pendS = {};
   if (!(S.P === 0 || (S.P >= 2 && S.P <= 10))) S.P = 0;
   function save(){ U.save(KEY, S); }
-  function gr(){ return L.groups(S.letters, S.N, S.k || K0, "vaca"); }
+  function gr(){ return vgroups(S.letters, S.N, S.k); }
   function sanc(m){ return S.P > 0 && m >= S.P; }
   /* Calcula, para un mes, el total de cada grupo y la ganancia de cada persona */
   function calcMonth(rec){
@@ -2007,7 +2016,7 @@ window.MV = (function(){
       '<button class="btn primary" type="submit" id="va-go">Cerrar el mes</button><p class="msg" id="va-msg" role="status"></p><div class="row"><button class="btn small ghost" type="button" id="va-undo">Deshacer el último mes</button></div></form>' +
     '<details><summary>Integrantes de cada grupo (no proyectar)</summary><div class="tablewrap" id="va-members"></div></details>' +
     G.plenaria(["¿Qué pasó con los aportes de un mes a otro?","¿Quién ganó el premio individual y cuánto puso en la vaca? ¿Y el grupo ganador?","Si hubo sanción, ¿por qué alguien paga para castigar a otro?","¿Se parece esto a pagar impuestos o a un convite?","¿Qué hace el Estado cuando la cooperación voluntaria no alcanza?"]) +
-    G.config("va", L.sessFields("va", {N:24, kLabel:"Personas por grupo", kOpts:[[3,"3"],[4,"4 (el diseño original)"],[5,"5"]]}) + '<div class="field"><label for="va-p">Sanción social</label><select id="va-p">' + SOPTS + '</select></div>'),
+    G.config("va", L.sessFields("va", {N:24, kLabel:"Número de grupos", kOpts:L.allNums(20).slice(1).map(function(k){ return [k, k + " grupos"]; })}) + '<p class="muted small" id="va-kh"></p>'  + '<div class="field"><label for="va-p">Sanción social</label><select id="va-p">' + SOPTS + '</select></div>'),
     '<div id="va-banner"></div><div id="va-show"></div><div class="tiles">' + G.tile("va-t1","Aporte promedio el mes pasado","% de los 20") + G.tile("va-t2","Ganancia promedio el mes pasado","por persona") + G.tile("va-t3","Grupos","") + G.revealTile("va-eq","Lo que dice la teoría") + '</div>' +
     '<div class="panel"><div class="row spread"><h3 id="va-gt-h">Resultado de cada grupo</h3></div><div class="tablewrap" id="va-gt"></div><p class="muted small" style="margin-top:10px" id="va-gch-h" hidden>Las ganancias son por persona: el promedio de los integrantes de cada grupo. El gráfico muestra la ganancia acumulada.</p><div id="va-gchart"></div></div>' +
     '<details class="panel" id="va-det"><summary><b>Aportes de cada integrante, por grupo</b> <span class="muted small">(sin números: vecino 1, 2, 3…)</span></summary><div class="field" style="margin-top:10px;max-width:260px"><label for="va-dm">Mes</label><select id="va-dm"></select></div><div class="tablewrap" id="va-dt"></div><p class="muted small" style="margin-top:8px" id="va-dn">Cada estudiante sabe qué vecino es en su grupo, así que reconoce su casilla sin que los demás sepan quién es quién. Se puede proyectar.</p></details>' +
@@ -2015,6 +2024,13 @@ window.MV = (function(){
     '<div class="panel" id="va-theory" hidden><h3>Lo que dice la teoría</h3><div class="theory"><p>Cada peso en la vaca le devuelve 0,4 a quien lo pone, así que a cada uno, pensando solo en su plata, le conviene no poner nada. Pero si todos ponen sus 20, cada uno gana 32 en lugar de 20. Lo que es racional para cada uno lleva al grupo a un mal resultado.</p><p>Los dos premios ponen esa tensión a la vista: el premio individual lo suele ganar alguien que puso poco en un grupo donde los demás sí pusieron, y el premio por grupo lo gana el grupo que logró cooperar.</p><p>Fehr y Gächter (2000) encontraron que sin castigo los aportes empiezan altos y caen mes a mes: los que cooperan se cansan de los aprovechados. Cuando se puede castigar, aunque cueste, la cooperación se sostiene. Normas sociales, sanciones e impuestos responden a este problema.</p></div></div>' +
     L.rankPanel("va", "Dos premios: la persona y el grupo que más ganaron"));
   $("va-p").addEventListener("change", function(){ var p = parseInt(this.value, 10); if (p === 0 || (p >= 2 && p <= 10)){ S.P = p; save(); render(); } });
+  function khint(){
+    var N = parseInt($("va-N").value, 10), Gn = parseInt($("va-k").value, 10), h = $("va-kh");
+    if (!N || N < 2 || !Gn){ h.textContent = ""; return; }
+    if (Gn > N){ h.textContent = "Hay más grupos que participantes: se usarán " + defG(N) + " grupos."; return; }
+    h.textContent = "Con " + N + " participantes: " + split(N, Gn) + "." + (N / Gn < 2 ? " Hay grupos de una persona: use menos grupos." : N / Gn < 3 ? " Con grupos de 2 el dilema se nota poco: conviene usar menos grupos." : "");
+  }
+  $("va-N").addEventListener("input", khint); $("va-k").addEventListener("change", khint);
   G.bindSeg("va-e", function(v){ if (S.pend){ U.flash("va-msg", "Termine primero el mes en curso.", "err"); return; } S.entry = v; save(); render(); });
   L.bindSecret("va", "va-inputs");
 
@@ -2158,10 +2174,10 @@ window.MV = (function(){
   });
   G.lockBind("va");
   L.bindRank("va", function(){ return S; }, save, render);
-  L.bindSess("va", function(N, k){ var p = S.P, e = S.entry; S = fresh(N, k || K0); S.P = p; S.entry = e; save(); render(); });
+  L.bindSess("va", function(N, k){ var p = S.P, e = S.entry; S = fresh(N, k); S.P = p; S.entry = e; save(); render(); });
   U.twoStep("va-clear-wrap", "va-clear", "Se borran todos los meses; el código se mantiene.", function(){ S.rounds = []; S.pend = null; S.pendS = {}; S.draft = {}; S.demo = false; save(); render(); });
   U.twoStep("va-demo-wrap", "va-demo", "Se cargan diez meses de ejemplo.", function(){
-    S = fresh(24, 4); S.demo = true; S.entry = 2; var r = U.rng(U.hashStr("vaca")), g = gr();
+    S = fresh(24, 6); S.demo = true; S.entry = 2; var r = U.rng(U.hashStr("vaca")), g = gr();
     [0.55,0.5,0.42,0.36,0.3,0.48,0.6,0.68,0.72,0.75].forEach(function(b, t){
       var c = {}, s = {};
       for (var p = 1; p <= S.N; p++) c[p] = Math.round(E * Math.min(1, Math.max(0, b + (r() - 0.5) * 0.6)));
@@ -2187,7 +2203,7 @@ window.MV = (function(){
     $("va-rk").insertAdjacentHTML("afterbegin", html);
   }
   function render(){
-    L.showSess("va", S); $("va-p").value = String(S.P); G.setSeg("va-e", S.entry);
+    L.showSess("va", S); khint(); $("va-p").value = String(S.P); G.setSeg("va-e", S.entry);
     $("va-e-h").textContent = S.entry === 1 ? "Un tesorero por grupo le dice el total. El tesorero conoce a su grupo, así que el grupo deja de ser secreto, y el ranking individual usa el promedio del grupo." : "Cada persona le dice su número y su aporte. El grupo sigue siendo secreto y el ranking individual usa la ganancia de cada uno.";
     buildInputs();
     var n = S.rounds.length, m = n + 1, g = gr();
