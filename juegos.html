@@ -2010,6 +2010,7 @@ window.MV = (function(){
     G.config("va", L.sessFields("va", {N:24, kLabel:"Personas por grupo", kOpts:[[3,"3"],[4,"4 (el diseño original)"],[5,"5"]]}) + '<div class="field"><label for="va-p">Sanción social</label><select id="va-p">' + SOPTS + '</select></div>'),
     '<div id="va-banner"></div><div id="va-show"></div><div class="tiles">' + G.tile("va-t1","Aporte promedio el mes pasado","% de los 20") + G.tile("va-t2","Ganancia promedio el mes pasado","por persona") + G.tile("va-t3","Grupos","") + G.revealTile("va-eq","Lo que dice la teoría") + '</div>' +
     '<div class="panel"><div class="row spread"><h3 id="va-gt-h">Resultado de cada grupo</h3></div><div class="tablewrap" id="va-gt"></div><p class="muted small" style="margin-top:10px" id="va-gch-h" hidden>Las ganancias son por persona: el promedio de los integrantes de cada grupo. El gráfico muestra la ganancia acumulada.</p><div id="va-gchart"></div></div>' +
+    '<details class="panel" id="va-det"><summary><b>Aportes de cada integrante, por grupo</b> <span class="muted small">(sin números: vecino 1, 2, 3…)</span></summary><div class="field" style="margin-top:10px;max-width:260px"><label for="va-dm">Mes</label><select id="va-dm"></select></div><div class="tablewrap" id="va-dt"></div><p class="muted small" style="margin-top:8px" id="va-dn">Cada estudiante sabe qué vecino es en su grupo, así que reconoce su casilla sin que los demás sepan quién es quién. Se puede proyectar.</p></details>' +
     '<div class="panel"><div class="row spread"><h3>Aporte promedio a la vaca, mes a mes</h3><div class="legend"><span style="--c:var(--r3)">Promedio del salón</span><span style="--c:var(--line)">Cada grupo</span></div></div><div id="va-chart"></div></div>' +
     '<div class="panel" id="va-theory" hidden><h3>Lo que dice la teoría</h3><div class="theory"><p>Cada peso en la vaca le devuelve 0,4 a quien lo pone, así que a cada uno, pensando solo en su plata, le conviene no poner nada. Pero si todos ponen sus 20, cada uno gana 32 en lugar de 20. Lo que es racional para cada uno lleva al grupo a un mal resultado.</p><p>Los dos premios ponen esa tensión a la vista: el premio individual lo suele ganar alguien que puso poco en un grupo donde los demás sí pusieron, y el premio por grupo lo gana el grupo que logró cooperar.</p><p>Fehr y Gächter (2000) encontraron que sin castigo los aportes empiezan altos y caen mes a mes: los que cooperan se cansan de los aprovechados. Cuando se puede castigar, aunque cueste, la cooperación se sostiene. Normas sociales, sanciones e impuestos responden a este problema.</p></div></div>' +
     L.rankPanel("va", "Dos premios: la persona y el grupo que más ganaron"));
@@ -2058,6 +2059,33 @@ window.MV = (function(){
     S.pendS[n] = o; save();
     $("va-sn").value = ""; $("va-sf").innerHTML = ""; $("va-sn").focus(); counterS();
     U.flash("va-msg", "Sanciones de N.º " + n + " registradas.", "ok");
+  }
+  /* desplegable con el aporte de cada vecino: el último mes por defecto (S.detM = 0) */
+  $("va-det").addEventListener("toggle", function(){ S.detOpen = this.open; save(); });
+  $("va-dm").addEventListener("change", function(){ var v = parseInt(this.value, 10), o = this.options, latest = parseInt(o[o.length - 1].value, 10); S.detM = v === latest ? 0 : v; save(); render(); });
+  function detail(g, n){
+    var det = $("va-det"), sel = $("va-dm"), dt = $("va-dt");
+    if (det.open !== !!S.detOpen) det.open = !!S.detOpen;
+    var opts = [];
+    for (var i = 1; i <= n; i++) opts.push([i, "Mes " + i]);
+    if (S.pend) opts.push([n + 1, "Mes " + (n + 1) + " (en curso)"]);
+    dt.innerHTML = "";
+    if (!opts.length){ sel.innerHTML = ""; sel.disabled = true; U.empty(dt, "Todavía no hay aportes registrados.", "Aparecen al cerrar el primer mes."); return; }
+    sel.disabled = false;
+    var latest = opts[opts.length - 1][0], cur = S.detM >= 1 && S.detM <= latest ? S.detM : latest;
+    sel.innerHTML = opts.map(function(o){ return '<option value="' + o[0] + '"' + (o[0] === cur ? ' selected' : '') + '>' + o[1] + '</option>'; }).join("");
+    var rec = cur === n + 1 ? {e:2, c:S.pend.c, s:null} : S.rounds[cur - 1];
+    if (rec.e === 1){ U.empty(dt, "Ese mes se registró por grupo.", "Solo se conoce el total de cada grupo."); return; }
+    var recv = {}, maxk = Math.max.apply(null, g.list.map(function(x){ return x.length; }));
+    if (rec.s) Object.keys(rec.s).forEach(function(p){ Object.keys(rec.s[p]).forEach(function(q){ recv[q] = (recv[q] || 0) + rec.s[p][q]; }); });
+    dt.innerHTML = '<table><thead><tr><th>Grupo</th>' + L.allNums(maxk).map(function(s){ return '<th>Vecino ' + s + '</th>'; }).join("") + '<th>Total</th></tr></thead><tbody>' +
+      g.list.map(function(mem, gi){
+        var bySeat = mem.slice().sort(function(a, b){ return g.of[a].seat - g.of[b].seat; }), t = 0, cells = "";
+        bySeat.forEach(function(p){ var v = rec.c[p] || 0; t += v; cells += '<td><b>' + v + '</b>' + (recv[p] ? ' <span class="chip C">' + recv[p] + ' pts</span>' : '') + '</td>'; });
+        for (var k = bySeat.length; k < maxk; k++) cells += '<td></td>';
+        return '<tr><td>Grupo ' + (gi + 1) + '</td>' + cells + '<td>' + t + ' de ' + (E * mem.length) + '</td></tr>';
+      }).join("") + '</tbody></table>' +
+      (rec.s && Object.keys(recv).length ? '<p class="muted small" style="margin-top:8px">En rojo, los puntos de sanción que recibió cada vecino ese mes (cada punto le quitó 3).</p>' : '');
   }
   $("va-inputs").addEventListener("input", function(e){
     var t = e.target, mt = t.id && t.id.match(/^va-c(\d+)$/); if (!mt) return;
@@ -2191,6 +2219,7 @@ window.MV = (function(){
         g.list.map(function(mem, gi){ return '<tr><td><b>Grupo ' + (gi + 1) + '</b></td><td>' + U.dec(last.T[gi]) + ' de ' + (E * mem.length) + '</td><td>' + Math.round(100 * last.T[gi] / (E * mem.length)) + ' %</td><td>' + U.dec(last.gp[gi]) + '</td><td><b>' + U.dec(acc[gi]) + '</b></td></tr>'; }).join("") + '</tbody></table>';
       G.bars(gch, g.list.map(function(_, gi){ return "G" + (gi + 1); }), [{vals:acc.map(function(v){ return Math.round(v * 10) / 10; }), cls:"f-c"}], {xlab:"Grupo", aria:"Ganancia acumulada por persona en cada grupo"});
     }
+    detail(g, n);
     if (!n){ $("va-chart").innerHTML = ""; U.empty($("va-chart"), "Todavía no hay meses cerrados.", "Registre los aportes al final de cada mes."); }
     else {
       var xs = S.rounds.map(function(_, i){ return String(i + 1); }), series = [];
